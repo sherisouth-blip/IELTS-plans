@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Task 2 Grammar Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column; a week switcher, then the week's calendar, rules, chunk table, exercises and essay. Red pen = corrections, blue ink = the student's own work. */
+:root{
+  --paper:#f7f8fa; --sheet:#ffffff; --ink:#1d2433; --muted:#5b6475; --line:#dde1e8;
+  --pen:#c2362b; --pen-soft:#fbe9e7; --blue:#2a5bd7; --blue-soft:#e8eefc; --ok:#1f7a4d; --ok-soft:#e3f3ea;
+  --display:"Newsreader", Georgia, "Times New Roman", serif;
+  --body:"Atkinson Hyperlegible", -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#12151c; --sheet:#1a1f29; --ink:#e7eaf0; --muted:#9aa3b4; --line:#2c3341;
+  --pen:#ff7a6b; --pen-soft:#3a1f1d; --blue:#8bb0ff; --blue-soft:#1d2a47; --ok:#6fd39f; --ok-soft:#173326; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --paper:#12151c; --sheet:#1a1f29; --ink:#e7eaf0; --muted:#9aa3b4; --line:#2c3341;
+  --pen:#ff7a6b; --pen-soft:#3a1f1d; --blue:#8bb0ff; --blue-soft:#1d2a47; --ok:#6fd39f; --ok-soft:#173326; color-scheme:dark }
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 64px}
+.wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+h1,h2,h3{font-family:var(--display);font-weight:600;text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:clamp(28px,6vw,40px)} h2{font-size:26px} h3{font-size:20px}
+p{margin:0}
+.eyebrow{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+header{display:flex;flex-direction:column;gap:10px}
+.lede{color:var(--muted);max-width:62ch}
+.example{border-left:3px solid var(--pen);padding:10px 14px;background:var(--sheet);display:flex;flex-direction:column;gap:4px}
+s{color:var(--pen);text-decoration-thickness:2px}
+.fixd{color:var(--ok);font-weight:700}
+.routine{font-size:15px;color:var(--muted)}
+/* week switcher */
+nav{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);padding-block:8px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+nav button{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--sheet);color:var(--ink);border-radius:8px;padding:8px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1.2}
+nav button small{font-size:11px;color:var(--muted)}
+nav button[aria-current="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+nav button[aria-current="true"] small{color:var(--paper);opacity:.8}
+nav button.now::after{content:"now";font-size:10px;color:var(--pen);font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+nav button[aria-current="true"].now::after{color:var(--paper)}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+section{display:flex;flex-direction:column;gap:14px}
+.weekhead{display:flex;flex-direction:column;gap:6px}
+/* calendar */
+.days{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:10px;background:var(--sheet);overflow:hidden}
+.days li{display:grid;grid-template-columns:auto 76px 1fr;gap:12px;align-items:start;padding:12px 14px;border-top:1px solid var(--line)}
+.days li:first-child{border-top:0}
+.days li.today{background:var(--blue-soft)}
+.days input[type=checkbox]{width:20px;height:20px;margin:2px 0 0;accent-color:var(--ok)}
+.days .d{font-weight:700;font-variant-numeric:tabular-nums;font-size:15px}
+.days .d small{display:block;font-weight:400;color:var(--muted)}
+.days .t{min-width:0}
+.days .t b{display:block}
+.days .t span{color:var(--muted);font-size:15px}
+.days li.done .t b{text-decoration:line-through;text-decoration-color:var(--ok)}
+.mins{font-family:var(--mono);font-size:12px;color:var(--muted)}
+/* rules */
+.rules{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
+.rules li{max-width:66ch}
+code,.chunk{font-family:var(--mono);font-size:.88em;background:var(--blue-soft);color:var(--ink);padding:1px 5px;border-radius:4px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--sheet)}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:9px 12px;border-top:1px solid var(--line);vertical-align:top}
+th{border-top:0;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+td:first-child{font-family:var(--mono);font-size:14px;white-space:nowrap;color:var(--blue)}
+/* exercises */
+.ex{background:var(--sheet);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:14px}
+.ex ol{margin:0;padding-left:24px;display:flex;flex-direction:column;gap:14px}
+.ex li{line-height:2}
+.gap{font:inherit;font-family:var(--mono);font-size:15px;border:0;border-bottom:2px solid var(--blue);background:var(--blue-soft);color:var(--ink);padding:2px 6px;border-radius:4px 4px 0 0;text-align:center}
+.gap.right{border-color:var(--ok);background:var(--ok-soft)}
+.gap.wrong{border-color:var(--pen);background:var(--pen-soft)}
+.hint{color:var(--muted);font-size:14px}
+.why{display:block;line-height:1.5;font-size:15px;color:var(--muted);margin-top:4px}
+.why b{color:var(--ok)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn{font:inherit;font-size:15px;font-weight:700;border-radius:8px;padding:9px 16px;cursor:pointer;border:1px solid var(--ink);background:var(--ink);color:var(--paper)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.score{font-weight:700;color:var(--ok)}
+.wrongtxt{color:var(--pen);font-family:var(--mono);font-size:15px;line-height:1.5}
+textarea{font:inherit;font-size:16px;width:100%;min-height:64px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--paper);color:var(--blue);resize:vertical;line-height:1.5}
+.fixitem{display:flex;flex-direction:column;gap:8px;line-height:1.5}
+.answer{border-left:3px solid var(--ok);padding:6px 12px;background:var(--ok-soft);display:flex;flex-direction:column;gap:2px}
+.prompt{border:2px solid var(--ink);border-radius:10px;padding:18px;background:var(--sheet);display:flex;flex-direction:column;gap:10px}
+.prompt blockquote{margin:0;font-family:var(--display);font-size:20px;line-height:1.4}
+.check{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+.check li{display:grid;grid-template-columns:22px 1fr;gap:10px}
+.check li::before{content:"";width:16px;height:16px;border:2px solid var(--muted);border-radius:3px;margin-top:4px}
+footer{color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding-top:16px}
+@media (max-width:520px){
+  nav{grid-template-columns:repeat(3,1fr)}
+  .days li{grid-template-columns:auto 1fr}
+  .days .d{grid-column:2}
+  .days .t{grid-column:2}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">IELTS Writing Task 2 · 6 weeks · Oct 26 – Dec 6, 2026</span>
+    <h1>Articles, plurals and verb patterns</h1>
+    <p class="lede">Your ideas and organisation are already strong. Cleaning up these three areas is the fastest way to raise your grammar score by half a band. The method: learn every verb, noun and adjective as a <em>chunk</em> with its pattern attached.</p>
+    <div class="example">
+      <span class="hint">From one of your essays</span>
+      <span>If <s>percentage</s> of <s>elderlies</s> keeps <s>cumulate</s>…</span>
+      <span class="fixd">If the percentage of the elderly keeps increasing (or continues to rise)…</span>
+    </div>
+    <p class="routine">About 25 minutes a day on weekdays, 40 minutes for the Saturday essay. Tick each day as you finish it; your ticks are saved in this browser.</p>
+  </header>
+
+  <nav id="weeknav" aria-label="Weeks"></nav>
+  <main id="week"></main>
+
+  <footer>Self-edit checklist, essay prompts and all exercises are original practice material in IELTS Task 2 format. Aim for 250+ words in 40 minutes.</footer>
+</div>
+
+<script>
+(function(){
+var Z = ["ø","-","–","—","x","0","no article","none","nothing","zero"]; // ways to write "no article"
+var START = new Date(2026, 9, 26); // Mon Oct 26 2026
+
+var CHECKLIST = [
+  "Every singular countable noun has a/an, the, or another determiner (my, this, each…).",
+  "General statements use a plural or uncountable noun with no article: <code>Technology changes…</code>, <code>Children need…</code>",
+  "<code>the percentage of</code>, <code>the number of</code>, <code>the + adjective</code> (the elderly, the young) are all correct.",
+  "No -s on uncountable nouns: information, advice, research, evidence, traffic, pollution, equipment.",
+  "Every verb after keep / avoid / suggest / consider / spend time is an -ing form.",
+  "Every allow / encourage / enable / force + person is followed by <code>to</code> + verb; make / let + person by the bare verb.",
+  "Every preposition (including the <code>to</code> in <code>contribute to</code>, <code>lead to</code>, <code>opposed to</code>) is followed by a noun or -ing."
+];
+
+var WEEKS = [
+{ title:"Articles: a, the, or nothing",
+  focus:"Most of your article errors come from three places: missing <code>the</code> before <code>percentage / number / proportion of</code>, missing <code>the</code> before groups like <code>the elderly</code>, and adding <code>the</code> to general ideas.",
+  rules:[
+   "<b>the + percentage / number / proportion / majority + of</b>: <code>the percentage of older people</code>, <code>the number of cars</code>.",
+   "<b>the + adjective</b> names a whole group of people and takes a plural verb: <code>the elderly are</code>, <code>the young</code>, <code>the unemployed</code>, <code>the rich</code>. Never add -s.",
+   "<b>General ideas take no article</b>: plural or uncountable nouns used in general. <code>Pollution is a problem.</code> <code>Children learn quickly.</code> <code>Education is the key to success.</code>",
+   "<b>a / an</b> for one non-specific thing you mention for the first time: <code>It is a good idea.</code> <code>an efficient system</code>.",
+   "<b>the</b> for things that are unique or already known: <code>the government</code> (of a country), <code>the environment</code>, <code>the internet</code>, <code>the most serious problem</code>."
+  ],
+  chunks:[
+   ["the percentage of + noun","The percentage of older people is rising."],
+   ["the number of + plural noun","The number of cars has doubled."],
+   ["the elderly / the young","The elderly often need more healthcare."],
+   ["the younger generation","The younger generation spends more time online."],
+   ["the majority of + plural","The majority of residents agreed."],
+   ["in the long term","In the long term, costs will fall."],
+   ["the environment","Plastic waste harms the environment."],
+   ["play a role in + noun / -ing","Parents play a role in shaping habits."]
+  ],
+  gap:[
+   {t:"If ___ percentage of ___ elderly keeps rising, governments will face higher pension costs.",a:[["the"],["the"]],why:"<b>the</b> percentage of… / <b>the</b> elderly (a group)."},
+   {t:"___ technology has changed ___ way people communicate.",a:[["ø"],["the"]],why:"Technology in general = no article; <b>the</b> way (a specific way)."},
+   {t:"Many people believe that ___ government should invest more in public transport.",a:[["the"]],why:"<b>the</b> government of the country."},
+   {t:"___ number of students who study abroad has doubled since 2010.",a:[["the"]],why:"<b>The</b> number of… + singular verb (has)."},
+   {t:"In ___ long term, this policy could reduce ___ air pollution in cities.",a:[["the"],["ø"]],why:"<b>in the long term</b> is a fixed chunk; air pollution in general = no article."},
+   {t:"This is ___ most serious problem facing ___ young today.",a:[["the"],["the"]],why:"<b>the</b> + superlative; <b>the</b> young (a group)."},
+   {t:"Every city needs ___ efficient public transport system.",a:[["an"]],why:"One non-specific system; <b>an</b> before a vowel sound (efficient)."},
+   {t:"___ children usually learn languages faster than ___ adults.",a:[["ø"],["ø"]],why:"Children and adults in general = no article."},
+   {t:"___ majority of residents opposed ___ new airport.",a:[["the"],["the"]],why:"<b>the</b> majority of…; <b>the</b> new airport (a specific one)."},
+   {t:"___ internet has made ___ information easier to find.",a:[["the"],["ø"]],why:"<b>the</b> internet (unique); information in general = no article."}
+  ],
+  fix:[
+   {w:"If percentage of elderlies keeps cumulate, government must act.",c:"If the percentage of the elderly keeps increasing, the government must act.",why:"the percentage of / the elderly (no -s) / keeps + -ing / the government."},
+   {w:"The pollution is a big problem in the modern cities.",c:"Pollution is a big problem in modern cities.",why:"General uncountable and general plural: no article."},
+   {w:"Number of cars in city centre has risen.",c:"The number of cars in the city centre has risen.",why:"the number of; the city centre (a specific place)."},
+   {w:"Young generation spends more time online than old people.",c:"The younger generation spends more time online than older people (do).",why:"the younger generation is a fixed chunk; compare with older people."},
+   {w:"It is the good idea to give the students a free lunch.",c:"It is a good idea to give students a free lunch.",why:"a good idea (one of many); students in general."},
+   {w:"In conclusion, I believe the education is the key to the success.",c:"In conclusion, I believe education is the key to success.",why:"education and success are general ideas; the key is specific."}
+  ],
+  prompt:"In many countries, the proportion of older people is steadily increasing. Does this trend have more positive or negative effects on society?"
+},
+{ title:"Plurals and countable vs uncountable nouns",
+  focus:"English treats some nouns as uncountable even when your first language counts them. Groups like <code>the elderly</code> never take -s. Words like <code>one of</code>, <code>each</code> and <code>a number of</code> decide singular or plural.",
+  rules:[
+   "<b>Uncountable</b> (no -s, no a/an): information, advice, research, evidence, knowledge, equipment, traffic, pollution, homework, furniture, progress, transport, employment. Use <code>a lot of</code>, <code>much</code>, <code>some</code>, <code>a piece of</code>.",
+   "<b>the elderly / the young / the poor</b> are already plural in meaning. Never <s>elderlies</s>. For a countable version use <code>elderly people</code>, <code>older people</code>.",
+   "<b>one of the + plural</b>: <code>one of the main reasons</code>. <b>many / several / a variety of / a range of + plural</b>.",
+   "<b>each / every / another + singular</b>: <code>each country</code>, <code>every student</code>.",
+   "<b>the number of + plural noun + singular verb</b> (<code>the number of tourists has grown</code>), but <b>a number of + plural noun + plural verb</b> (<code>a number of experts believe</code>).",
+   "Adjectives never take -s, even with numbers: <code>a ten-minute walk</code>, <code>a two-year course</code>."
+  ],
+  chunks:[
+   ["a great deal of + uncountable","a great deal of research"],
+   ["a wide range of + plural","a wide range of courses"],
+   ["one of the most + adj + plural","one of the most serious problems"],
+   ["each / every + singular","Each country has its own culture."],
+   ["a number of + plural + are","A number of studies show…"],
+   ["the number of + plural + is","The number of studies is growing."],
+   ["elderly people / older people","Older people need support."],
+   ["a piece of advice / evidence","One useful piece of advice is…"]
+  ],
+  gap:[
+   {t:"Teenagers can find a lot of useful ___ (information) online.",a:[["information"]],why:"<b>information</b> is uncountable."},
+   {t:"One of the biggest ___ (problem) in large cities is traffic.",a:[["problems"]],why:"one of the + <b>plural</b>."},
+   {t:"Every ___ (student) should learn to cook.",a:[["student"]],why:"every + <b>singular</b>."},
+   {t:"There has been a lot of ___ (research) into screen time.",a:[["research"]],why:"<b>research</b> is uncountable."},
+   {t:"The number of private cars ___ (has / have) increased.",a:[["has"]],why:"<b>the</b> number of + singular verb."},
+   {t:"A number of experts ___ (believe / believes) that the trend will continue.",a:[["believe"]],why:"<b>a</b> number of + plural verb."},
+   {t:"Governments should provide more support for the ___ (elderly).",a:[["elderly"]],why:"<b>the elderly</b>: no -s. <b>support</b> is uncountable too."},
+   {t:"Many ___ (city) have introduced congestion charges.",a:[["cities"]],why:"many + <b>plural</b>; city → cities."},
+   {t:"My teacher gave me some excellent ___ (advice).",a:[["advice"]],why:"<b>advice</b> is uncountable."},
+   {t:"It is a ten-___ (minute) walk from the station.",a:[["minute"]],why:"Number + noun used as an adjective: <b>no -s</b>."},
+   {t:"Several ___ (country) have banned single-use plastic.",a:[["countries"]],why:"several + <b>plural</b>."}
+  ],
+  fix:[
+   {w:"Governments should give more supports to elderlies.",c:"Governments should give more support to the elderly.",why:"support is uncountable; the elderly (no -s)."},
+   {w:"Students can get many informations from the internet.",c:"Students can get a lot of information from the internet.",why:"information is uncountable: a lot of / much, not many."},
+   {w:"One of the main reason is the cost.",c:"One of the main reasons is the cost.",why:"one of the + plural noun + singular verb (is)."},
+   {w:"Each countries has its own culture.",c:"Each country has its own culture.",why:"each + singular."},
+   {w:"There are much evidences that exercise improves mood.",c:"There is a lot of evidence that exercise improves mood.",why:"evidence is uncountable: there is, a lot of, no -s."},
+   {w:"The number of tourists have grown in the recent years.",c:"The number of tourists has grown in recent years.",why:"the number of + singular verb; in recent years is a fixed chunk."}
+  ],
+  prompt:"Nowadays, many people look for information and advice online rather than asking experts such as doctors or teachers. Is this a positive or negative development?"
+},
+{ title:"Verb patterns 1: what follows a verb",
+  focus:"This is the error in <code>keeps cumulate</code>. Every verb decides the form of the next verb. Learn the verb and its pattern together, as one chunk: <code>keep + -ing</code>, <code>allow someone + to</code>, <code>prevent someone + from + -ing</code>.",
+  rules:[
+   "<b>verb + -ing</b>: keep, avoid, consider, suggest, enjoy, finish, risk, involve, spend (time) + -ing. <code>Prices keep rising.</code>",
+   "<b>verb + to + verb</b>: want, need, decide, refuse, tend, fail, manage, plan, afford, aim, seem, choose. <code>People tend to spend more.</code>",
+   "<b>continue / start / begin</b> take both: <code>continues to rise</code> or <code>continues rising</code>.",
+   "<b>verb + person + to + verb</b>: allow, encourage, enable, force, expect, persuade, require. <code>Phones enable people to work anywhere.</code>",
+   "<b>make / let + person + bare verb</b> (no to): <code>make students think</code>, <code>let employees choose</code>. <code>help</code> works with or without <code>to</code>.",
+   "<b>verb + person + from + -ing</b>: prevent, stop, discourage, ban. <code>prevent companies from polluting</code>."
+  ],
+  chunks:[
+   ["keep + -ing","If the population keeps growing…"],
+   ["continue to + verb / -ing","Costs continue to rise."],
+   ["tend to + verb","Teenagers tend to sleep late."],
+   ["can't afford to + verb","Many cannot afford to buy a home."],
+   ["allow / enable sb to + verb","Technology enables people to work remotely."],
+   ["encourage sb to + verb","Schools should encourage students to read."],
+   ["prevent sb from + -ing","Laws prevent firms from polluting."],
+   ["make / let sb + verb","Fines make drivers slow down."],
+   ["consider / suggest + -ing","I suggest introducing a tax."],
+   ["spend time + -ing","Students spend hours scrolling."]
+  ],
+  gap:[
+   {t:"If the population keeps ___ (grow), housing will become scarce.",a:[["growing"]],why:"keep + <b>-ing</b>."},
+   {t:"Many young people cannot afford ___ (buy) a home.",a:[["to buy"]],why:"afford + <b>to</b> + verb."},
+   {t:"Smartphones allow students ___ (access) information instantly.",a:[["to access"]],why:"allow + person + <b>to</b> + verb."},
+   {t:"Strict laws can prevent companies from ___ (pollute) rivers.",a:[["polluting"]],why:"prevent + person + from + <b>-ing</b>."},
+   {t:"Parents should encourage their children ___ (read) for pleasure.",a:[["to read"]],why:"encourage + person + <b>to</b> + verb."},
+   {t:"Some people avoid ___ (use) public transport at night.",a:[["using"]],why:"avoid + <b>-ing</b>."},
+   {t:"Working from home lets employees ___ (spend) more time with family.",a:[["spend"]],why:"let + person + <b>bare verb</b> (no to)."},
+   {t:"The government has decided ___ (raise) taxes on sugary drinks.",a:[["to raise"]],why:"decide + <b>to</b> + verb."},
+   {t:"Teenagers tend ___ (spend) too much time online.",a:[["to spend"]],why:"tend + <b>to</b> + verb."},
+   {t:"I suggest ___ (introduce) a four-day school week.",a:[["introducing"]],why:"suggest + <b>-ing</b> (never suggest to do)."},
+   {t:"High prices make people ___ (think) twice before flying.",a:[["think"]],why:"make + person + <b>bare verb</b>."},
+   {t:"Many students spend hours ___ (scroll) through social media.",a:[["scrolling"]],why:"spend time + <b>-ing</b>."}
+  ],
+  fix:[
+   {w:"If percentage of elderlies keeps cumulate, pensions will be a problem.",c:"If the percentage of the elderly keeps increasing (or continues to rise), pensions will be a problem.",why:"keep + -ing. Also use increase / rise / grow: cumulate is not used for populations."},
+   {w:"Technology enables people work from home.",c:"Technology enables people to work from home.",why:"enable + person + to + verb."},
+   {w:"Governments should consider to ban fast food advertising.",c:"Governments should consider banning fast food advertising.",why:"consider + -ing."},
+   {w:"This law will stop people to drive in the city centre.",c:"This law will stop people from driving in the city centre.",why:"stop + person + from + -ing."},
+   {w:"Teachers should make students to think critically.",c:"Teachers should make students think critically.",why:"make + person + bare verb."},
+   {w:"Many people suggest to reduce working hours.",c:"Many people suggest reducing working hours.",why:"suggest + -ing (or: suggest that working hours should be reduced)."}
+  ],
+  prompt:"Some people believe that governments should prevent people from eating unhealthy food, for example by taxing it. Others think individuals should be free to choose what they eat. Discuss both views and give your own opinion."
+},
+{ title:"Verb patterns 2: nouns and adjectives",
+  focus:"Nouns and adjectives carry patterns too, usually a fixed preposition. After any preposition, use a noun or -ing. Watch the <code>to</code> in <code>contribute to</code>, <code>lead to</code> and <code>opposed to</code>: it is a preposition, so it takes -ing.",
+  rules:[
+   "<b>Change nouns</b>: <code>an increase in</code>, <code>a rise in</code>, <code>a decline in</code>, <code>a reduction in</code> (not <s>of</s>).",
+   "<b>Effect nouns</b>: <code>an impact on</code>, <code>an effect on</code>, <code>an influence on</code>.",
+   "<b>Other common nouns</b>: <code>a reason for</code>, <code>a solution to</code>, <code>access to</code>, <code>demand for</code>, <code>a lack of</code>, <code>the cause of</code>.",
+   "<b>Adjectives</b>: <code>responsible for</code>, <code>aware of</code>, <code>capable of</code>, <code>dependent on</code>, <code>harmful to</code>, <code>interested in</code>.",
+   "<b>Verbs with prepositions</b>: <code>lead to</code>, <code>contribute to</code>, <code>result in</code>, <code>depend on</code>, <code>rely on</code>, <code>benefit from</code>, <code>focus on</code>.",
+   "<b>Preposition + -ing</b>: <code>contribute to reducing</code>, <code>opposed to paying</code>, <code>look forward to seeing</code>, <code>capable of learning</code>."
+  ],
+  chunks:[
+   ["an increase in + noun","an increase in house prices"],
+   ["an impact on + noun","a strong impact on health"],
+   ["a solution to + noun","a solution to traffic congestion"],
+   ["access to + noun","access to clean water"],
+   ["responsible for + noun / -ing","responsible for protecting children"],
+   ["aware of + noun","aware of the risks"],
+   ["capable of + -ing","capable of learning new skills"],
+   ["lead to + noun / -ing","This could lead to job losses."],
+   ["contribute to + noun / -ing","Cars contribute to air pollution."],
+   ["result in + noun","Poor diet results in illness."],
+   ["depend / rely on + noun","Small towns depend on tourism."],
+   ["be opposed to + -ing","Many are opposed to paying more."]
+  ],
+  gap:[
+   {t:"There has been a sharp increase ___ the cost of living.",a:[["in"]],why:"increase <b>in</b>."},
+   {t:"Social media has a strong impact ___ teenagers' self-esteem.",a:[["on"]],why:"impact <b>on</b>."},
+   {t:"Many rural areas still lack access ___ fast internet.",a:[["to"]],why:"access <b>to</b>."},
+   {t:"Parents are responsible ___ their children's safety online.",a:[["for"]],why:"responsible <b>for</b>."},
+   {t:"Recycling can contribute to ___ (reduce) waste.",a:[["reducing"]],why:"contribute to + <b>-ing</b> (to is a preposition here)."},
+   {t:"Many students are not aware ___ the risks of sharing personal data.",a:[["of"]],why:"aware <b>of</b>."},
+   {t:"Poor diet can result ___ serious health problems.",a:[["in"]],why:"result <b>in</b>."},
+   {t:"There is no simple solution ___ this problem.",a:[["to"]],why:"solution <b>to</b>."},
+   {t:"Older workers are perfectly capable of ___ (learn) new skills.",a:[["learning"]],why:"capable of + <b>-ing</b>."},
+   {t:"Many people are opposed to ___ (pay) higher taxes.",a:[["paying"]],why:"opposed to + <b>-ing</b>."},
+   {t:"Small towns depend heavily ___ tourism.",a:[["on"]],why:"depend <b>on</b>."},
+   {t:"A lack ___ exercise is linked ___ heart disease.",a:[["of"],["to"]],why:"a lack <b>of</b>; linked <b>to</b>."}
+  ],
+  fix:[
+   {w:"There is a big increase of the number of cars.",c:"There has been a big increase in the number of cars.",why:"increase in; present perfect for a change up to now."},
+   {w:"Video games have a negative effect to children's concentration.",c:"Video games have a negative effect on children's concentration.",why:"effect on."},
+   {w:"This will lead to reduce crime.",c:"This will lead to a reduction in crime. (or: This will help to reduce crime.)",why:"lead to + noun / -ing, never the base verb."},
+   {w:"People in remote areas have no access for healthcare.",c:"People in remote areas have no access to healthcare.",why:"access to."},
+   {w:"I am looking forward to see the results.",c:"I am looking forward to seeing the results.",why:"look forward to + -ing."},
+   {w:"Teenagers are very depend on their phones.",c:"Teenagers are very dependent on their phones.",why:"Adjective form: dependent on."}
+  ],
+  prompt:"The cost of housing in many large cities has risen sharply in recent years. What are the causes of this problem, and what solutions can you suggest?"
+},
+{ title:"Putting it together",
+  focus:"Real essays mix all three error types in one sentence. This week, every exercise is mixed, and the Thursday task asks you to correct one of your own old essays.",
+  rules:[
+   "Read each sentence three times: once for <b>articles</b>, once for <b>plurals</b>, once for <b>what follows each verb, noun and adjective</b>.",
+   "When you are not sure of a pattern, swap in a chunk you know is right. <code>continue to rise</code> is safer than a verb you have never seen used.",
+   "Simple and correct beats complex and wrong. Examiners reward accurate complex sentences, so build them from chunks you trust."
+  ],
+  chunks:[
+   ["the percentage of the + adj","the percentage of the unemployed"],
+   ["continue to + verb","If prices continue to rise…"],
+   ["have an impact on the + noun","an impact on the environment"],
+   ["prevent sb from + -ing","prevent companies from selling…"],
+   ["give sb access to + noun","give students access to courses"],
+   ["be capable of + -ing","capable of using technology"]
+  ],
+  gap:[
+   {t:"___ percentage of ___ unemployed fell last year.",a:[["the"],["the"]],why:"<b>the</b> percentage of <b>the</b> unemployed."},
+   {t:"Governments should encourage people ___ (cycle) to work.",a:[["to cycle"]],why:"encourage + person + <b>to</b> + verb."},
+   {t:"There is not enough ___ (evidence) to support this view.",a:[["evidence"]],why:"<b>evidence</b> is uncountable."},
+   {t:"This could have a serious impact ___ ___ environment.",a:[["on"],["the"]],why:"impact <b>on</b>; <b>the</b> environment."},
+   {t:"Many ___ (family) cannot afford ___ (rent) a flat in the city.",a:[["families"],["to rent"]],why:"many + <b>plural</b>; afford + <b>to</b>."},
+   {t:"Some companies avoid ___ (hire) older workers.",a:[["hiring"]],why:"avoid + <b>-ing</b>."},
+   {t:"One of the most important ___ (factor) is cost.",a:[["factors"]],why:"one of the most + <b>plural</b>."},
+   {t:"If the cost of housing continues ___ (rise), young people will leave.",a:[["to rise","rising"]],why:"continue + <b>to rise</b> or <b>rising</b>; both are correct."},
+   {t:"Online learning gives students access ___ courses from top universities.",a:[["to"]],why:"access <b>to</b>."},
+   {t:"___ number of people who work from home ___ (has / have) tripled.",a:[["the"],["has"]],why:"<b>The</b> number of… + singular verb (<b>has</b>)."}
+  ],
+  fix:[
+   {w:"Nowadays, the most of peoples prefer to shopping online.",c:"Nowadays, most people prefer to shop online. (or: prefer shopping online)",why:"most people (no the, no of); people is already plural; prefer to + verb or prefer + -ing."},
+   {w:"Government should prevent the companies to sell the junk foods to childrens.",c:"The government should prevent companies from selling junk food to children.",why:"the government; companies in general; prevent from + -ing; food is uncountable; children is already plural."},
+   {w:"The rise of the house prices has big impact to the young.",c:"The rise in house prices has a big impact on the young.",why:"rise in; house prices in general; a big impact on."},
+   {w:"Many elderlies are not capable to use the technology.",c:"Many elderly people are not capable of using technology.",why:"elderly people (countable); capable of + -ing; technology in general."},
+   {w:"Students should be allowed use the phones in a class.",c:"Students should be allowed to use phones in class.",why:"allowed to + verb; phones in general; in class is a fixed chunk."},
+   {w:"This trend will continue increase, which lead to more traffics.",c:"This trend will continue to increase, which will lead to more traffic.",why:"continue to + verb; will lead (future); traffic is uncountable."}
+  ],
+  prompt:"More and more people are working from home rather than in an office. Do the advantages of this development outweigh the disadvantages?"
+},
+{ title:"Timed essays and final check",
+  focus:"Two full essays under exam conditions, each followed by a careful self-edit. On Sunday, compare your Week 1 essay with your last one and count the errors in each area.",
+  rules:[
+   "Write each essay in 40 minutes: 5 minutes to plan, 30 to write, 5 to check.",
+   "Use the last 5 minutes only for the checklist below. Do not add new ideas.",
+   "Count your errors in each area (articles, plurals, verb patterns) and write the numbers at the top of the essay."
+  ],
+  chunks:[],
+  gap:[
+   {t:"The government should ban companies from ___ (advertise) junk food to children.",a:[["advertising"]],why:"ban + person + from + <b>-ing</b>."},
+   {t:"___ elderly often feel isolated.",a:[["the"]],why:"<b>The</b> elderly (a group), plural verb (feel)."},
+   {t:"We need more ___ (equipment) in school science labs.",a:[["equipment"]],why:"<b>equipment</b> is uncountable."},
+   {t:"Rising temperatures are having an effect ___ crop yields.",a:[["on"]],why:"effect <b>on</b>."},
+   {t:"Most experts expect prices ___ (fall).",a:[["to fall"]],why:"expect + <b>to</b> + verb."},
+   {t:"I am opposed to ___ (build) a new motorway.",a:[["building"]],why:"opposed to + <b>-ing</b>."},
+   {t:"Each ___ (household) should separate its recycling.",a:[["household"]],why:"each + <b>singular</b>."},
+   {t:"___ proportion of women in engineering is still low.",a:[["the"]],why:"<b>The</b> proportion of…"}
+  ],
+  fix:[
+   {w:"In my opinion, the technology has a positive effects to the society.",c:"In my opinion, technology has a positive effect on society.",why:"technology and society in general; a… effect (singular); effect on."},
+   {w:"Young people should avoid to spend too many money.",c:"Young people should avoid spending too much money.",why:"avoid + -ing; money is uncountable: much."},
+   {w:"If number of elderlies continue grow, government will need more nurses.",c:"If the number of elderly people continues to grow, the government will need more nurses.",why:"the number of; elderly people; continues (singular) to grow; the government."}
+  ],
+  prompt:"Essay A: Some people think children should start school at a very early age, while others believe they should not begin until they are older. Discuss both views and give your own opinion.<br><br>Essay B: Traffic congestion is becoming a serious problem in many cities. What are the causes, and what measures could governments take to reduce it?"
+}
+];
+
+function dayPlan(i){
+  var w = WEEKS[i];
+  if(i===5) return [
+    ["Review all chunks","Read the chunk tables from Weeks 1–4 aloud. Write five sentences, each using two chunks.",20],
+    ["Final check exercises","Do Exercise A and B below.",20],
+    ["Timed Essay A","40 minutes, exam conditions. No dictionary.",40],
+    ["Self-edit Essay A","Go through the checklist line by line. Count errors in each area.",25],
+    ["Timed Essay B","40 minutes, exam conditions.",40],
+    ["Self-edit Essay B","Checklist again. Count errors and compare with Essay A.",25],
+    ["Compare and reflect","Count errors in your Week 1 essay and Essay B. Which area improved most? Which needs more work?",20]
+  ];
+  return [
+    ["Learn the chunks","Read the rules. Say each chunk aloud, then write your own sentence for five of them.",25],
+    ["Exercise A: fill the gaps","Type your answers and press Check. Redo any wrong ones tomorrow morning.",20],
+    ["Exercise B: fix the sentence","Write the corrected sentence first, then reveal the answer.",20],
+    [i===4?"Correct an old essay":"Chunk hunt",i===4?"Take one of your earlier essays. Underline every article, plural noun and verb pattern, and correct the mistakes.":"In a model essay or newspaper article, find and copy five sentences that use this week's patterns.",25],
+    ["Plan + one paragraph","Plan this week's essay. Write the introduction and one body paragraph using at least five chunks.",25],
+    ["Full essay","Write this week's Task 2 essay in 40 minutes, 250+ words.",40],
+    ["Self-edit","Check Saturday's essay with the checklist below, then send it to your tutor.",20]
+  ];
+}
+
+var DN = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+var MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function addDays(d,n){ var x=new Date(d.getFullYear(),d.getMonth(),d.getDate()+n); return x; }
+function fmt(d){ return MON[d.getMonth()]+" "+d.getDate(); }
+function sameDay(a,b){ return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate(); }
+var today = new Date();
+var diff = Math.floor((new Date(today.getFullYear(),today.getMonth(),today.getDate()) - START)/86400000);
+var nowWeek = Math.max(0, Math.min(5, Math.floor(diff/7)));
+
+function load(){ try{ return JSON.parse(localStorage.getItem("t2plan")||"{}"); }catch(e){ return {}; } }
+function save(s){ try{ localStorage.setItem("t2plan", JSON.stringify(s)); }catch(e){} }
+var state = load();
+
+function norm(s){
+  return (s||"").toLowerCase().replace(/[‘’]/g,"'").replace(/[.,!?;:]+$/,"").replace(/\s+/g," ").trim();
+}
+function isRight(val, accepted){
+  var v = norm(val);
+  for(var k=0;k<accepted.length;k++){
+    if(accepted[k]==="ø"){ if(Z.indexOf(v)>-1) return true; }
+    else if(v===accepted[k]) return true;
+  }
+  return false;
+}
+function shown(a){ return a==="ø" ? "— (no article)" : a; }
+function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+
+var nav = document.getElementById("weeknav");
+var main = document.getElementById("week");
+
+function renderNav(cur){
+  var h="";
+  for(var i=0;i<6;i++){
+    var s=addDays(START,i*7);
+    h+='<button type="button" id="wk'+(i+1)+'" data-w="'+i+'" aria-current="'+(i===cur)+'"'+(i===nowWeek?' class="now"':'')+'>Week '+(i+1)+'<small>'+fmt(s)+'</small></button>';
+  }
+  nav.innerHTML=h;
+}
+
+function render(i){
+  renderNav(i);
+  var w=WEEKS[i], s=addDays(START,i*7), e=addDays(s,6), plan=dayPlan(i), h="";
+  h+='<section><div class="weekhead"><span class="eyebrow">Week '+(i+1)+' · '+fmt(s)+' – '+fmt(e)+'</span><h2>'+w.title+'</h2><p class="lede">'+w.focus+'</p></div>';
+  h+='<ul class="days">';
+  for(var d=0;d<7;d++){
+    var dt=addDays(s,d), key="w"+i+"d"+d, done=!!state[key];
+    h+='<li class="'+(sameDay(dt,today)?'today ':'')+(done?'done':'')+'"><input type="checkbox" id="'+key+'" data-k="'+key+'"'+(done?' checked':'')+' aria-label="Done: '+DN[d]+' '+fmt(dt)+'">'+
+       '<div class="d">'+DN[d]+'<small>'+fmt(dt)+'</small></div><div class="t"><b>'+plan[d][0]+' <span class="mins">'+plan[d][2]+' min</span></b><span>'+plan[d][1]+'</span></div></li>';
+  }
+  h+='</ul></section>';
+
+  h+='<section><h3>The rules</h3><ul class="rules">';
+  w.rules.forEach(function(r){ h+='<li>'+r+'</li>'; });
+  h+='</ul></section>';
+
+  if(w.chunks.length){
+    h+='<section><h3>Chunks to learn</h3><div class="tablewrap"><table><thead><tr><th>Chunk</th><th>Example</th></tr></thead><tbody>';
+    w.chunks.forEach(function(c){ h+='<tr><td>'+c[0]+'</td><td>'+c[1]+'</td></tr>'; });
+    h+='</tbody></table></div></section>';
+  }
+
+  h+='<section class="ex" id="exA"><div><h3>Exercise A: fill the gaps</h3><p class="hint">'+(i===0?'Write a, an, the, or — for no article.':'Write the missing word, or the correct form of the word in brackets. Write — if no article is needed.')+'</p></div><ol>';
+  w.gap.forEach(function(g,gi){
+    var parts=g.t.split("___"), line="";
+    for(var p=0;p<parts.length;p++){
+      line+=esc(parts[p]);
+      if(p<parts.length-1){
+        var longest=0; g.a[p].forEach(function(x){ longest=Math.max(longest, shown(x).length); });
+        var wdt=Math.min(14, Math.max(4, longest>12?6:longest+2));
+        line+='<input class="gap" id="g'+i+'_'+gi+'_'+p+'" data-g="'+gi+'" data-p="'+p+'" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" style="width:'+wdt+'ch" aria-label="Gap '+(gi+1)+'">';
+      }
+    }
+    h+='<li>'+line+'<span class="why" hidden id="why'+i+'_'+gi+'"></span></li>';
+  });
+  h+='</ol><div class="actions"><button class="btn" type="button" id="checkA">Check answers</button><button class="btn ghost" type="button" id="showA">Show all answers</button><span class="score" id="scoreA" aria-live="polite"></span></div></section>';
+
+  h+='<section class="ex" id="exB"><div><h3>Exercise B: fix the sentence</h3><p class="hint">Each sentence has one or more errors. Write the corrected sentence, then reveal the answer and compare.</p></div><ol>';
+  w.fix.forEach(function(f,fi){
+    h+='<li><div class="fixitem"><span class="wrongtxt">'+esc(f.w)+'</span><textarea id="f'+i+'_'+fi+'" rows="2" aria-label="Your correction for sentence '+(fi+1)+'" placeholder="Your corrected sentence"></textarea>'+
+       '<div class="actions"><button class="btn ghost" type="button" data-reveal="'+fi+'">Reveal answer</button></div>'+
+       '<div class="answer" id="ans'+i+'_'+fi+'" hidden><span class="fixd">'+esc(f.c)+'</span><span class="hint">'+esc(f.why)+'</span></div></div></li>';
+  });
+  h+='</ol></section>';
+
+  h+='<section class="prompt"><span class="eyebrow">'+(i===5?'Timed essays · 40 minutes each':'This week\'s Task 2 essay · 40 minutes · 250+ words')+'</span><blockquote>'+w.prompt+'</blockquote>'+
+     (i<5?'<p class="hint">Use at least five chunks from this week and underline them.</p>':'')+'</section>';
+
+  h+='<section><h3>Self-edit checklist</h3><ul class="check">';
+  CHECKLIST.forEach(function(c){ h+='<li><span>'+c+'</span></li>'; });
+  h+='</ul></section>';
+
+  main.innerHTML=h;
+  wire(i);
+}
+
+function wire(i){
+  var w=WEEKS[i];
+  Array.prototype.forEach.call(main.querySelectorAll('.days input'), function(cb){
+    cb.addEventListener('change', function(){
+      state[cb.getAttribute('data-k')]=cb.checked; save(state);
+      cb.parentNode.className=cb.parentNode.className.replace(/\bdone\b/,'').trim()+(cb.checked?' done':'');
+    });
+  });
+  function mark(reveal){
+    var right=0,total=0;
+    w.gap.forEach(function(g,gi){
+      var all=true;
+      g.a.forEach(function(acc,p){
+        var el=document.getElementById('g'+i+'_'+gi+'_'+p); total++;
+        if(reveal && !isRight(el.value,acc)) el.value=shown(acc[0])==="— (no article)"?"—":acc[0];
+        var ok=isRight(el.value,acc);
+        el.className='gap '+(ok?'right':'wrong'); if(ok) right++; else all=false;
+      });
+      var why=document.getElementById('why'+i+'_'+gi);
+      var ans=g.a.map(function(acc){ return acc.map(shown).join(' / '); }).join(' · ');
+      why.innerHTML=(all?'':'<b>Answer: '+esc(ans)+'.</b> ')+g.why;
+      why.hidden=false;
+    });
+    document.getElementById('scoreA').textContent=reveal?'Answers shown':right+' / '+total+' correct';
+  }
+  document.getElementById('checkA').addEventListener('click', function(){ mark(false); });
+  document.getElementById('showA').addEventListener('click', function(){ mark(true); });
+  Array.prototype.forEach.call(main.querySelectorAll('[data-reveal]'), function(b){
+    b.addEventListener('click', function(){
+      var a=document.getElementById('ans'+i+'_'+b.getAttribute('data-reveal'));
+      a.hidden=!a.hidden; b.textContent=a.hidden?'Reveal answer':'Hide answer';
+    });
+  });
+}
+
+nav.addEventListener('click', function(e){
+  var b=e.target.closest ? e.target.closest('button') : null; if(!b) return;
+  var n=+b.getAttribute('data-w'); render(n);
+  try{ history.replaceState(null,'','#week'+(n+1)); }catch(err){}
+  nav.scrollIntoView({block:'start'});
+});
+
+var m=/^#week([1-6])$/.exec(location.hash||"");
+render(m ? (+m[1]-1) : nowWeek);
+})();
+</script>
+</body>
+</html>
