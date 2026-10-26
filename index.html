@@ -49,16 +49,16 @@ section{display:flex;flex-direction:column;gap:14px}
 .weekhead{display:flex;flex-direction:column;gap:6px}
 /* calendar */
 .days{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:10px;background:var(--sheet);overflow:hidden}
-.days li{display:grid;grid-template-columns:auto 76px 1fr;gap:12px;align-items:start;padding:12px 14px;border-top:1px solid var(--line)}
-.days li:first-child{border-top:0}
-.days li.today{background:var(--blue-soft)}
-.days input[type=checkbox]{width:20px;height:20px;margin:2px 0 0;accent-color:var(--ok)}
+.days > li{display:grid;grid-template-columns:auto 76px 1fr;gap:12px;align-items:start;padding:12px 14px;border-top:1px solid var(--line)}
+.days > li:first-child{border-top:0}
+.days > li.today{background:var(--blue-soft)}
+.days > li > input[type=checkbox]{width:20px;height:20px;margin:2px 0 0;accent-color:var(--ok)}
 .days .d{font-weight:700;font-variant-numeric:tabular-nums;font-size:15px}
 .days .d small{display:block;font-weight:400;color:var(--muted)}
 .days .t{min-width:0}
 .days .t b{display:block}
 .days .t span{color:var(--muted);font-size:15px}
-.days li.done .t b{text-decoration:line-through;text-decoration-color:var(--ok)}
+.days > li.done > .t b{text-decoration:line-through;text-decoration-color:var(--ok)}
 .mins{font-family:var(--mono);font-size:12px;color:var(--muted)}
 /* rules */
 .rules{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
@@ -92,10 +92,15 @@ textarea{font:inherit;font-size:16px;width:100%;min-height:64px;border:1px solid
 .check{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
 .check li{display:grid;grid-template-columns:22px 1fr;gap:10px}
 .check li::before{content:"";width:16px;height:16px;border:2px solid var(--muted);border-radius:3px;margin-top:4px}
+.work{grid-column:1/-1;min-width:0}
+.work>summary{cursor:pointer;font-weight:700;color:var(--blue);font-size:15px;padding:6px 0}
+.work>summary:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:4px}
+.workbody{display:flex;flex-direction:column;gap:14px;padding-top:10px;min-width:0}
+.workbody .ex{padding:14px}
 footer{color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding-top:16px}
 @media (max-width:520px){
   nav{grid-template-columns:repeat(3,1fr)}
-  .days li{grid-template-columns:auto 1fr}
+  .days > li{grid-template-columns:auto 1fr}
   .days .d{grid-column:2}
   .days .t{grid-column:2}
 }
@@ -399,7 +404,7 @@ function dayPlan(i){
     [i===4?"Correct an old essay":"Chunk hunt",i===4?"Take one of your earlier essays. Underline every article, plural noun and verb pattern, and correct the mistakes.":"In a model essay or newspaper article, find and copy five sentences that use this week's patterns.",25],
     ["Plan + one paragraph","Plan this week's essay. Write the introduction and one body paragraph using at least five chunks.",25],
     ["Full essay","Write this week's Task 2 essay in 40 minutes, 250+ words.",40],
-    ["Self-edit","Check Saturday's essay with the checklist below, then send it to your tutor.",20]
+    ["Self-edit","Check Saturday's essay with the checklist, then send it to your tutor.",20]
   ];
 }
 
@@ -445,26 +450,17 @@ function renderNav(cur){
 function render(i){
   renderNav(i);
   var w=WEEKS[i], s=addDays(START,i*7), e=addDays(s,6), plan=dayPlan(i), h="";
-  h+='<section><div class="weekhead"><span class="eyebrow">Week '+(i+1)+' · '+fmt(s)+' – '+fmt(e)+'</span><h2>'+w.title+'</h2><p class="lede">'+w.focus+'</p></div>';
-  h+='<ul class="days">';
-  for(var d=0;d<7;d++){
-    var dt=addDays(s,d), key="w"+i+"d"+d, done=!!state[key];
-    h+='<li class="'+(sameDay(dt,today)?'today ':'')+(done?'done':'')+'"><input type="checkbox" id="'+key+'" data-k="'+key+'"'+(done?' checked':'')+' aria-label="Done: '+DN[d]+' '+fmt(dt)+'">'+
-       '<div class="d">'+DN[d]+'<small>'+fmt(dt)+'</small></div><div class="t"><b>'+plan[d][0]+' <span class="mins">'+plan[d][2]+' min</span></b><span>'+plan[d][1]+'</span></div></li>';
-  }
-  h+='</ul></section>';
 
-  h+='<section><h3>The rules</h3><ul class="rules">';
-  w.rules.forEach(function(r){ h+='<li>'+r+'</li>'; });
-  h+='</ul></section>';
-
+  var rulesH='<h3>The rules</h3><ul class="rules">';
+  w.rules.forEach(function(r){ rulesH+='<li>'+r+'</li>'; });
+  rulesH+='</ul>';
   if(w.chunks.length){
-    h+='<section><h3>Chunks to learn</h3><div class="tablewrap"><table><thead><tr><th>Chunk</th><th>Example</th></tr></thead><tbody>';
-    w.chunks.forEach(function(c){ h+='<tr><td>'+c[0]+'</td><td>'+c[1]+'</td></tr>'; });
-    h+='</tbody></table></div></section>';
+    rulesH+='<h3>Chunks to learn</h3><div class="tablewrap"><table><thead><tr><th>Chunk</th><th>Example</th></tr></thead><tbody>';
+    w.chunks.forEach(function(c){ rulesH+='<tr><td>'+c[0]+'</td><td>'+c[1]+'</td></tr>'; });
+    rulesH+='</tbody></table></div>';
   }
 
-  h+='<section class="ex" id="exA"><div><h3>Exercise A: fill the gaps</h3><p class="hint">'+(i===0?'Write a, an, the, or — for no article.':'Write the missing word, or the correct form of the word in brackets. Write — if no article is needed.')+'</p></div><ol>';
+  var exA='<div class="ex" id="exA"><div><h3>Exercise A: fill the gaps</h3><p class="hint">'+(i===0?'Write a, an, the, or — for no article.':'Write the missing word, or the correct form of the word in brackets. Write — if no article is needed.')+'</p></div><ol>';
   w.gap.forEach(function(g,gi){
     var parts=g.t.split("___"), line="";
     for(var p=0;p<parts.length;p++){
@@ -472,26 +468,49 @@ function render(i){
       if(p<parts.length-1){
         var longest=0; g.a[p].forEach(function(x){ longest=Math.max(longest, shown(x).length); });
         var wdt=Math.min(14, Math.max(4, longest>12?6:longest+2));
-        line+='<input class="gap" id="g'+i+'_'+gi+'_'+p+'" data-g="'+gi+'" data-p="'+p+'" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" style="width:'+wdt+'ch" aria-label="Gap '+(gi+1)+'">';
+        line+='<input class="gap" id="g'+i+'_'+gi+'_'+p+'" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" style="width:'+wdt+'ch" aria-label="Gap '+(gi+1)+'">';
       }
     }
-    h+='<li>'+line+'<span class="why" hidden id="why'+i+'_'+gi+'"></span></li>';
+    exA+='<li>'+line+'<span class="why" hidden id="why'+i+'_'+gi+'"></span></li>';
   });
-  h+='</ol><div class="actions"><button class="btn" type="button" id="checkA">Check answers</button><button class="btn ghost" type="button" id="showA">Show all answers</button><span class="score" id="scoreA" aria-live="polite"></span></div></section>';
+  exA+='</ol><div class="actions"><button class="btn" type="button" id="checkA">Check answers</button><button class="btn ghost" type="button" id="showA">Show all answers</button><span class="score" id="scoreA" aria-live="polite"></span></div></div>';
 
-  h+='<section class="ex" id="exB"><div><h3>Exercise B: fix the sentence</h3><p class="hint">Each sentence has one or more errors. Write the corrected sentence, then reveal the answer and compare.</p></div><ol>';
+  var exB='<div class="ex" id="exB"><div><h3>Exercise B: fix the sentence</h3><p class="hint">Each sentence has one or more errors. Write the corrected sentence, then reveal the answer and compare.</p></div><ol>';
   w.fix.forEach(function(f,fi){
-    h+='<li><div class="fixitem"><span class="wrongtxt">'+esc(f.w)+'</span><textarea id="f'+i+'_'+fi+'" rows="2" aria-label="Your correction for sentence '+(fi+1)+'" placeholder="Your corrected sentence"></textarea>'+
+    exB+='<li><div class="fixitem"><span class="wrongtxt">'+esc(f.w)+'</span><textarea id="f'+i+'_'+fi+'" rows="2" aria-label="Your correction for sentence '+(fi+1)+'" placeholder="Your corrected sentence"></textarea>'+
        '<div class="actions"><button class="btn ghost" type="button" data-reveal="'+fi+'">Reveal answer</button></div>'+
        '<div class="answer" id="ans'+i+'_'+fi+'" hidden><span class="fixd">'+esc(f.c)+'</span><span class="hint">'+esc(f.why)+'</span></div></div></li>';
   });
-  h+='</ol></section>';
+  exB+='</ol></div>';
 
-  h+='<section class="prompt"><span class="eyebrow">'+(i===5?'Timed essays · 40 minutes each':'This week\'s Task 2 essay · 40 minutes · 250+ words')+'</span><blockquote>'+w.prompt+'</blockquote>'+
-     (i<5?'<p class="hint">Use at least five chunks from this week and underline them.</p>':'')+'</section>';
+  var prompts=w.prompt.split('<br><br>');
+  function promptH(k){
+    return '<div class="prompt"><span class="eyebrow">'+(i===5?'Timed essay · 40 minutes · 250+ words':'This week\'s Task 2 essay · 40 minutes · 250+ words')+'</span><blockquote>'+prompts[k]+'</blockquote>'+
+      (i<5?'<p class="hint">Use at least five chunks from this week and underline them.</p>':'')+'</div>';
+  }
+  var checkH='<h3>Self-edit checklist</h3><ul class="check">';
+  CHECKLIST.forEach(function(c){ checkH+='<li><span>'+c+'</span></li>'; });
+  checkH+='</ul>';
 
-  h+='<section><h3>Self-edit checklist</h3><ul class="check">';
-  CHECKLIST.forEach(function(c){ h+='<li><span>'+c+'</span></li>'; });
+  var work = i===5 ? [
+    ["Rules from this week",rulesH],["Exercises A and B",exA+exB],["Essay A prompt",promptH(0)],["Checklist",checkH],
+    ["Essay B prompt",promptH(1)],["Checklist",checkH],null
+  ] : [
+    ["Rules and chunks",rulesH],["Exercise A",exA],["Exercise B",exB],
+    i===4?["Checklist",checkH]:null,["Essay prompt",promptH(0)],["Essay prompt",promptH(0)],["Checklist",checkH]
+  ];
+
+  h+='<section><div class="weekhead"><span class="eyebrow">Week '+(i+1)+' · '+fmt(s)+' – '+fmt(e)+'</span><h2>'+w.title+'</h2><p class="lede">'+w.focus+'</p></div>';
+  h+='<ul class="days">';
+  var anyToday=false, d;
+  for(d=0;d<7;d++){ if(sameDay(addDays(s,d),today)) anyToday=true; }
+  for(d=0;d<7;d++){
+    var dt=addDays(s,d), key="w"+i+"d"+d, done=!!state[key], isToday=sameDay(dt,today);
+    var open = isToday || (!anyToday && d===0);
+    h+='<li class="'+(isToday?'today ':'')+(done?'done':'')+'"><input type="checkbox" id="'+key+'" data-k="'+key+'"'+(done?' checked':'')+' aria-label="Done: '+DN[d]+' '+fmt(dt)+'">'+
+       '<div class="d">'+DN[d]+'<small>'+fmt(dt)+'</small></div><div class="t"><b>'+plan[d][0]+' <span class="mins">'+plan[d][2]+' min</span></b><span>'+plan[d][1]+'</span></div>'+
+       (work[d]?'<details class="work"'+(open?' open':'')+'><summary>'+work[d][0]+'</summary><div class="workbody">'+work[d][1]+'</div></details>':'')+'</li>';
+  }
   h+='</ul></section>';
 
   main.innerHTML=h;
@@ -500,7 +519,7 @@ function render(i){
 
 function wire(i){
   var w=WEEKS[i];
-  Array.prototype.forEach.call(main.querySelectorAll('.days input'), function(cb){
+  Array.prototype.forEach.call(main.querySelectorAll('.days > li > input[type=checkbox]'), function(cb){
     cb.addEventListener('change', function(){
       state[cb.getAttribute('data-k')]=cb.checked; save(state);
       cb.parentNode.className=cb.parentNode.className.replace(/\bdone\b/,'').trim()+(cb.checked?' done':'');
