@@ -2,134 +2,177 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Task 2 Grammar Plan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: one reading column; a week switcher, then the week's calendar, rules, chunk table, exercises and essay. Red pen = corrections, blue ink = the student's own work. */
 :root{
-  --paper:#f7f8fa; --sheet:#ffffff; --ink:#1d2433; --muted:#5b6475; --line:#dde1e8;
-  --pen:#c2362b; --pen-soft:#fbe9e7; --blue:#2a5bd7; --blue-soft:#e8eefc; --ok:#1f7a4d; --ok-soft:#e3f3ea;
-  --display:"Newsreader", Georgia, "Times New Roman", serif;
-  --body:"Atkinson Hyperlegible", -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --bg:#f2f5f1; --card:#ffffff; --ink:#1c2b39; --muted:#4a5a68; --line:#d5ddd4;
+  --gold:#d99a2b; --gold-ink:#8a5c0e; --gold-soft:#fbf1dc;
+  --pen:#b4432e; --pen-soft:#f8e6e1; --ok:#2f6b4a; --ok-soft:#e2efe6; --blue:#2c5d8f; --blue-soft:#e4edf5;
+  --display:"DM Serif Display", Georgia, "Times New Roman", serif;
+  --body:"Source Sans 3", -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   --mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
-  --paper:#12151c; --sheet:#1a1f29; --ink:#e7eaf0; --muted:#9aa3b4; --line:#2c3341;
-  --pen:#ff7a6b; --pen-soft:#3a1f1d; --blue:#8bb0ff; --blue-soft:#1d2a47; --ok:#6fd39f; --ok-soft:#173326; color-scheme:dark }}
+  --bg:#121a20; --card:#1b252e; --ink:#e8eef0; --muted:#a3b1bb; --line:#2c3a44;
+  --gold:#e2b04f; --gold-ink:#e9bd62; --gold-soft:#33291a;
+  --pen:#f08a74; --pen-soft:#3a221d; --ok:#7fcf9f; --ok-soft:#18301f; --blue:#8fbbe8; --blue-soft:#1d2e40; color-scheme:dark }}
 :root[data-theme="dark"]{
-  --paper:#12151c; --sheet:#1a1f29; --ink:#e7eaf0; --muted:#9aa3b4; --line:#2c3341;
-  --pen:#ff7a6b; --pen-soft:#3a1f1d; --blue:#8bb0ff; --blue-soft:#1d2a47; --ok:#6fd39f; --ok-soft:#173326; color-scheme:dark }
+  --bg:#121a20; --card:#1b252e; --ink:#e8eef0; --muted:#a3b1bb; --line:#2c3a44;
+  --gold:#e2b04f; --gold-ink:#e9bd62; --gold-soft:#33291a;
+  --pen:#f08a74; --pen-soft:#3a221d; --ok:#7fcf9f; --ok-soft:#18301f; --blue:#8fbbe8; --blue-soft:#1d2e40; color-scheme:dark }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-img{max-width:100%}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;
-  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 64px}
-.wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
-h1,h2,h3{font-family:var(--display);font-weight:600;text-wrap:balance;margin:0;line-height:1.2}
-h1{font-size:clamp(28px,6vw,40px)} h2{font-size:26px} h3{font-size:20px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:28px 64px;-webkit-text-size-adjust:100%}
+.wrap{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:24px}
+h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;line-height:1.15;text-wrap:balance}
+h1{font-size:clamp(30px,7vw,40px)} h2{font-size:clamp(26px,6vw,32px)} h3{font-size:21px}
 p{margin:0}
-.eyebrow{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
-header{display:flex;flex-direction:column;gap:10px}
-.lede{color:var(--muted);max-width:62ch}
-.example{border-left:3px solid var(--pen);padding:10px 14px;background:var(--sheet);display:flex;flex-direction:column;gap:4px}
+.eyebrow{font-size:14px;font-weight:600;color:var(--muted)}
+.lede{color:var(--muted);max-width:60ch}
+header{display:flex;flex-direction:column;gap:8px}
+details.about>summary{cursor:pointer;color:var(--blue);font-weight:600;font-size:15px;padding:4px 0;list-style:none}
+details.about>summary::-webkit-details-marker{display:none}
+details.about>summary::before{content:"+ "}
+details.about[open]>summary::before{content:"– "}
+.aboutbody{display:flex;flex-direction:column;gap:10px;padding-top:8px;font-size:16px;color:var(--muted)}
+.example{background:var(--card);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:2px;color:var(--ink)}
 s{color:var(--pen);text-decoration-thickness:2px}
 .fixd{color:var(--ok);font-weight:700}
-.routine{font-size:15px;color:var(--muted)}
-/* week switcher */
-nav{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);padding-block:8px}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
-nav button{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--sheet);color:var(--ink);border-radius:8px;padding:8px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1.2}
-nav button small{font-size:11px;color:var(--muted)}
-nav button[aria-current="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-nav button[aria-current="true"] small{color:var(--paper);opacity:.8}
-nav button.now::after{content:"now";font-size:10px;color:var(--pen);font-weight:700;letter-spacing:.05em;text-transform:uppercase}
-nav button[aria-current="true"].now::after{color:var(--paper)}
-button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
-section{display:flex;flex-direction:column;gap:14px}
-.weekhead{display:flex;flex-direction:column;gap:6px}
-/* calendar */
-.days{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:10px;background:var(--sheet);overflow:hidden}
-.days > li{display:grid;grid-template-columns:auto 76px 1fr;gap:12px;align-items:start;padding:12px 14px;border-top:1px solid var(--line)}
-.days > li:first-child{border-top:0}
-.days > li.today{background:var(--blue-soft)}
-.days > li > input[type=checkbox]{width:20px;height:20px;margin:2px 0 0;accent-color:var(--ok)}
-.days .d{font-weight:700;font-variant-numeric:tabular-nums;font-size:15px}
-.days .d small{display:block;font-weight:400;color:var(--muted)}
-.days .t{min-width:0}
-.days .t b{display:block}
-.days .t span{color:var(--muted);font-size:15px}
-.days > li.done > .t b{text-decoration:line-through;text-decoration-color:var(--ok)}
-.mins{font-family:var(--mono);font-size:12px;color:var(--muted)}
-/* rules */
+.small{font-size:13px;color:var(--muted)}
+/* week tabs */
+nav{display:flex;gap:4px;overflow-x:auto;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5;background:var(--bg);scrollbar-width:none;-webkit-overflow-scrolling:touch}
+nav::-webkit-scrollbar{display:none}
+nav button{flex:1 0 auto;font:inherit;font-size:15px;font-weight:600;border:0;background:none;color:var(--muted);padding:12px 10px 10px;cursor:pointer;border-bottom:3px solid transparent;display:flex;flex-direction:column;align-items:center;line-height:1.2;white-space:nowrap}
+nav button small{font-size:12px;font-weight:400}
+nav button[aria-current="true"]{color:var(--ink);border-bottom-color:var(--gold)}
+nav button.now small::after{content:" · now";color:var(--gold-ink);font-weight:700}
+button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:6px}
+section{display:flex;flex-direction:column;gap:18px}
+.weekhead{display:flex;flex-direction:column;gap:8px}
+.progress{display:flex;align-items:center;gap:12px;font-size:15px;color:var(--muted)}
+.bar{flex:1;height:8px;border-radius:99px;background:var(--line);overflow:hidden;max-width:240px}
+.bar i{display:block;height:100%;background:var(--gold);border-radius:99px;transition:width .3s}
+/* today card */
+.today{background:var(--card);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:8px;border-top:4px solid var(--gold)}
+.today .k{font-size:14px;font-weight:700;color:var(--gold-ink)}
+.today .m{color:var(--muted)}
+.today.alldone{border-top-color:var(--ok)}
+.today.alldone .k{color:var(--ok)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:4px}
+.btn{font:inherit;font-size:16px;font-weight:700;border-radius:10px;padding:11px 20px;cursor:pointer;border:1px solid var(--ink);background:var(--ink);color:var(--bg);-webkit-appearance:none;appearance:none}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.small-btn{font-size:15px;padding:8px 14px}
+/* day list */
+.days{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;background:var(--card);border-radius:14px;overflow:hidden}
+.days>li{display:block;border-top:1px solid var(--line)}
+.days>li:first-child{border-top:0}
+.days>li.isToday{background:var(--gold-soft)}
+.days>li{scroll-margin-top:84px}
+.days details{min-width:0}
+.days summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:1fr auto auto;gap:2px 12px;padding:14px 16px;align-items:center}
+.days summary:hover b{text-decoration:underline;text-decoration-color:var(--line)}
+.chev{grid-row:1/3;grid-column:3;width:32px;height:32px;border-radius:50%;background:var(--blue-soft);display:flex;align-items:center;justify-content:center}
+.chev::after{content:"";width:8px;height:8px;border:solid var(--blue);border-width:0 2.5px 2.5px 0;transform:translateY(-2px) rotate(45deg);transition:transform .2s}
+.days details[open] .chev::after{transform:translateY(2px) rotate(-135deg)}
+.days summary::-webkit-details-marker{display:none}
+.days summary .dd{font-size:13px;color:var(--muted);font-weight:600}
+.days summary b{font-weight:600}
+.days summary .mins{grid-row:1/3;grid-column:2;font-size:14px;color:var(--muted);white-space:nowrap}
+.days summary .dd{grid-column:1}
+.days li.done summary b{color:var(--muted)}
+.days li.done summary .dd::after{content:" · Done ✓";color:var(--ok);font-weight:700}
+.daybody{padding:0 16px 18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.daybody>.desc{color:var(--muted)}
+/* rules + chunks */
 .rules{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
-.rules li{max-width:66ch}
-code,.chunk{font-family:var(--mono);font-size:.88em;background:var(--blue-soft);color:var(--ink);padding:1px 5px;border-radius:4px}
-.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--sheet)}
+code,.chunk{font-family:var(--mono);font-size:.86em;background:var(--blue-soft);color:var(--ink);padding:1px 5px;border-radius:4px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
 table{border-collapse:collapse;width:100%;font-size:15px}
 th,td{text-align:left;padding:9px 12px;border-top:1px solid var(--line);vertical-align:top}
-th{border-top:0;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-td:first-child{font-family:var(--mono);font-size:14px;white-space:nowrap;color:var(--blue)}
+th{border-top:0;font-size:13px;color:var(--muted);font-weight:600}
+td:first-child{font-family:var(--mono);font-size:14px;color:var(--blue)}
 /* exercises */
-.ex{background:var(--sheet);border:1px solid var(--line);border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:14px}
-.ex ol{margin:0;padding-left:24px;display:flex;flex-direction:column;gap:14px}
+.ex{display:flex;flex-direction:column;gap:14px}
+.ex ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:14px}
 .ex li{line-height:2}
-.gap{font:inherit;font-family:var(--mono);font-size:15px;border:0;border-bottom:2px solid var(--blue);background:var(--blue-soft);color:var(--ink);padding:2px 6px;border-radius:4px 4px 0 0;text-align:center}
+.hint{color:var(--muted);font-size:15px}
+.gap{margin:0 6px;font:inherit;font-family:var(--mono);font-size:16px;border:0;border-bottom:2px solid var(--blue);background:var(--blue-soft);color:var(--ink);padding:2px 6px;border-radius:4px 4px 0 0;text-align:center;-webkit-appearance:none;appearance:none}
 .gap.right{border-color:var(--ok);background:var(--ok-soft)}
 .gap.wrong{border-color:var(--pen);background:var(--pen-soft)}
-.hint{color:var(--muted);font-size:14px}
 .why{display:block;line-height:1.5;font-size:15px;color:var(--muted);margin-top:4px}
 .why b{color:var(--ok)}
-.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.btn{font:inherit;font-size:15px;font-weight:700;border-radius:8px;padding:9px 16px;cursor:pointer;border:1px solid var(--ink);background:var(--ink);color:var(--paper)}
-.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.why .rule{display:block;margin-top:6px;padding:8px 12px;border-radius:8px;background:var(--card);border:1px solid var(--gold);color:var(--ink);line-height:1.5}
+.why .rule b{color:var(--ink)}
 .score{font-weight:700;color:var(--ok)}
-.wrongtxt{color:var(--pen);font-family:var(--mono);font-size:15px;line-height:1.5}
-textarea{font:inherit;font-size:16px;width:100%;min-height:64px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--paper);color:var(--blue);resize:vertical;line-height:1.5}
+.wrongtxt{color:var(--pen);font-size:16px;line-height:1.5}
+textarea{font:inherit;font-size:16px;width:100%;min-height:64px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--bg);color:var(--blue);resize:vertical;line-height:1.5}
 .fixitem{display:flex;flex-direction:column;gap:8px;line-height:1.5}
-.answer{border-left:3px solid var(--ok);padding:6px 12px;background:var(--ok-soft);display:flex;flex-direction:column;gap:2px}
-.prompt{border:2px solid var(--ink);border-radius:10px;padding:18px;background:var(--sheet);display:flex;flex-direction:column;gap:10px}
+.answer{border-radius:10px;padding:8px 12px;background:var(--ok-soft);display:flex;flex-direction:column;gap:2px}
+.prompt{border:2px solid var(--ink);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px}
 .prompt blockquote{margin:0;font-family:var(--display);font-size:20px;line-height:1.4}
-.check{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+.prompt .eyebrow{font-size:13px}
+.check{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;font-size:16px}
 .check li{display:grid;grid-template-columns:22px 1fr;gap:10px}
-.check li::before{content:"";width:16px;height:16px;border:2px solid var(--muted);border-radius:3px;margin-top:4px}
-.work{grid-column:1/-1;min-width:0}
-.work>summary{cursor:pointer;font-weight:700;color:var(--blue);font-size:15px;padding:6px 0}
-.work>summary:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:4px}
-.workbody{display:flex;flex-direction:column;gap:14px;padding-top:10px;min-width:0}
-.workbody .ex{padding:14px}
+.check li::before{content:"";width:16px;height:16px;border:2px solid var(--muted);border-radius:4px;margin-top:4px}
+.donebtn{align-self:flex-start}
+.thesisb{display:flex;flex-direction:column;gap:14px;border-top:1px solid var(--line);padding-top:18px;margin-top:6px}
+.frame{background:var(--card);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.slot{color:var(--blue);font-weight:600}
+.fields{display:flex;flex-direction:column;gap:12px}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-weight:600;font-size:15px;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.bp{font-size:13px;font-weight:700;color:var(--gold-ink)}
+.field input,.field select{font:inherit;font-size:16px;width:100%;border:1px solid var(--line);border-radius:10px;padding:9px 12px;background:var(--card);color:var(--blue)}
+.field select{-webkit-appearance:none;appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 18px) 55%,calc(100% - 12px) 55%;background-size:6px 6px;background-repeat:no-repeat;padding-right:32px}
+.field textarea{min-height:64px;color:var(--blue);background:var(--card)}
+.result{background:var(--card);border:2px solid var(--gold);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.result p{font-size:18px;line-height:1.5}
+.teel{display:flex;flex-direction:column;gap:12px;margin-top:6px}
+.tk{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;background:var(--ink);color:var(--bg);font-size:13px;font-weight:700;margin-right:6px}
+.answer .tk{width:22px;height:22px;font-size:12px}
+.answer>span{line-height:1.5}
+.essaybox{display:flex;flex-direction:column;gap:8px}
+.essaybox textarea{min-height:320px;font-size:17px;line-height:1.6;color:var(--ink);background:var(--card);padding:12px 14px}
+.wc{font-size:15px;color:var(--muted);font-variant-numeric:tabular-nums;margin-right:auto}
+.wc.enough{color:var(--ok);font-weight:700}
+.saved{color:var(--ok)}
+.model{display:flex;flex-direction:column;gap:14px}
+.essay{display:flex;flex-direction:column;gap:12px;background:var(--bg);border-radius:10px;padding:16px;font-size:17px;line-height:1.65}
+.essay mark{background:none;color:inherit}
+.chunklist{display:flex;flex-direction:column;gap:8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips .chunk{font-size:14px;padding:3px 8px}
+.model.show .essay mark{background:var(--blue-soft);color:var(--blue);font-weight:600;border-radius:3px;padding:0 2px}
+.model.show .thesis{background:var(--gold-soft);box-shadow:inset 0 -2px 0 var(--gold)}
+.thesisnote{display:none;font-size:15px;color:var(--muted)}
+.model.show .thesisnote{display:block}
 footer{color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding-top:16px}
-@media (max-width:520px){
-  nav{grid-template-columns:repeat(3,1fr)}
-  .days > li{grid-template-columns:auto 1fr}
-  .days .d{grid-column:2}
-  .days .t{grid-column:2}
-}
-@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 </style>
 </head>
 <body>
-
 <div class="wrap">
   <header>
-    <span class="eyebrow">IELTS Writing Task 2 · 6 weeks · Oct 26 – Dec 6, 2026</span>
-    <h1>Articles, plurals and verb patterns</h1>
-    <p class="lede">Your ideas and organisation are already strong. Cleaning up these three areas is the fastest way to raise your grammar score by half a band. The method: learn every verb, noun and adjective as a <em>chunk</em> with its pattern attached.</p>
-    <div class="example">
-      <span class="hint">From one of your essays</span>
-      <span>If <s>percentage</s> of <s>elderlies</s> keeps <s>cumulate</s>…</span>
-      <span class="fixd">If the percentage of the elderly keeps increasing (or continues to rise)…</span>
-    </div>
-    <p class="routine">About 25 minutes a day on weekdays, 40 minutes for the Saturday essay. Tick each day as you finish it; your ticks are saved in this browser.</p>
+    <span class="eyebrow">IELTS Writing Task 2 · 6 weeks · 26 Oct – 6 Dec 2026</span>
+    <h1>Your grammar plan</h1>
+    <p class="lede">Each day has one short task. Tap a day to open it, do the task, then press <b>Mark as done</b>.</p>
+    <details class="about"><summary>Why this plan?</summary>
+      <div class="aboutbody">
+        <p>Your ideas and organisation are already strong. Fixing articles, plurals and verb patterns is the fastest way to raise your grammar score by half a band. The method: learn each word as a <em>chunk</em> with its pattern attached.</p>
+        <div class="example"><span class="small">From one of your essays</span><span>If <s>percentage</s> of <s>elderlies</s> keeps <s>cumulate</s>…</span><span class="fixd">If the percentage of the elderly keeps increasing…</span></div>
+        <p>About 25 minutes a day, 40 for the essay. Your progress is saved on this device.</p>
+      </div>
+    </details>
   </header>
-
   <nav id="weeknav" aria-label="Weeks"></nav>
   <main id="week"></main>
-
-  <footer>Self-edit checklist, essay prompts and all exercises are original practice material in IELTS Task 2 format. Aim for 250+ words in 40 minutes.</footer>
+  <footer>All exercises and essay prompts are original practice material in IELTS Task 2 format.</footer>
 </div>
-
 <script>
 (function(){
 var Z = ["ø","-","–","—","x","0","no article","none","nothing","zero"]; // ways to write "no article"
@@ -178,11 +221,11 @@ var WEEKS = [
    {t:"___ internet has made ___ information easier to find.",a:[["the"],["ø"]],why:"<b>the</b> internet (unique); information in general = no article."}
   ],
   fix:[
-   {w:"If percentage of elderlies keeps cumulate, government must act.",c:"If the percentage of the elderly keeps increasing, the government must act.",why:"the percentage of / the elderly (no -s) / keeps + -ing / the government."},
+   {w:"If percentage of elderlies keeps cumulate, government must act.",c:"If the percentage of the elderly keeps increasing, the government must act.",alt:"If the percentage of older people keeps increasing, the government must act.",why:"the percentage of / the elderly (the + adjective, no -s) or older people (a general plural, so no article) / keeps + -ing / the government."},
    {w:"The pollution is a big problem in the modern cities.",c:"Pollution is a big problem in modern cities.",why:"General uncountable and general plural: no article."},
    {w:"Number of cars in city centre has risen.",c:"The number of cars in the city centre has risen.",why:"the number of; the city centre (a specific place)."},
-   {w:"Young generation spends more time online than old people.",c:"The younger generation spends more time online than older people (do).",why:"the younger generation is a fixed chunk; compare with older people."},
-   {w:"It is the good idea to give the students a free lunch.",c:"It is a good idea to give students a free lunch.",why:"a good idea (one of many); students in general."},
+   {w:"Young generation spends more time online than old people.",c:"The younger generation spends more time online than older people.",alt:"The younger generation spends more time online than older people do.",why:"the younger generation is a fixed chunk and always takes the. Use older people, not old people: it is more polite and matches younger. It is a general plural, so no article."},
+   {w:"It is the good idea to give the students a free lunch.",c:"It is a good idea to give students a free lunch.",alt:"It is a good idea to give the students a free lunch.",why:"The main error is the good idea: use a good idea (one of many possible ideas). students with no article means students in general. the students is also correct, but it means a specific group, such as the students at one school you have already mentioned."},
    {w:"In conclusion, I believe the education is the key to the success.",c:"In conclusion, I believe education is the key to success.",why:"education and success are general ideas; the key is specific."}
   ],
   prompt:"In many countries, the proportion of older people is steadily increasing. Does this trend have more positive or negative effects on society?"
@@ -391,7 +434,7 @@ var WEEKS = [
 function dayPlan(i){
   var w = WEEKS[i];
   if(i===5) return [
-    ["Review all chunks","Read the chunk tables from Weeks 1–4 aloud. Write five sentences, each using two chunks.",20],
+    ["Review all chunks + thesis builder","Read the chunk tables from Weeks 1–4 aloud and write five sentences, each using two chunks. Then build a thesis statement.",30],
     ["Final check exercises","Do Exercise A and B below.",20],
     ["Timed Essay A","40 minutes, exam conditions. No dictionary.",40],
     ["Self-edit Essay A","Go through the checklist line by line. Count errors in each area.",25],
@@ -402,8 +445,8 @@ function dayPlan(i){
   return [
     ["Learn the chunks","Read the rules. Say each chunk aloud, then write your own sentence for five of them.",25],
     ["Exercise A: fill the gaps","Type your answers and press Check. Redo any wrong ones tomorrow morning.",20],
-    ["Exercise B: fix the sentence","Write the corrected sentence first, then reveal the answer.",20],
-    [i===4?"Correct an old essay":"Chunk hunt",i===4?"Take one of your earlier essays. Underline every article, plural noun and verb pattern, and correct the mistakes.":"In a model essay or newspaper article, find and copy five sentences that use this week's patterns.",25],
+    ["Exercise B + thesis builder","Fix the sentences, then build a thesis statement for a new type of question."+(i===4?" Then write one TEEL paragraph.":""),i===4?45:30],
+    [i===4?"Correct an old essay":"Chunk hunt",i===4?"Take one of your earlier essays. Underline every article, plural noun and verb pattern, and correct the mistakes.":"Read the model essay below and copy five sentences that use this week's chunks.",25],
     ["Plan + one paragraph","Plan this week's essay. Write the introduction and one body paragraph using at least five chunks.",25],
     ["Full essay","Write this week's Task 2 essay in 40 minutes, 250+ words.",40],
     ["Self-edit","Check Saturday's essay with the checklist, then send it to your tutor.",20]
@@ -413,7 +456,7 @@ function dayPlan(i){
 var DN = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
 var MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 function addDays(d,n){ var x=new Date(d.getFullYear(),d.getMonth(),d.getDate()+n); return x; }
-function fmt(d){ return MON[d.getMonth()]+" "+d.getDate(); }
+function fmt(d){ return d.getDate()+" "+MON[d.getMonth()]; }
 function sameDay(a,b){ return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate(); }
 var today = new Date();
 var diff = Math.floor((new Date(today.getFullYear(),today.getMonth(),today.getDate()) - START)/86400000);
@@ -434,26 +477,181 @@ function isRight(val, accepted){
   }
   return false;
 }
-function shown(a){ return a==="ø" ? "— (no article)" : a; }
+function shown(a){ return a==="ø" ? "- (no article)" : a; }
 function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+
+var MODELS = [
+{ q:"Some people believe that young people should be required to do unpaid work in their local community. To what extent do you agree or disagree?",
+  p:[
+"In some countries, there are plans to make community service compulsory for teenagers. Supporters say it would build a sense of responsibility, while critics argue that students are already too busy. [[I strongly agree that young people should be required to do some voluntary work, as it benefits both society and the volunteers themselves.]]",
+"Firstly, compulsory volunteering would help {{the elderly}} and others who need support. In many cities, {{the number of older people}} living alone has risen sharply. If teenagers spent a few hours a month visiting them, they could {{play a role in reducing}} loneliness. Volunteers could also help to protect {{the environment}} by cleaning beaches or planting trees.",
+"Secondly, voluntary work gives {{the younger generation}} skills that school cannot teach. Students learn to talk to strangers, work in teams and solve real problems. {{The majority of employers}} value this kind of experience, and {{the percentage of students}} who include community work on university applications is growing.",
+"Admittedly, some students have very little free time, and forcing them to volunteer could add stress. However, this could be solved by limiting the requirement to around twenty hours a year, which is a small amount of time for {{the young}} to give back.",
+"In conclusion, I believe that requiring young people to volunteer is a sensible policy. {{In the long term}}, it would create stronger communities and more caring citizens."]},
+{ q:"Secondary school students should study a wide range of subjects rather than focusing on a few subjects early. To what extent do you agree or disagree?",
+  p:[
+"In many education systems, teenagers must choose only a few subjects at the age of fifteen or sixteen. Some people believe this helps students focus on their strengths, but others think it narrows their choices too soon. [[I strongly agree that secondary students should study a wide range of subjects, because it keeps their options open and prepares them for a changing job market.]]",
+"The main reason is that most teenagers do not yet know what career they want. Choosing a career is {{one of the most important decisions}} a person makes, and {{each student}} needs time to discover their interests. By taking {{a wide range of courses}}, students can try different areas before deciding. {{A number of teachers have}} noticed that students often find a new passion in a subject they almost dropped.",
+"Furthermore, the job market is changing quickly. {{The number of jobs}} that combine different skills, such as data science or digital design, {{is growing}} every year. Employers want people with {{a great deal of knowledge}} in more than one area.",
+"Some people argue that studying many subjects means learning each one less deeply. However, {{every subject}} adds a useful skill, and students can still specialise at university. {{One useful piece of advice}} that many {{older people}} give is that they wish they had explored more subjects at school.",
+"In conclusion, I agree that a broad curriculum is the better choice for secondary students. It gives them time to find their strengths and the flexibility to adapt to future careers."]},
+{ q:"Mobile phones should be banned in schools. To what extent do you agree or disagree?",
+  p:[
+"Many schools are now discussing whether students should be allowed to bring mobile phones to class. Although phones can be useful learning tools, they also cause many problems. [[I largely agree that phones should be banned during lessons, because they distract students and reduce face-to-face contact, although a few exceptions should be made.]]",
+"Firstly, phones make concentration difficult. Teenagers {{tend to check}} their messages every few minutes, and many {{spend hours scrolling}} through social media instead of studying. Notifications {{make students feel}} that they must reply immediately, so they {{keep thinking}} about their phones even when they are silent. A ban would {{allow students to focus}} on their lessons.",
+"Secondly, a ban would {{encourage students to talk}} to each other during breaks. Without screens, children {{continue to develop}} important social skills, such as making friends and solving disagreements. Clear rules would also {{prevent students from sharing}} unkind messages or photos at school.",
+"On the other hand, some families {{cannot afford to lose}} contact with their children, for example when parents work long hours. For this reason, I would {{suggest keeping}} phones in lockers during the day. Teachers could also {{let students use}} them for research when it is useful.",
+"In conclusion, I believe banning phones in lessons is the right decision. Schools should {{consider introducing}} clear rules so that phones help, rather than harm, students' learning."]},
+{ q:"Public transport should be free for everyone who lives in a large city. To what extent do you agree or disagree?",
+  p:[
+"In many large cities, roads are crowded and the air is polluted. One proposal is to make buses and trains free for all residents. [[I agree with this idea to a large extent, because free public transport would reduce traffic and give everyone fair access to the city, although it would need careful funding.]]",
+"The main benefit is environmental. Private cars {{contribute to air pollution}} and are a major cause of traffic jams. If public transport were free, many drivers would leave their cars at home, which could {{lead to cleaner air}}. This would have a positive {{impact on public health}}, especially for children and older people.",
+"In addition, free transport would give everyone equal {{access to education}}, jobs and healthcare. Many low-income families {{depend on buses}} to get to work, and {{an increase in fares}} can {{result in lost income}}. Some students who are {{capable of succeeding}} at a good school do not attend it because of travel costs.",
+"However, someone must be {{responsible for paying}} for the system. Many taxpayers are {{opposed to paying}} more, and governments must be {{aware of this concern}}. One {{solution to this problem}} is to charge drivers who enter the city centre and use the money to fund buses and trains.",
+"In conclusion, I mostly agree that public transport in large cities should be free. With fair funding, it would make cities cleaner and fairer for everyone."]}
+];
+function modelH(i){
+  var m=MODELS[i]; if(!m) return '';
+  var h='<div class="model" id="model'+i+'"><div class="prompt"><span class="eyebrow">Model essay · agree or disagree</span><blockquote>'+m.q+'</blockquote></div>'+
+    '<p class="hint">Read the essay. Find five sentences that use any of these chunks and copy them into your notebook. Then press <b>Show the patterns</b> to check.</p>'+
+    '<div class="chunklist"><span class="small">This week\'s chunks (from Monday)</span><div class="chips">'+WEEKS[i].chunks.map(function(c){ return '<span class="chunk">'+c[0]+'</span>'; }).join('')+'</div></div><div class="essay">';
+  m.p.forEach(function(par){
+    h+='<p>'+esc(par).replace(/\[\[(.+?)\]\]/g,'<span class="thesis">$1</span>').replace(/\{\{(.+?)\}\}/g,'<mark>$1</mark>')+'</p>';
+  });
+  h+='</div><p class="thesisnote">The highlighted last sentence of the introduction is the <b>thesis statement</b>: it answers the question and gives the writer\'s opinion.</p>'+
+    '<div class="actions"><button class="btn ghost" type="button" data-model="'+i+'">Show the patterns</button></div></div>';
+  return h;
+}
+
+var THESIS = [
+{ type:"Opinion · agree or disagree",
+  q:"Some people think that all university students should study at least one subject outside their main area, such as art or history. To what extent do you agree or disagree?",
+  how:"Say clearly whether you agree or disagree, then give two reasons. Reason 1 becomes body paragraph 1; reason 2 becomes body paragraph 2.",
+  frame:["I ",{sel:["agree","strongly agree","disagree","strongly disagree"],l:"Your position"}," that ",{f:"the question in your own words",l:"Restate the question"},", because ",{f:"reason 1",l:"Reason 1",bp:1}," and ",{f:"reason 2",l:"Reason 2",bp:2},"."],
+  model:"I strongly agree that university students should study at least one subject outside their main area, because it develops a wider range of skills and helps them understand other people's points of view."},
+{ type:"Discuss both views and give your opinion",
+  q:"Some people believe that children should start learning a foreign language at primary school. Others think it is better to wait until secondary school. Discuss both views and give your own opinion.",
+  how:"Mention the view you disagree with and its main reason first (body paragraph 1), then your own view and its main reason (body paragraph 2).",
+  frame:["Although some people believe that ",{f:"the view you disagree with",l:"The other view"}," because ",{f:"their main reason",l:"Their reason",bp:1},", I believe that ",{f:"your view",l:"Your view"}," because ",{f:"your main reason",l:"Your reason",bp:2},"."],
+  model:"Although some people believe that children should wait until secondary school because they first need to master their own language, I believe that starting at primary school is better because young children learn pronunciation more easily."},
+{ type:"Advantages and disadvantages · which outweighs?",
+  q:"More and more people are working from home instead of in an office. Do the advantages of this outweigh the disadvantages?",
+  how:"Name the main advantage (body paragraph 1) and the main disadvantage (body paragraph 2), and say clearly which one is stronger.",
+  frame:["Although ",{f:"the trend in your own words",l:"Restate the trend"}," has the advantage of ",{f:"the main advantage",l:"Advantage",bp:1},", I believe this is ",{sel:["outweighed by","more important than"],l:"Which is stronger?"}," the disadvantage of ",{f:"the main disadvantage",l:"Disadvantage",bp:2},"."],
+  model:"Although working from home has the advantage of saving people time on commuting, I believe this is outweighed by the disadvantage of losing face-to-face teamwork with colleagues."},
+{ type:"Problem and solution · causes and solutions",
+  q:"Many young people today do not get enough exercise. What are the causes of this problem, and what solutions can you suggest?",
+  how:"Answer both parts of the question: the main cause (body paragraph 1) and the best solution (body paragraph 2).",
+  frame:["The main cause of ",{f:"the problem in your own words",l:"Restate the problem"}," is ",{f:"the main cause",l:"Cause",bp:1},", and the most effective solution is ",{f:"the best solution",l:"Solution",bp:2},"."],
+  model:"The main cause of the lack of exercise among young people is the amount of time they spend on screens, and the most effective solution is to make sport a daily part of the school timetable."},
+{ type:"Positive or negative development",
+  q:"In many countries, more people are choosing to shop online rather than in shops. Is this a positive or negative development?",
+  how:"Say clearly whether the change is positive or negative, then give two reasons. This week you will also write body paragraph 1 in full.",
+  frame:["I believe this is a ",{sel:["largely positive","largely negative"],l:"Positive or negative?"}," development because ",{f:"reason 1",l:"Reason 1",bp:1}," and ",{f:"reason 2",l:"Reason 2",bp:2},"."],
+  model:"I believe this is a largely positive development because online shopping saves people a great deal of time and gives them access to a wider range of products.",
+  teel:true},
+{ type:"Two-part question · direct questions",
+  q:"Many people today choose to live alone. Why is this happening? What effects does this have on society?",
+  how:"Answer each question directly: the main reason (body paragraph 1) and the main effect (body paragraph 2).",
+  frame:["More people ",{f:"the trend in your own words",l:"Restate the trend"}," mainly because ",{f:"the main reason",l:"Answer to question 1",bp:1},", and the main effect of this is ",{f:"the main effect",l:"Answer to question 2",bp:2},"."],
+  model:"More people live alone than in the past mainly because they marry later, and the main effect of this is a growing demand for small apartments in cities."}
+];
+var TEEL = [
+ {k:"T",l:"Topic sentence",h:"State reason 1 from your thesis as the main idea of the paragraph.",m:"The main benefit of online shopping is that it saves people a great deal of time."},
+ {k:"E",l:"Explain",h:"Explain what you mean in one or two sentences.",m:"Instead of travelling to several shops, customers can compare prices and place an order from home in a few minutes."},
+ {k:"E",l:"Example / evidence",h:"Give one specific, realistic example.",m:"For example, a working parent can order a week's groceries during a lunch break and have them delivered the same evening."},
+ {k:"W",l:"Warrant",h:"Say WHY your example proves your point. Start with \"This shows that…\" or \"This matters because…\"",m:"This shows that online shopping returns hours to busy people, and because working adults have very little free time, saving even a few hours a week improves their quality of life."},
+ {k:"L",l:"Link",h:"Link back to the question and your thesis.",m:"Therefore, the time it saves is a clear reason why the move to online shopping is a positive development."}
+];
+function thesisH(i){
+  var t=THESIS[i], n=0, h='<div class="thesisb" id="tb'+i+'"><h3>Thesis builder</h3>'+
+    '<div class="prompt"><span class="eyebrow">Question type: '+t.type+'</span><blockquote>'+t.q+'</blockquote></div>'+
+    '<p class="hint">'+t.how+'</p>'+
+    '<div class="frame"><span class="small">The frame</span><p>';
+  t.frame.forEach(function(p){ h+= typeof p==='string' ? esc(p) : '<span class="slot">['+esc(p.l.toLowerCase())+']</span>'; });
+  h+='</p></div><div class="fields">';
+  t.frame.forEach(function(p){
+    if(typeof p==='string') return;
+    var id='th'+i+'_'+n, bp=p.bp?'<span class="bp">→ Body paragraph '+p.bp+'</span>':'';
+    h+='<div class="field"><label for="'+id+'">'+esc(p.l)+bp+'</label>';
+    if(p.sel){ h+='<select id="'+id+'" data-th="'+i+'"><option value="">Choose…</option>'+p.sel.map(function(o){ return '<option>'+o+'</option>'; }).join('')+'</select>'; }
+    else h+='<input type="text" id="'+id+'" data-th="'+i+'" placeholder="'+esc(p.f)+'" autocomplete="off" autocapitalize="off">';
+    h+='</div>'; n++;
+  });
+  h+='</div><div class="result"><span class="small">Your thesis statement</span><p id="thout'+i+'"></p>'+
+    '<div class="actions"><button class="btn ghost small-btn" type="button" data-thcopy="'+i+'">Copy</button><button class="btn ghost small-btn" type="button" data-thmodel="'+i+'">Show a model</button></div>'+
+    '<div class="answer" id="thmodel'+i+'" hidden><span class="small">Model thesis</span><span>'+t.model+'</span></div></div>'+
+    '<ul class="check"><li><span>It answers the question directly in one sentence.</span></li><li><span>It gives exactly two points.</span></li><li><span>Each point could become one body paragraph.</span></li></ul>';
+  if(t.teel){
+    h+='<div class="teel"><h3>Write body paragraph 1 (TEEL)</h3><p class="hint">Develop <b>reason 1</b> from your thesis. Fill in each part, and make sure the <b>warrant</b> clearly explains why your example proves your point.</p>';
+    TEEL.forEach(function(s,si){
+      h+='<div class="field"><label for="te'+i+'_'+si+'"><span class="tk">'+s.k+'</span> '+s.l+'</label><span class="small">'+s.h+'</span><textarea id="te'+i+'_'+si+'" data-te="'+i+'" rows="2"></textarea></div>';
+    });
+    h+='<div class="actions"><span class="wc" id="tewc'+i+'">0 words</span><button class="btn ghost small-btn" type="button" data-tecopy="'+i+'">Copy paragraph</button><button class="btn ghost small-btn" type="button" data-temodel="'+i+'">Show a model</button></div>'+
+      '<div class="answer" id="temodel'+i+'" hidden>'+TEEL.map(function(s){ return '<span><b class="tk">'+s.k+'</b> '+s.m+'</span>'; }).join('')+'</div></div>';
+  }
+  return h+'</div>';
+}
+function copyText(t,b,label){
+  function done(){ b.textContent='Copied ✓'; setTimeout(function(){ b.textContent=label; },2000); }
+  function fallback(){ var x=document.createElement('textarea'); x.value=t; x.setAttribute('readonly',''); x.style.position='fixed'; x.style.opacity='0'; document.body.appendChild(x); x.select(); x.setSelectionRange(0,t.length); try{ document.execCommand('copy'); done(); }catch(e){} document.body.removeChild(x); }
+  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(done, fallback); } else fallback();
+}
+function wireThesis(i){
+  var box=document.getElementById('tb'+i); if(!box) return;
+  var t=THESIS[i], ins=box.querySelectorAll('[data-th]'), out=document.getElementById('thout'+i);
+  function build(){
+    var n=0, s='', filled=0, total=0;
+    t.frame.forEach(function(p){
+      if(typeof p==='string'){ s+=esc(p); return; }
+      var v=ins[n++].value.trim(); total++;
+      if(v){ filled++; s+=esc(v); } else s+='<span class="slot">['+esc(p.l.toLowerCase())+']</span>';
+    });
+    out.innerHTML=s; return filled===total;
+  }
+  Array.prototype.forEach.call(ins, function(el,n){
+    var k='th'+i+'_'+n; el.value=essays[k]||'';
+    el.addEventListener('input', function(){ essays[k]=el.value; saveE(essays); build(); });
+    el.addEventListener('change', function(){ essays[k]=el.value; saveE(essays); build(); });
+  });
+  build();
+  box.querySelector('[data-thcopy]').addEventListener('click', function(){ copyText(out.textContent, this, 'Copy'); });
+  box.querySelector('[data-thmodel]').addEventListener('click', function(){ var m=document.getElementById('thmodel'+i); m.hidden=!m.hidden; this.textContent=m.hidden?'Show a model':'Hide the model'; });
+  if(t.teel){
+    var tes=box.querySelectorAll('[data-te]'), wc=document.getElementById('tewc'+i);
+    function para(){ var a=[]; Array.prototype.forEach.call(tes,function(x){ if(x.value.trim()) a.push(x.value.trim()); }); return a.join(' '); }
+    function count(){ var n=words(para()); wc.textContent=n+(n===1?' word':' words'); }
+    Array.prototype.forEach.call(tes, function(el,n){
+      var k='te'+i+'_'+n; el.value=essays[k]||'';
+      el.addEventListener('input', function(){ essays[k]=el.value; saveE(essays); count(); });
+    });
+    count();
+    box.querySelector('[data-tecopy]').addEventListener('click', function(){ copyText(t.q+'\n\nThesis: '+out.textContent+'\n\nBody paragraph 1:\n'+para(), this, 'Copy paragraph'); });
+    box.querySelector('[data-temodel]').addEventListener('click', function(){ var m=document.getElementById('temodel'+i); m.hidden=!m.hidden; this.textContent=m.hidden?'Show a model':'Hide the model'; });
+  }
+}
+
+var R1=[[0,1],[2,4],[4],[0],[-1,2],[4,1],[3],[2,2],[0,4],[4,2]];
+WEEKS[0].gap.forEach(function(g,k){ g.r=R1[k]; });
 
 var nav = document.getElementById("weeknav");
 var main = document.getElementById("week");
+var cur = 0;
 
-function renderNav(cur){
+function renderNav(c){
   var h="";
   for(var i=0;i<6;i++){
     var s=addDays(START,i*7);
-    h+='<button type="button" id="wk'+(i+1)+'" data-w="'+i+'" aria-current="'+(i===cur)+'"'+(i===nowWeek?' class="now"':'')+'>Week '+(i+1)+'<small>'+fmt(s)+'</small></button>';
+    h+='<button type="button" data-w="'+i+'" aria-current="'+(i===c)+'"'+(i===nowWeek?' class="now"':'')+'>Week '+(i+1)+'<small>'+fmt(s)+'</small></button>';
   }
   nav.innerHTML=h;
+  var on=nav.querySelector('[aria-current="true"]');
+  if(on && on.scrollIntoView){ try{ nav.scrollLeft = on.offsetLeft - 16; }catch(e){} }
 }
 
-function render(i){
-  renderNav(i);
-  var w=WEEKS[i], s=addDays(START,i*7), e=addDays(s,6), plan=dayPlan(i), h="";
-
-  var rulesH='<h3>The rules</h3><ul class="rules">';
+function buildWork(i){
+  var w=WEEKS[i];
+  var rulesH='<p>'+w.focus+'</p><h3>The rules</h3><ul class="rules">';
   w.rules.forEach(function(r){ rulesH+='<li>'+r+'</li>'; });
   rulesH+='</ul>';
   if(w.chunks.length){
@@ -461,8 +659,7 @@ function render(i){
     w.chunks.forEach(function(c){ rulesH+='<tr><td>'+c[0]+'</td><td>'+c[1]+'</td></tr>'; });
     rulesH+='</tbody></table></div>';
   }
-
-  var exA='<div class="ex" id="exA"><div><h3>Exercise A: fill the gaps</h3><p class="hint">'+(i===0?'Write a, an, the, or — for no article.':'Write the missing word, or the correct form of the word in brackets. Write — if no article is needed.')+'</p></div><ol>';
+  var exA='<div class="ex" id="exA"><p class="hint">'+(i===0?'Write <b>a</b>, <b>an</b>, <b>the</b>, or a dash <b>-</b> if no article is needed.':'Write the missing word, or the correct form of the word in brackets. Write a dash - if no article is needed.')+'</p><ol>';
   w.gap.forEach(function(g,gi){
     var parts=g.t.split("___"), line="";
     for(var p=0;p<parts.length;p++){
@@ -475,90 +672,180 @@ function render(i){
     }
     exA+='<li>'+line+'<span class="why" hidden id="why'+i+'_'+gi+'"></span></li>';
   });
-  exA+='</ol><div class="actions"><button class="btn" type="button" id="checkA">Check answers</button><button class="btn ghost" type="button" id="showA">Show all answers</button><span class="score" id="scoreA" aria-live="polite"></span></div></div>';
-
-  var exB='<div class="ex" id="exB"><div><h3>Exercise B: fix the sentence</h3><p class="hint">Each sentence has one or more errors. Write the corrected sentence, then reveal the answer and compare.</p></div><ol>';
+  exA+='</ol><div class="actions"><button class="btn" type="button" id="checkA">Check answers</button><button class="btn ghost" type="button" id="showA">Show answers</button><span class="score" id="scoreA" aria-live="polite"></span></div></div>';
+  var exB='<div class="ex" id="exB"><p class="hint">Each sentence has one or more mistakes. Write it correctly, then check.</p><ol>';
   w.fix.forEach(function(f,fi){
-    exB+='<li><div class="fixitem"><span class="wrongtxt">'+esc(f.w)+'</span><textarea id="f'+i+'_'+fi+'" rows="2" aria-label="Your correction for sentence '+(fi+1)+'" placeholder="Your corrected sentence"></textarea>'+
-       '<div class="actions"><button class="btn ghost" type="button" data-reveal="'+fi+'">Reveal answer</button></div>'+
-       '<div class="answer" id="ans'+i+'_'+fi+'" hidden><span class="fixd">'+esc(f.c)+'</span><span class="hint">'+esc(f.why)+'</span></div></div></li>';
+    exB+='<li><div class="fixitem"><span class="wrongtxt">'+esc(f.w)+'</span><textarea id="f'+i+'_'+fi+'" rows="2" aria-label="Your correction for sentence '+(fi+1)+'" placeholder="Write it correctly here"></textarea>'+
+       '<div class="actions"><button class="btn ghost small-btn" type="button" data-reveal="'+fi+'">Check</button></div>'+
+       '<div class="answer" id="ans'+i+'_'+fi+'" hidden><span class="fixd">'+esc(f.c)+'</span>'+(f.alt?'<span>Also correct: <span class="fixd">'+esc(f.alt)+'</span></span>':'')+'<span class="hint">'+esc(f.why)+'</span></div></div></li>';
   });
   exB+='</ol></div>';
-
   var prompts=w.prompt.split('<br><br>');
   function promptH(k){
-    return '<div class="prompt"><span class="eyebrow">'+(i===5?'Timed essay · 40 minutes · 250+ words':'This week\'s Task 2 essay · 40 minutes · 250+ words')+'</span><blockquote>'+prompts[k]+'</blockquote>'+
+    return '<div class="prompt"><span class="eyebrow">'+(i===5?'Timed essay · 40 minutes · 250+ words':'This week\'s essay · 40 minutes · 250+ words')+'</span><blockquote>'+prompts[k]+'</blockquote>'+
       (i<5?'<p class="hint">Use at least five chunks from this week and underline them.</p>':'')+'</div>';
   }
   var checkH='<h3>Self-edit checklist</h3><ul class="check">';
   CHECKLIST.forEach(function(c){ checkH+='<li><span>'+c+'</span></li>'; });
   checkH+='</ul>';
+  function box(k,d,label){
+    return '<div class="essaybox"><label class="small" for="es'+i+'_'+k+'_'+d+'">'+label+'</label>'+
+      '<textarea class="essay-in" id="es'+i+'_'+k+'_'+d+'" data-ekey="w'+i+'p'+k+'" data-q="'+esc(prompts[k].replace(/<[^>]+>/g,''))+'" rows="14" placeholder="Start writing here…" spellcheck="false" autocorrect="off" autocapitalize="sentences"></textarea>'+
+      '<div class="actions"><span class="wc" aria-live="polite">0 words</span><button class="btn ghost small-btn" type="button" data-copy>Copy</button><button class="btn ghost small-btn" type="button" data-dl>Download</button><span class="saved small"></span></div>'+
+      '<p class="small">Your writing is saved on this device as you type. Copy or download it to keep it or to send it to your tutor.</p></div>';
+  }
+  return i===5 ? [rulesH+thesisH(i), exA+exB, promptH(0)+box(0,2,'Essay A'), checkH+box(0,3,'Essay A: edit your essay here'), promptH(1)+box(1,4,'Essay B'), checkH+box(1,5,'Essay B: edit your essay here'), ''] :
+    [rulesH, exA, exB+thesisH(i), i===4?checkH:modelH(i), promptH(0)+box(0,4,'Your plan, introduction and one body paragraph'), promptH(0)+box(0,5,'Your essay (it continues from yesterday)'), checkH+box(0,6,'Edit your essay here')];
+}
 
-  var work = i===5 ? [
-    ["Rules from this week",rulesH],["Exercises A and B",exA+exB],["Essay A prompt",promptH(0)],["Checklist",checkH],
-    ["Essay B prompt",promptH(1)],["Checklist",checkH],null
-  ] : [
-    ["Rules and chunks",rulesH],["Exercise A",exA],["Exercise B",exB],
-    i===4?["Checklist",checkH]:null,["Essay prompt",promptH(0)],["Essay prompt",promptH(0)],["Checklist",checkH]
-  ];
+function doneCount(i){ var n=0; for(var d=0;d<7;d++){ if(state["w"+i+"d"+d]) n++; } return n; }
 
-  h+='<section><div class="weekhead"><span class="eyebrow">Week '+(i+1)+' · '+fmt(s)+' – '+fmt(e)+'</span><h2>'+w.title+'</h2><p class="lede">'+w.focus+'</p></div>';
-  h+='<ul class="days">';
-  var anyToday=false, d;
-  for(d=0;d<7;d++){ if(sameDay(addDays(s,d),today)) anyToday=true; }
+function todayCard(i,s,plan,todayIdx){
+  var h="", d, focus=todayIdx;
+  if(focus<0 || state["w"+i+"d"+focus]){ focus=-1; for(d=0;d<7;d++){ if(!state["w"+i+"d"+d]){ focus=d; break; } } }
+  if(focus>=0){
+    var fd=addDays(s,focus);
+    h+='<div class="today"><span class="k">'+(focus===todayIdx?'Today':'Next up')+' · '+DN[focus]+' '+fmt(fd)+'</span><h3>'+plan[focus][0]+'</h3>'+
+       '<p class="m">'+plan[focus][1]+' <b>'+plan[focus][2]+' min</b></p>'+
+       '<div class="actions"><button class="btn" type="button" id="startbtn" data-d="'+focus+'">Start</button></div></div>';
+  } else {
+    h+='<div class="today alldone"><span class="k">Week complete</span><h3>Well done!</h3><p class="m">'+(i<5?'Every task this week is done. Move on to Week '+(i+2)+' when it starts.':'You have finished the whole plan.')+'</p></div>';
+  }
+
+  return h;
+}
+
+function render(i){
+  cur=i; renderNav(i);
+  var w=WEEKS[i], s=addDays(START,i*7), e=addDays(s,6), plan=dayPlan(i), work=buildWork(i), h="";
+  var todayIdx=-1, d;
+  for(d=0;d<7;d++){ if(sameDay(addDays(s,d),today)) todayIdx=d; }
+  var n=doneCount(i);
+
+  h+='<section><div class="weekhead"><span class="eyebrow">Week '+(i+1)+' of 6 · '+fmt(s)+' – '+fmt(e)+'</span><h2>'+w.title+'</h2>'+
+     '<div class="progress"><div class="bar"><i id="barfill" style="width:'+Math.round(n/7*100)+'%"></i></div><span id="progtxt">'+n+' of 7 done</span></div></div>';
+
+  h+=todayCard(i,s,plan,todayIdx);
+
+  h+='<h3>This week</h3><ul class="days">';
   for(d=0;d<7;d++){
-    var dt=addDays(s,d), key="w"+i+"d"+d, done=!!state[key], isToday=sameDay(dt,today);
-    var open = isToday || (!anyToday && d===0);
-    h+='<li class="'+(isToday?'today ':'')+(done?'done':'')+'"><input type="checkbox" id="'+key+'" data-k="'+key+'"'+(done?' checked':'')+' aria-label="Done: '+DN[d]+' '+fmt(dt)+'">'+
-       '<div class="d">'+DN[d]+'<small>'+fmt(dt)+'</small></div><div class="t"><b>'+plan[d][0]+' <span class="mins">'+plan[d][2]+' min</span></b><span>'+plan[d][1]+'</span></div>'+
-       (work[d]?'<details class="work"'+(open?' open':'')+'><summary>'+work[d][0]+'</summary><div class="workbody">'+work[d][1]+'</div></details>':'')+'</li>';
+    var dt=addDays(s,d), key="w"+i+"d"+d, done=!!state[key];
+    h+='<li id="day'+d+'" class="'+(d===todayIdx?'isToday ':'')+(done?'done':'')+'">'+
+       '<details id="det'+d+'"><summary><span class="dd">'+DN[d]+' '+fmt(dt)+(d===todayIdx?' · Today':'')+'</span><b>'+plan[d][0]+'</b><span class="mins">'+plan[d][2]+' min</span><span class="chev" aria-hidden="true"></span></summary>'+
+       '<div class="daybody"><p class="desc">'+plan[d][1]+'</p>'+(work[d]||'')+
+       '<button class="btn small-btn donebtn" type="button" data-done="'+d+'">'+(done?'Done ✓':'Mark as done')+'</button></div></details></li>';
   }
   h+='</ul></section>';
-
   main.innerHTML=h;
   wire(i);
 }
 
-function wire(i){
-  var w=WEEKS[i];
-  Array.prototype.forEach.call(main.querySelectorAll('.days > li > input[type=checkbox]'), function(cb){
-    cb.addEventListener('change', function(){
-      state[cb.getAttribute('data-k')]=cb.checked; save(state);
-      cb.parentNode.className=cb.parentNode.className.replace(/\bdone\b/,'').trim()+(cb.checked?' done':'');
+function setDone(i,d,val){
+  var key="w"+i+"d"+d; state[key]=val; save(state);
+  var li=document.getElementById('day'+d);
+  li.className=li.className.replace(/\bdone\b/,'').trim()+(val?' done':'');
+  li.querySelector('[data-done]').textContent=val?'Done ✓':'Mark as done';
+  var n=doneCount(i);
+  document.getElementById('barfill').style.width=Math.round(n/7*100)+'%';
+  document.getElementById('progtxt').textContent=n+' of 7 done';
+  var s=addDays(START,i*7), todayIdx=-1;
+  for(var k=0;k<7;k++){ if(sameDay(addDays(s,k),today)) todayIdx=k; }
+  var t=main.querySelector('.today'), tmp=document.createElement('div');
+  tmp.innerHTML=todayCard(i,s,dayPlan(i),todayIdx);
+  t.parentNode.replaceChild(tmp.firstChild,t);
+  wireStart();
+}
+function loadE(){ try{ return JSON.parse(localStorage.getItem("t2essays")||"{}"); }catch(e){ return {}; } }
+function saveE(o){ try{ localStorage.setItem("t2essays", JSON.stringify(o)); return true; }catch(e){ return false; } }
+var essays = loadE();
+function words(t){ var m=(t||"").trim().match(/\S+/g); return m?m.length:0; }
+function wireEssays(){
+  Array.prototype.forEach.call(main.querySelectorAll('.essaybox'), function(bx){
+    var ta=bx.querySelector('textarea'), k=ta.getAttribute('data-ekey'), wc=bx.querySelector('.wc'), sv=bx.querySelector('.saved');
+    function count(){ var n=words(ta.value); wc.textContent=n+(n===1?' word':' words')+(n>=250?' ✓':''); wc.className='wc'+(n>=250?' enough':''); }
+    ta.value=essays[k]||''; count();
+    ta.addEventListener('input', function(){
+      essays[k]=ta.value; var ok=saveE(essays); count(); sv.textContent=ok?'Saved':'';
+      Array.prototype.forEach.call(main.querySelectorAll('textarea[data-ekey="'+k+'"]'), function(o){ if(o!==ta) o.value=ta.value; });
+    });
+    function fullText(){ return ta.getAttribute('data-q')+'\n\n'+ta.value+'\n\n('+words(ta.value)+' words)'; }
+    bx.querySelector('[data-copy]').addEventListener('click', function(){
+      var b=this, t=fullText();
+      function done(){ b.textContent='Copied ✓'; setTimeout(function(){ b.textContent='Copy'; },2000); }
+      function fallback(){ var x=document.createElement('textarea'); x.value=t; x.setAttribute('readonly',''); x.style.position='fixed'; x.style.opacity='0'; document.body.appendChild(x); x.select(); x.setSelectionRange(0,t.length); try{ document.execCommand('copy'); done(); }catch(e){} document.body.removeChild(x); }
+      if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(done, fallback); } else fallback();
+    });
+    bx.querySelector('[data-dl]').addEventListener('click', function(){
+      var blob=new Blob([fullText()],{type:'text/plain;charset=utf-8'}), url=URL.createObjectURL(blob), a=document.createElement('a');
+      a.href=url; var mm=/w(\d)p(\d)/.exec(k); a.download='IELTS-essay-week'+(+mm[1]+1)+(mm[1]==='5'?(mm[2]==='0'?'-A':'-B'):'')+'.txt'; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); },1000);
     });
   });
+}
+function wireStart(){
+  var sb=document.getElementById('startbtn');
+  if(sb) sb.addEventListener('click', function(){
+    var d=sb.getAttribute('data-d'), det=document.getElementById('det'+d);
+    det.open=true; var li=document.getElementById('day'+d); if(li.scrollIntoView) li.scrollIntoView({block:'start'});
+  });
+}
+
+function wire(i){
+  var w=WEEKS[i];
+  Array.prototype.forEach.call(main.querySelectorAll('[data-done]'), function(b){
+    b.addEventListener('click', function(){
+      var d=+b.getAttribute('data-done'), was=!!state["w"+i+"d"+d];
+      setDone(i,d,!was);
+      if(!was){ var t=main.querySelector('.today'); if(t && t.scrollIntoView) t.scrollIntoView({block:'center'}); }
+    });
+  });
+  Array.prototype.forEach.call(main.querySelectorAll('[data-model]'), function(b){
+    b.addEventListener('click', function(){
+      var m=document.getElementById('model'+b.getAttribute('data-model'));
+      var on=m.className.indexOf(' show')<0;
+      m.className=on?m.className+' show':m.className.replace(' show','');
+      b.textContent=on?'Hide the patterns':'Show the patterns';
+    });
+  });
+  wireStart();
+  wireEssays();
+  wireThesis(i);
   function mark(reveal){
     var right=0,total=0;
     w.gap.forEach(function(g,gi){
-      var all=true;
+      var all=true, ruleIdx=[];
       g.a.forEach(function(acc,p){
-        var el=document.getElementById('g'+i+'_'+gi+'_'+p); total++;
-        if(reveal && !isRight(el.value,acc)) el.value=shown(acc[0])==="— (no article)"?"—":acc[0];
+        var el=document.getElementById('g'+i+'_'+gi+'_'+p); if(!el) return; total++;
+        if(!isRight(el.value,acc) && g.r && g.r[p]>=0 && ruleIdx.indexOf(g.r[p])<0) ruleIdx.push(g.r[p]);
+        if(reveal && !isRight(el.value,acc)) el.value=acc[0]==="ø"?"-":acc[0];
         var ok=isRight(el.value,acc);
         el.className='gap '+(ok?'right':'wrong'); if(ok) right++; else all=false;
       });
-      var why=document.getElementById('why'+i+'_'+gi);
+      var why=document.getElementById('why'+i+'_'+gi); if(!why) return;
       var ans=g.a.map(function(acc){ return acc.map(shown).join(' / '); }).join(' · ');
-      why.innerHTML=(all?'':'<b>Answer: '+esc(ans)+'.</b> ')+g.why;
+      var rulesTxt=(!all && !reveal)?ruleIdx.map(function(r){ return '<span class="rule">Rule: '+w.rules[r]+'</span>'; }).join(''):'';
+      why.innerHTML=(all?'':'<b>Answer: '+esc(ans)+'.</b> ')+g.why+rulesTxt;
       why.hidden=false;
     });
-    document.getElementById('scoreA').textContent=reveal?'Answers shown':right+' / '+total+' correct';
+    var sc=document.getElementById('scoreA'); if(sc) sc.textContent=reveal?'Answers shown':right+' / '+total+' correct';
   }
-  document.getElementById('checkA').addEventListener('click', function(){ mark(false); });
-  document.getElementById('showA').addEventListener('click', function(){ mark(true); });
+  var ca=document.getElementById('checkA'), sa=document.getElementById('showA');
+  if(ca) ca.addEventListener('click', function(){ mark(false); });
+  if(sa) sa.addEventListener('click', function(){ mark(true); });
   Array.prototype.forEach.call(main.querySelectorAll('[data-reveal]'), function(b){
     b.addEventListener('click', function(){
       var a=document.getElementById('ans'+i+'_'+b.getAttribute('data-reveal'));
-      a.hidden=!a.hidden; b.textContent=a.hidden?'Reveal answer':'Hide answer';
+      a.hidden=!a.hidden; b.textContent=a.hidden?'Check':'Hide answer';
     });
   });
 }
 
 nav.addEventListener('click', function(e){
-  var b=e.target.closest ? e.target.closest('button') : null; if(!b) return;
-  var n=+b.getAttribute('data-w'); render(n);
+  var t=e.target; while(t && t!==nav && t.tagName!=='BUTTON') t=t.parentNode;
+  if(!t || t===nav) return;
+  var n=+t.getAttribute('data-w'); render(n);
   try{ history.replaceState(null,'','#week'+(n+1)); }catch(err){}
-  nav.scrollIntoView({block:'start'});
+  window.scrollTo(0, Math.max(0, nav.offsetTop - 8));
 });
 
 var m=/^#week([1-6])$/.exec(location.hash||"");
