@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>History Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+:root{
+  --bg:#f4efe6; --paper:#fffdf8; --ink:#1f2328; --muted:#5b6168; --line:#ded5c4;
+  --accent:#b23a2e; --accent-ink:#ffffff; --blue:#1f4e79; --gold:#c8962c;
+  --museum:#7a4b9a; --university:#1f4e79; --government:#2e6b3a; --news:#a0522d; --court:#3b3b3b; --other:#b23a2e;
+  --shadow:0 1px 2px rgba(0,0,0,.06),0 4px 14px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Source Sans 3",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:17px;line-height:1.5;-webkit-text-size-adjust:100%}
+a{color:var(--blue)}
+.wrap{max-width:1000px;margin:0 auto;padding:20px 16px 80px}
+header.top{border-bottom:3px solid var(--ink);padding-bottom:14px;margin-bottom:18px}
+.eyebrow{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:700}
+h1{font-family:"Fraunces",Georgia,serif;font-size:clamp(28px,6vw,44px);line-height:1.1;margin:6px 0 10px}
+.bq-label{font-weight:700;font-size:14px;color:var(--muted);margin-bottom:4px;display:block}
+textarea,input,select{font:inherit;color:inherit}
+#bigq{width:100%;border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:10px 12px;font-family:"Fraunces",Georgia,serif;font-size:20px;resize:vertical;min-height:64px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:18px 0}
+.btn{-webkit-appearance:none;appearance:none;border:0;border-radius:999px;padding:10px 18px;font-weight:700;font-size:16px;cursor:pointer;background:var(--accent);color:var(--accent-ink);min-height:44px}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.btn.small{padding:6px 12px;font-size:14px;min-height:34px}
+.status{font-size:14px;color:var(--muted);margin-left:auto}
+.status.err{color:var(--accent);font-weight:700}
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-bottom:16px}
+.tab{background:none;border:0;border-bottom:3px solid transparent;padding:8px 12px;font-weight:700;font-size:16px;color:var(--muted);cursor:pointer}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+/* timeline */
+.timeline{position:relative;padding-left:28px}
+.timeline:before{content:"";position:absolute;left:9px;top:4px;bottom:4px;width:3px;background:var(--ink);border-radius:2px}
+.yeargroup{position:relative;margin-bottom:22px}
+.year{position:relative;font-family:"Fraunces",Georgia,serif;font-size:24px;font-weight:700;margin:0 0 8px}
+.year:before{content:"";position:absolute;left:-26px;top:9px;width:15px;height:15px;border-radius:50%;background:var(--paper);border:3px solid var(--accent)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
+.card .img{width:100%;aspect-ratio:16/10;object-fit:cover;background:#e9e2d4;display:block}
+.card .body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.pill{font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:#efe7d8;color:var(--ink)}
+.pill.kind{background:var(--ink);color:#fff}
+.pill.src{color:#fff}
+.card h3{margin:0;font-size:19px;line-height:1.25}
+.card p{margin:0;color:#2c3136;white-space:pre-wrap}
+.links{display:flex;flex-wrap:wrap;gap:12px;font-size:15px;margin-top:auto;padding-top:6px}
+.actions{display:flex;gap:8px;margin-top:8px}
+.section-h{font-family:"Fraunces",Georgia,serif;font-size:22px;margin:4px 0 10px}
+.id-cards{margin-bottom:24px}
+.idcard{border-top:5px solid var(--gold)}
+.idchart{text-align:center;padding:6px 0}
+.idname{display:inline-block;font-family:"Fraunces",Georgia,serif;font-size:22px;font-weight:700;border:3px solid var(--ink);border-radius:999px;padding:6px 18px;margin:6px 0 12px}
+.idwords{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.idword{background:#f3ead6;border:1px solid var(--line);border-radius:8px;padding:3px 9px;font-size:15px}
+.idword.muted{color:var(--muted);font-style:italic}
+.card.k-upstander{border-left:6px solid var(--government)}
+.card.k-bystander{border-left:6px solid var(--gold)}
+.card.k-perpetrator{border-left:6px solid var(--accent)}
+.card.k-memory{border-left:6px solid var(--museum)}
+.card.k-novel{border-left:6px solid var(--blue)}
+.field .hint:empty{display:none}
+.empty{background:var(--paper);border:2px dashed var(--line);border-radius:14px;padding:24px;text-align:center;color:var(--muted)}
+/* script */
+.script-box{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:var(--shadow)}
+#script{width:100%;min-height:340px;border:1px solid var(--line);border-radius:10px;padding:12px;font-size:18px;line-height:1.6;resize:vertical;background:#fff}
+.counter{display:flex;flex-wrap:wrap;gap:16px;font-size:15px;color:var(--muted);margin-top:8px}
+.counter b{color:var(--ink)}
+.tips{font-size:15px;color:var(--muted);margin:0 0 10px}
+.hidden{display:none !important}
+/* modal */
+.overlay{position:fixed;inset:0;top:0;left:0;right:0;bottom:0;background:rgba(20,20,20,.5);display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto;-webkit-overflow-scrolling:touch;z-index:10}
+.modal{background:var(--paper);border-radius:16px;max-width:560px;width:100%;padding:18px 18px 20px;margin:20px 0;box-shadow:0 10px 40px rgba(0,0,0,.3)}
+.modal h2{font-family:"Fraunces",Georgia,serif;margin:0 0 12px}
+.field{margin-bottom:12px}
+.field label{display:block;font-weight:700;font-size:15px;margin-bottom:4px}
+.field .hint{font-size:13px;color:var(--muted);margin-top:2px}
+.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;background:#fff;font-size:16px}
+.field textarea{min-height:90px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.warn{background:#fbe9e6;color:var(--accent);border-radius:8px;padding:8px 10px;font-weight:600;font-size:15px;margin-bottom:10px}
+.modal .btns{display:flex;gap:10px;justify-content:flex-end;margin-top:6px}
+.nokey{background:var(--paper);border-radius:14px;padding:24px;border:1px solid var(--line)}
+@media (max-width:520px){.row2{grid-template-columns:1fr}.status{margin-left:0;width:100%}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">History Project · Patron Saints of Nothing</div>
+    <h1 id="title">History Board</h1>
+    <label class="bq-label" for="bigq">Big question</label>
+    <textarea id="bigq" rows="2"></textarea>
+  </header>
+
+  <div id="nokey" class="nokey hidden">
+    <h2>This board link is incomplete</h2>
+    <p>Ask your tutor for the full link. It ends with a long code after a # sign.</p>
+  </div>
+
+  <div id="app" class="hidden">
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" id="tab-board" aria-selected="true">Timeline</button>
+      <button class="tab" role="tab" id="tab-script" aria-selected="false">Documentary script</button>
+    </div>
+
+    <section id="panel-board">
+      <div class="bar">
+        <button class="btn" id="addBtn">+ Add a card</button>
+        <span class="status" id="status">Loading…</span>
+      </div>
+      <div id="timeline"></div>
+    </section>
+
+    <section id="panel-script" class="hidden">
+      <div class="script-box">
+        <p class="tips">Write your 3-minute narration here (about 350–400 words). Start with the airport, end with your answer to the big question, and link it to Jay. It saves as you type.</p>
+        <textarea id="script" placeholder="One airport, two stories…"></textarea>
+        <div class="counter"><span><b id="wc">0</b> words</span><span>about <b id="mins">0:00</b> spoken</span><span id="status2"></span></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="overlay hidden" id="overlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mtitle">
+    <h2 id="mtitle">Add a card</h2>
+    <div id="mwarn" class="warn hidden"></div>
+    <div class="row2">
+      <div class="field"><label for="f_date">Date</label><input id="f_date" placeholder="e.g. 21 Sep 1972"><div class="hint">As exact as your source gives it.</div></div>
+      <div class="field"><label for="f_year">Year (for the timeline)</label><input id="f_year" inputmode="numeric" placeholder="1972"></div>
+    </div>
+    <div class="field"><label for="f_kind">Card type</label>
+      <select id="f_kind">
+        <optgroup label="Identity">
+          <option value="identity">Identity chart</option>
+        </optgroup>
+        <optgroup label="History">
+          <option value="event">Event</option>
+          <option value="voice">Voice (a person's story)</option>
+          <option value="official">Official story</option>
+          <option value="claim">False claim</option>
+          <option value="factcheck">Fact-check</option>
+        </optgroup>
+        <optgroup label="Choices">
+          <option value="upstander">Choice: upstander</option>
+          <option value="bystander">Choice: bystander</option>
+          <option value="perpetrator">Choice: perpetrator</option>
+        </optgroup>
+        <optgroup label="Memory and the novel">
+          <option value="memory">Memory and legacy</option>
+          <option value="novel">Link to the novel</option>
+        </optgroup>
+      </select>
+      <div class="hint" id="kindHint"></div>
+    </div>
+    <div class="field"><label for="f_title" id="l_title">Title</label><input id="f_title" maxlength="200" placeholder="Martial law is declared"></div>
+    <div class="field"><label for="f_caption" id="l_caption">What happened, in your own words</label><textarea id="f_caption" maxlength="2000" placeholder="2–4 sentences. Don't copy from the source."></textarea></div>
+    <div class="field"><label for="f_img">Image link (optional)</label><input id="f_img" type="url" placeholder="https://…jpg"><div class="hint">Right-click an image on the source page and choose "Copy image address".</div></div>
+    <div class="field"><label for="f_video">Video link (optional)</label><input id="f_video" type="url" placeholder="https://www.youtube.com/watch?v=…"></div>
+    <div class="row2">
+      <div class="field"><label for="f_srcname">Source name</label><input id="f_srcname" maxlength="200" placeholder="Martial Law Museum"></div>
+      <div class="field"><label for="f_srctype">Source type</label>
+        <select id="f_srctype">
+          <option value="">Choose…</option>
+          <option value="museum">Museum</option>
+          <option value="university">University</option>
+          <option value="government">Government</option>
+          <option value="news">News</option>
+          <option value="court">Court</option>
+        </select>
+      </div>
+    </div>
+    <div class="field"><label for="f_srcurl">Source link</label><input id="f_srcurl" type="url" placeholder="https://…"></div>
+    <div class="btns">
+      <button class="btn ghost" id="cancelBtn" type="button">Cancel</button>
+      <button class="btn" id="saveBtn" type="button">Save card</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var API = "https://tbrgkozypzlpbmetnorl.supabase.co/rest/v1/rpc/";
+  var APIKEY = "sb_publishable_oINhZITFStePh8JcIrj0kQ_gT-77nvG";
+  var KEY = (window.location.hash || "").replace(/^#/, "").trim();
+
+  var KIND_LABEL = {identity:"Identity chart", event:"Event", voice:"Voice", official:"Official story", claim:"False claim", factcheck:"Fact-check", upstander:"Upstander", bystander:"Bystander", perpetrator:"Perpetrator", memory:"Memory and legacy", novel:"Link to the novel"};
+  var KIND_HINT = {
+    identity:"Who is this person? Put their name as the title, then list words that describe them: how they see themselves and how others see them.",
+    upstander:"Someone who chose to speak up or act against the injustice. What did they do, and what did it cost them?",
+    bystander:"Someone who saw what was happening and stayed silent or looked away. Why might they have done that?",
+    perpetrator:"Someone who carried out or ordered the injustice. Describe what they did, not what they were like.",
+    memory:"How is this injustice remembered today? A memorial, a court case, a museum, or an argument about the past.",
+    novel:"How does this connect to Jay, Jun or their family?"
+  };
+  var NO_SOURCE_KINDS = {identity:true, novel:true};
+  var SRC_LABEL = {museum:"Museum", university:"University", government:"Government", news:"News", court:"Court"};
+
+  var state = {board:null, cards:[], editingId:null, lastLoad:0, typing:false};
+  var $ = function(id){ return document.getElementById(id); };
+
+  function rpc(name, body){
+    return fetch(API + name, {
+      method:"POST",
+      headers:{"apikey":APIKEY, "Authorization":"Bearer " + APIKEY, "Content-Type":"application/json"},
+      body:JSON.stringify(body)
+    }).then(function(r){
+      return r.text().then(function(t){
+        if(!r.ok){ throw new Error(t || ("Error " + r.status)); }
+        return t ? JSON.parse(t) : null;
+      });
+    });
+  }
+
+  function setStatus(msg, err){
+    var s = $("status"), s2 = $("status2");
+    s.textContent = msg; s2.textContent = msg;
+    s.className = "status" + (err ? " err" : "");
+  }
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+  function safeUrl(u){
+    u = String(u || "").trim();
+    return /^https?:\/\//i.test(u) ? u : "";
+  }
+
+  function load(silent){
+    if(!silent) setStatus("Loading…");
+    return rpc("hb_get", {p_key:KEY}).then(function(data){
+      state.board = data.board;
+      state.cards = data.cards || [];
+      state.lastLoad = Date.now();
+      $("title").textContent = state.board.title || "History Board";
+      document.title = state.board.title || "History Board";
+      if(document.activeElement !== $("bigq")) $("bigq").value = state.board.big_question || "";
+      if(document.activeElement !== $("script") && !state.typing) { $("script").value = state.board.script || ""; countWords(); }
+      render();
+      setStatus("All changes saved");
+    }).catch(function(e){
+      if(String(e.message).indexOf("board not found") >= 0){
+        $("app").classList.add("hidden"); $("nokey").classList.remove("hidden");
+      } else {
+        setStatus("Couldn't load the board — check your internet and refresh.", true);
+      }
+    });
+  }
+
+  function render(){
+    var tl = $("timeline");
+    if(!state.cards.length){
+      tl.innerHTML = '<div class="empty">No cards yet. Click <b>+ Add a card</b> to post your first source.</div>';
+      return;
+    }
+    var ids = state.cards.filter(function(c){ return c.kind === "identity"; });
+    var rest = state.cards.filter(function(c){ return c.kind !== "identity"; });
+    var pre = "";
+    if(ids.length){
+      pre = '<h2 class="section-h">Identity charts</h2><div class="cards id-cards">';
+      ids.forEach(function(c){ pre += cardHtml(c); });
+      pre += '</div><h2 class="section-h">Timeline</h2>';
+    }
+    if(!rest.length){
+      tl.innerHTML = pre + '<div class="empty">No timeline cards yet.</div>';
+      return;
+    }
+    var groups = {}, order = [];
+    rest.forEach(function(c){
+      var y = (c.sort_year === null || c.sort_year === undefined || c.sort_year === "") ? "No year yet" : String(c.sort_year);
+      if(!groups[y]){ groups[y] = []; order.push(y); }
+      groups[y].push(c);
+    });
+    order.sort(function(a,b){
+      if(a === "No year yet") return 1; if(b === "No year yet") return -1;
+      return Number(a) - Number(b);
+    });
+    var html = pre + '<div class="timeline">';
+    order.forEach(function(y){
+      html += '<div class="yeargroup"><h2 class="year">' + esc(y) + '</h2><div class="cards">';
+      groups[y].forEach(function(c){ html += cardHtml(c); });
+      html += '</div></div>';
+    });
+    html += '</div>';
+    tl.innerHTML = html;
+    var imgs = tl.querySelectorAll("img.img");
+    for(var i=0;i<imgs.length;i++){ imgs[i].addEventListener("error", function(){ this.style.display="none"; }); }
+  }
+
+  function identityHtml(c){
+    var words = String(c.caption || "").split(/[,\n]+/).map(function(w){ return w.trim(); }).filter(Boolean);
+    var h = '<article class="card idcard"><div class="body">';
+    h += '<div class="meta"><span class="pill kind">Identity chart</span></div>';
+    h += '<div class="idchart"><div class="idname">' + esc(c.title || "Name") + '</div><div class="idwords">';
+    words.forEach(function(w){ h += '<span class="idword">' + esc(w) + '</span>'; });
+    if(!words.length) h += '<span class="idword muted">Add words that describe this person</span>';
+    h += '</div></div>';
+    var src = safeUrl(c.source_url);
+    if(src) h += '<div class="links"><a href="' + esc(src) + '" target="_blank" rel="noopener">Source: ' + esc(c.source_name || "link") + '</a></div>';
+    h += '<div class="actions"><button class="btn ghost small" data-edit="' + esc(c.id) + '">Edit</button><button class="btn ghost small" data-del="' + esc(c.id) + '">Delete</button></div>';
+    return h + '</div></article>';
+  }
+
+  function cardHtml(c){
+    if(c.kind === "identity") return identityHtml(c);
+    var img = safeUrl(c.image_url), src = safeUrl(c.source_url), vid = safeUrl(c.video_url);
+    var h = '<article class="card k-' + esc(c.kind || "event") + '">';
+    if(img) h += '<img class="img" loading="lazy" alt="" src="' + esc(img) + '">';
+    h += '<div class="body"><div class="meta">';
+    h += '<span class="pill kind">' + esc(KIND_LABEL[c.kind] || "Event") + '</span>';
+    if(c.event_date) h += '<span class="pill">' + esc(c.event_date) + '</span>';
+    if(c.source_type) h += '<span class="pill src" style="background:var(--' + esc(c.source_type) + ',#555)">' + esc(SRC_LABEL[c.source_type] || c.source_type) + '</span>';
+    h += '</div>';
+    h += '<h3>' + esc(c.title || "Untitled") + '</h3>';
+    if(c.caption) h += '<p>' + esc(c.caption) + '</p>';
+    h += '<div class="links">';
+    if(src) h += '<a href="' + esc(src) + '" target="_blank" rel="noopener">Source: ' + esc(c.source_name || "link") + '</a>';
+    else if(c.source_name) h += '<span>Source: ' + esc(c.source_name) + '</span>';
+    if(vid) h += '<a href="' + esc(vid) + '" target="_blank" rel="noopener">Watch video</a>';
+    h += '</div>';
+    h += '<div class="actions"><button class="btn ghost small" data-edit="' + esc(c.id) + '">Edit</button><button class="btn ghost small" data-del="' + esc(c.id) + '">Delete</button></div>';
+    h += '</div></article>';
+    return h;
+  }
+
+  /* modal */
+  var F = ["date","year","kind","title","caption","img","video","srcname","srctype","srcurl"];
+  function openModal(card){
+    state.editingId = card ? card.id : null;
+    $("mtitle").textContent = card ? "Edit card" : "Add a card";
+    $("mwarn").classList.add("hidden");
+    $("f_date").value = card ? card.event_date : "";
+    $("f_year").value = card && card.sort_year != null ? card.sort_year : "";
+    $("f_kind").value = card ? (card.kind || "event") : "event";
+    $("f_title").value = card ? card.title : "";
+    $("f_caption").value = card ? card.caption : "";
+    $("f_img").value = card ? card.image_url : "";
+    $("f_video").value = card ? card.video_url : "";
+    $("f_srcname").value = card ? card.source_name : "";
+    $("f_srctype").value = card ? (card.source_type || "") : "";
+    $("f_srcurl").value = card ? card.source_url : "";
+    applyKind();
+    $("overlay").classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+    setTimeout(function(){ $("f_date").focus(); }, 30);
+  }
+  function applyKind(){
+    var k = $("f_kind").value, isId = k === "identity";
+    $("kindHint").textContent = KIND_HINT[k] || "";
+    $("l_title").textContent = isId ? "Whose identity chart? (name)" : "Title";
+    $("f_title").placeholder = isId ? "Jay" : "Martial law is declared";
+    $("l_caption").textContent = isId ? "Identity words, separated by commas" : "What happened, in your own words";
+    $("f_caption").placeholder = isId ? "Filipino American, son, student, outsider, cousin…" : "2–4 sentences. Don't copy from the source.";
+    var dateFields = [$("f_date"), $("f_year"), $("f_img"), $("f_video")];
+    for(var i=0;i<dateFields.length;i++){
+      var fld = dateFields[i].parentNode;
+      fld.classList.toggle("hidden", isId);
+    }
+  }
+
+  function closeModal(){
+    $("overlay").classList.add("hidden");
+    document.body.style.overflow = "";
+  }
+  function warn(msg){ var w = $("mwarn"); w.textContent = msg; w.classList.remove("hidden"); w.scrollIntoView({block:"nearest"}); }
+
+  function saveCard(){
+    var yearRaw = $("f_year").value.trim();
+    var card = {
+      event_date: $("f_date").value.trim(),
+      sort_year: yearRaw,
+      kind: $("f_kind").value,
+      title: $("f_title").value.trim(),
+      caption: $("f_caption").value.trim(),
+      image_url: $("f_img").value.trim(),
+      video_url: $("f_video").value.trim(),
+      source_name: $("f_srcname").value.trim(),
+      source_type: $("f_srctype").value,
+      source_url: $("f_srcurl").value.trim()
+    };
+    if(!card.title){ return warn("Give your card a title."); }
+    if(yearRaw && !/^\d{4}$/.test(yearRaw)){ return warn("Year should be four digits, like 1972."); }
+    var all = (card.source_url + " " + card.image_url + " " + card.source_name).toLowerCase();
+    if(all.indexOf("wikipedia") >= 0 || all.indexOf("wikimedia") >= 0){
+      return warn("Wikipedia isn't allowed. Find this on a museum, university, government or news site instead.");
+    }
+    if(!NO_SOURCE_KINDS[card.kind] && (!card.source_url || !card.source_type)){ return warn("This card needs a source link and a source type."); }
+    if(card.source_url && !card.source_type){ return warn("Choose a source type for your link."); }
+    if(state.editingId) card.id = state.editingId;
+    $("saveBtn").disabled = true;
+    setStatus("Saving…");
+    rpc("hb_save_card", {p_key:KEY, p_card:card}).then(function(){
+      closeModal();
+      return load(true);
+    }).catch(function(){
+      warn("Couldn't save — check your internet and try again.");
+      setStatus("Not saved", true);
+    }).then(function(){ $("saveBtn").disabled = false; });
+  }
+
+  function deleteCard(id){
+    var c = state.cards.filter(function(x){ return x.id === id; })[0];
+    if(!window.confirm('Delete "' + (c ? c.title : "this card") + '"?')) return;
+    setStatus("Deleting…");
+    rpc("hb_delete_card", {p_key:KEY, p_id:id}).then(function(){ return load(true); })
+      .catch(function(){ setStatus("Couldn't delete — try again.", true); });
+  }
+
+  /* board text (big question + script) */
+  var saveTimer = null;
+  function queueBoardSave(){
+    setStatus("Saving…");
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(saveBoard, 900);
+  }
+  function saveBoard(){
+    rpc("hb_save_board", {p_key:KEY, p_big_question:$("bigq").value, p_script:$("script").value})
+      .then(function(){ state.typing = false; setStatus("All changes saved"); })
+      .catch(function(){ setStatus("Not saved — check your internet. Keep this tab open.", true); });
+  }
+  function countWords(){
+    var t = $("script").value.trim();
+    var n = t ? t.split(/\s+/).length : 0;
+    $("wc").textContent = n;
+    var secs = Math.round(n / 130 * 60);
+    $("mins").textContent = Math.floor(secs/60) + ":" + ("0" + (secs % 60)).slice(-2);
+  }
+
+  function showTab(which){
+    var b = which === "board";
+    $("tab-board").setAttribute("aria-selected", b ? "true" : "false");
+    $("tab-script").setAttribute("aria-selected", b ? "false" : "true");
+    $("panel-board").classList.toggle("hidden", !b);
+    $("panel-script").classList.toggle("hidden", b);
+  }
+
+  function init(){
+    if(!/^[a-f0-9]{20,}$/i.test(KEY)){
+      $("nokey").classList.remove("hidden");
+      $("bigq").disabled = true;
+      return;
+    }
+    $("app").classList.remove("hidden");
+    $("addBtn").addEventListener("click", function(){ openModal(null); });
+    $("cancelBtn").addEventListener("click", closeModal);
+    $("f_kind").addEventListener("change", applyKind);
+    $("saveBtn").addEventListener("click", saveCard);
+    $("overlay").addEventListener("click", function(e){ if(e.target === this) closeModal(); });
+    document.addEventListener("keydown", function(e){ if(e.key === "Escape") closeModal(); });
+    $("timeline").addEventListener("click", function(e){
+      var t = e.target;
+      if(t.getAttribute("data-edit")){
+        var id = t.getAttribute("data-edit");
+        openModal(state.cards.filter(function(x){ return x.id === id; })[0]);
+      } else if(t.getAttribute("data-del")){
+        deleteCard(t.getAttribute("data-del"));
+      }
+    });
+    $("bigq").addEventListener("input", queueBoardSave);
+    $("script").addEventListener("input", function(){ state.typing = true; countWords(); queueBoardSave(); });
+    $("tab-board").addEventListener("click", function(){ showTab("board"); });
+    $("tab-script").addEventListener("click", function(){ showTab("script"); });
+    load(false);
+    setInterval(function(){
+      var modalOpen = !$("overlay").classList.contains("hidden");
+      var editing = document.activeElement === $("script") || document.activeElement === $("bigq");
+      if(!modalOpen && !editing && !state.typing && !document.hidden) load(true);
+    }, 20000);
+  }
+  init();
+})();
+</script>
+</body>
+</html>
