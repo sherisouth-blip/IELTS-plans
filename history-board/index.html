@@ -53,6 +53,8 @@ textarea,input,select{font:inherit;color:inherit}
 .card p{margin:0;color:#2c3136;white-space:pre-wrap}
 .links{display:flex;flex-wrap:wrap;gap:12px;font-size:15px;margin-top:auto;padding-top:6px}
 .actions{display:flex;gap:8px;margin-top:8px}
+.readings{margin-top:10px;font-size:15px;font-weight:600;color:var(--muted)}
+.readings a{margin-left:4px}
 .section-h{font-family:"Fraunces",Georgia,serif;font-size:22px;margin:4px 0 10px}
 .id-cards{margin-bottom:24px}
 .idcard{border-top:5px solid var(--gold)}
@@ -98,6 +100,7 @@ textarea,input,select{font:inherit;color:inherit}
     <h1 id="title">History Board</h1>
     <label class="bq-label" for="bigq">Big question</label>
     <textarea id="bigq" rows="2"></textarea>
+    <nav class="readings" id="readings">Readings: <a href="stage2.html" data-keyed="1">Stage 2 · We and they</a></nav>
   </header>
 
   <div id="nokey" class="nokey hidden">
@@ -452,6 +455,8 @@ textarea,input,select{font:inherit;color:inherit}
       return;
     }
     $("app").classList.remove("hidden");
+    var rl = document.querySelectorAll("a[data-keyed]");
+    for(var r=0;r<rl.length;r++){ rl[r].setAttribute("href", rl[r].getAttribute("href").split("#")[0] + "#" + KEY); }
     $("addBtn").addEventListener("click", function(){ openModal(null); });
     $("cancelBtn").addEventListener("click", closeModal);
     $("f_kind").addEventListener("change", applyKind);
