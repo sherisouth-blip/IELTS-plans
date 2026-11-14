@@ -412,7 +412,7 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
     var ch = $(chapSel).value;
     var rows = V.items.filter(function(it){ return it.t === type && (ch === "all" || String(it.c) === ch); });
     $(listEl).innerHTML = rows.map(function(it){
-      return '<div class="item"><div class="row" style="justify-content:space-between"><span class="e">' + esc(it.e) + '</span>' + listenBtn(it.e, (type === "filipino" && !PH_ENGLISH[it.e]) ? "fil" : null) + '</div>' +
+      return '<div class="item"><div class="row" style="justify-content:space-between"><span class="e">' + esc(it.e) + '</span>' + listenBtn(it.sy || it.e, (type === "filipino" && !PH_ENGLISH[it.e]) ? "fil" : null) + '</div>' +
         '<div class="meta">' + esc(chapLabel(it.c)) + (it.p ? ' · PDF page ' + it.p : '') + '</div>' +
         (it.s ? '<div class="ex">In the book: ' + esc(it.s) + '</div>' : '') +
         (type === "idiom" ? '<details class="reveal" style="margin-top:4px"><summary>Meaning</summary><p>' + esc(it.m) + '</p></details>' : '<div>' + esc(it.m) + (it.j ? ' <span class="ja">(' + esc(it.j) + ')</span>' : '') + '</div>') +
@@ -439,7 +439,7 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
   $("fChap").addEventListener("change", function(){ renderOther("filipino", "fChap", "fList"); });
 
   /* ---------- load ---------- */
-  Promise.all([fetch("vocab.json?v=3").then(function(r){ return r.json(); }), fetch("quiz.json?v=1").then(function(r){ return r.json(); })])
+  Promise.all([fetch("vocab.json?v=4").then(function(r){ return r.json(); }), fetch("quiz.json?v=1").then(function(r){ return r.json(); })])
     .then(function(res){
       V = res[0]; Q = res[1];
       Q.forEach(function(q){ QBY[q.e] = q; });
