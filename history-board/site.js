@@ -10,3 +10,26 @@
     }
   }catch(e){}
 })();
+
+/* Makes the choice chips in lessons clickable: tap to select, tap again to unselect. */
+(function(){
+  try{
+    var chips = document.querySelectorAll(".chips .chip, .choices .chip");
+    for(var i=0;i<chips.length;i++){
+      var c = chips[i];
+      if(c.closest && c.closest(".static")) continue;
+      c.setAttribute("role","button");
+      c.setAttribute("tabindex","0");
+      c.setAttribute("aria-pressed","false");
+      c.classList.add("pickable");
+      var toggle = function(el){
+        var on = el.getAttribute("aria-pressed") !== "true";
+        el.setAttribute("aria-pressed", on ? "true" : "false");
+      };
+      c.addEventListener("click", function(){ toggle(this); });
+      c.addEventListener("keydown", function(e){
+        if(e.key === "Enter" || e.key === " "){ e.preventDefault(); toggle(this); }
+      });
+    }
+  }catch(e){}
+})();

@@ -91,3 +91,6 @@ a.stage:hover{border-color:var(--ink)}
 
 @media (max-width:600px){.words,.two{grid-template-columns:1fr}.venn .t{font-size:16px}}
 @media print{body{background:#fff}.nav,.noprint{display:none}.box,.word,.st,.source{break-inside:avoid}details.reveal{display:block}}
+.chip.pickable{cursor:pointer;-webkit-user-select:none;user-select:none}
+.chip.pickable:hover{border-color:var(--ink)}
+.chip.pickable[aria-pressed="true"]{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
