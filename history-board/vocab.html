@@ -11,25 +11,45 @@
 <link rel="stylesheet" href="site.css?v=2">
 <style>
 .counts{display:flex;flex-wrap:wrap;gap:12px;margin:6px 0 16px}
-.count{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px 18px;min-width:150px}
+.count{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px 18px;min-width:150px;flex:1 1 150px}
 .count b{display:block;font-family:var(--font-display);font-size:30px;line-height:1.1}
 .count span{color:var(--muted);font-size:16px}
-.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0 14px}
-.tabbtn{-webkit-appearance:none;appearance:none;border:1px solid var(--line);background:var(--soft);color:var(--ink);border-radius:10px;padding:8px 14px;font:600 16px var(--font-body);cursor:pointer;min-height:40px}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px}
+.tabbtn,.btn,.opt,.sbtn{-webkit-appearance:none;appearance:none;font-family:var(--font-body);cursor:pointer}
+.tabbtn{border:1px solid var(--line);background:var(--soft);color:var(--ink);border-radius:10px;padding:8px 14px;font-weight:600;font-size:16px;min-height:42px}
 .tabbtn[aria-pressed="true"]{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
-select{font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);min-height:40px;max-width:100%}
+.btn{border:0;border-radius:999px;padding:11px 22px;font-weight:700;font-size:17px;background:var(--accent);color:var(--on-accent);min-height:46px}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.btn[disabled]{opacity:.5;cursor:default}
+select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);max-width:100%}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.qcard{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px;margin:12px 0}
+.qnum{font-size:14px;color:var(--muted);font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.qtext{font-size:21px;line-height:1.5;margin:10px 0 14px}
+.qword{font-family:var(--font-display);font-size:30px;font-weight:700}
+.opts{display:grid;gap:10px}
+.opt{text-align:left;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:12px;padding:12px 16px;font-size:18px;line-height:1.4;min-height:48px}
+.opt:hover{border-color:var(--ink)}
+.opt .letter{display:inline-block;width:28px;font-weight:700;color:var(--muted)}
+.opt.right{background:#dfeee2;border-color:#2e6b3a}
+.opt.wrong{background:#f3dcd8;border-color:var(--accent)}
+.fb{border-radius:12px;padding:12px 16px;margin-top:12px;font-size:18px}
+.fb.ok{background:#dfeee2}
+.fb.no{background:#f3dcd8}
+.listen{-webkit-appearance:none;appearance:none;border:1px solid var(--line);background:var(--soft);color:var(--ink);border-radius:999px;padding:6px 12px;font:600 15px var(--font-body);cursor:pointer;min-height:36px}
+.bar{height:10px;background:var(--soft);border-radius:999px;overflow:hidden;margin:6px 0 2px}
+.bar i{display:block;height:100%;background:var(--accent);width:0}
 .list{display:grid;gap:10px}
 .item{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 16px;display:grid;gap:4px}
 .item .e{font-weight:700;font-size:20px}
 .item .meta{font-size:14px;color:var(--muted)}
 .item .ex{color:var(--muted);font-style:italic;font-size:17px}
-.status{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-.sbtn{-webkit-appearance:none;appearance:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:6px 12px;font:600 15px var(--font-body);cursor:pointer;min-height:36px}
-.sbtn.on.s-new{background:var(--soft);border-color:var(--ink)}
-.sbtn.on.s-understand{background:var(--gold);border-color:var(--gold);color:var(--ink)}
-.sbtn.on.s-use{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.badge{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 9px;border-radius:999px;background:var(--soft);color:var(--ink)}
+.badge.u{background:var(--gold);color:var(--ink)}
+.badge.s{background:var(--accent);color:var(--on-accent)}
 .saving{font-size:15px;color:var(--muted)}
 .saving.err{color:var(--accent);font-weight:700}
+.hidden{display:none!important}
 </style>
 </head>
 <body>
@@ -45,23 +65,64 @@ select{font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line)
     <a href="vocab.html" data-keyed aria-current="page">Vocabulary</a>
   </nav>
 
-  <div class="counts" id="counts">
+  <div class="counts">
     <div class="count"><b id="cUse">0</b><span>words I can use</span></div>
     <div class="count"><b id="cUnd">0</b><span>words I understand</span></div>
-    <div class="count"><b id="cNew">0</b><span>still new</span></div>
+    <div class="count"><b id="cRev">0</b><span>words to review</span></div>
+    <div class="count"><b id="cSen">0</b><span>my sentences</span></div>
   </div>
 
-  <div class="filters">
-    <button class="tabbtn" type="button" data-type="use" aria-pressed="true">Words to use</button>
-    <button class="tabbtn" type="button" data-type="drugwar" aria-pressed="false">Drug-war words</button>
-    <button class="tabbtn" type="button" data-type="idiom" aria-pressed="false">Idioms</button>
-    <button class="tabbtn" type="button" data-type="filipino" aria-pressed="false">Filipino words</button>
-    <label for="chap" class="small">Chapter</label>
-    <select id="chap"><option value="all">All chapters</option></select>
+  <div class="tabs" role="group" aria-label="Vocabulary sections">
+    <button class="tabbtn" type="button" data-tab="practise" aria-pressed="true">Practise</button>
+    <button class="tabbtn" type="button" data-tab="words" aria-pressed="false">My words</button>
+    <button class="tabbtn" type="button" data-tab="sentences" aria-pressed="false">My sentences</button>
+    <button class="tabbtn" type="button" data-tab="idioms" aria-pressed="false">Idioms</button>
+    <button class="tabbtn" type="button" data-tab="filipino" aria-pressed="false">Filipino words</button>
     <span class="saving" id="saving"></span>
   </div>
 
-  <div class="list" id="list"><p class="small">Loading the word list…</p></div>
+  <!-- PRACTISE -->
+  <section id="tab-practise">
+    <div id="pStart">
+      <h2 style="font-family:var(--font-display);font-size:26px;margin:0 0 6px">Practise your words</h2>
+      <p>Choose a chapter. You will practise 5 words, with 2 questions each. Get both right to move a word up: <b>new → I understand it → I can use it</b>.</p>
+      <div class="row">
+        <label for="pChap" class="small">Chapter</label>
+        <select id="pChap"><option value="review">Words to review</option></select>
+        <button class="btn" type="button" id="pGo">Start</button>
+      </div>
+      <p class="small" id="pNote"></p>
+    </div>
+    <div id="pRun" class="hidden">
+      <div class="row" style="justify-content:space-between"><span class="qnum" id="pProg"></span><button class="listen" type="button" id="pQuit">Stop</button></div>
+      <div class="bar"><i id="pBar"></i></div>
+      <div class="qcard" id="pCard"></div>
+    </div>
+    <div id="pDone" class="hidden"></div>
+  </section>
+
+  <!-- MY WORDS -->
+  <section id="tab-words" class="hidden">
+    <div class="row" style="margin-bottom:12px"><label for="wChap" class="small">Chapter</label><select id="wChap"><option value="all">All chapters</option></select></div>
+    <div class="list" id="wList"></div>
+  </section>
+
+  <!-- SENTENCES -->
+  <section id="tab-sentences" class="hidden">
+    <p>These are the sentences you wrote. Your tutor will go over them with you in class.</p>
+    <div class="list" id="sList"></div>
+  </section>
+
+  <!-- IDIOMS / FILIPINO -->
+  <section id="tab-idioms" class="hidden">
+    <p>Idioms are groups of words with a special meaning. Read the scene note to work out the meaning before you read it.</p>
+    <div class="row" style="margin-bottom:12px"><label for="iChap" class="small">Chapter</label><select id="iChap"><option value="all">All chapters</option></select></div>
+    <div class="list" id="iList"></div>
+  </section>
+  <section id="tab-filipino" class="hidden">
+    <div class="row" style="margin-bottom:12px"><label for="fChap" class="small">Chapter</label><select id="fChap"><option value="all">All chapters</option></select></div>
+    <div class="list" id="fList"></div>
+  </section>
 </div>
 <script src="site.js?v=2"></script>
 <script>
@@ -71,83 +132,301 @@ select{font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line)
   var APIKEY = "sb_publishable_oINhZITFStePh8JcIrj0kQ_gT-77nvG";
   var KEY = (window.location.hash || "").replace(/^#/, "");
   var hasKey = /^[a-f0-9]{20,}$/i.test(KEY);
-  var data = null, status = {}, type = "use", chap = "all";
-  var TRACKED = {use:true, drugwar:true};
+  var V = null, Q = [], QBY = {}, state = {}, sentences = [];
+  var LETTERS = ["A","B","C","D"];
   function $(id){ return document.getElementById(id); }
   function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
   function rpc(name, body){
     return fetch(API + name, {method:"POST", headers:{"apikey":APIKEY,"Authorization":"Bearer " + APIKEY,"Content-Type":"application/json"}, body:JSON.stringify(body)})
       .then(function(r){ return r.text().then(function(t){ if(!r.ok) throw new Error(t); return t ? JSON.parse(t) : null; }); });
   }
-  function chapName(n){
-    for(var i=0;i<data.chapters.length;i++){ if(data.chapters[i].n === n) return data.chapters[i].t; }
-    return "";
+  function saving(msg, err){ var s = $("saving"); s.textContent = msg; s.className = "saving" + (err ? " err" : ""); }
+  function chapName(n){ for(var i=0;i<V.chapters.length;i++){ if(V.chapters[i].n === n) return V.chapters[i].t; } return ""; }
+  function chapLabel(n){ return n === 0 ? "Prologue" : n + ". " + chapName(n); }
+  function status(w){ return state[w] ? state[w][0] : "new"; }
+  function misses(w){ return state[w] ? state[w][1] : 0; }
+  function shuffle(a){ a = a.slice(); for(var i=a.length-1;i>0;i--){ var j = Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+  function pick(arr, n, not){ return shuffle(arr.filter(function(x){ return not.indexOf(x) < 0; })).slice(0, n); }
+
+  /* ---------- speech ---------- */
+  var voice = null;
+  function loadVoice(){
+    if(!("speechSynthesis" in window)) return;
+    var vs = window.speechSynthesis.getVoices();
+    var en = vs.filter(function(v){ return /^en(-|_)/i.test(v.lang); });
+    voice = en.filter(function(v){ return /natural|online|google|samantha|daniel|karen|aria|jenny/i.test(v.name); })[0] || en[0] || null;
   }
+  if("speechSynthesis" in window){ loadVoice(); window.speechSynthesis.onvoiceschanged = loadVoice; }
+  function speak(text){
+    if(!("speechSynthesis" in window)){ saving("Listening is not available in this browser.", true); return; }
+    try{
+      window.speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(text);
+      if(voice){ u.voice = voice; u.lang = voice.lang; } else { u.lang = "en-US"; }
+      u.rate = 0.9;
+      window.speechSynthesis.speak(u);
+    }catch(e){ saving("Listening is not available on this device.", true); }
+  }
+  function listenBtn(text){ return '<button class="listen" type="button" data-say="' + esc(text) + '">🔊 Listen</button>'; }
+  document.addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest("[data-say]") : null;
+    if(b) speak(b.getAttribute("data-say"));
+  });
+
+  /* ---------- counts ---------- */
   function counts(){
-    var u=0, d=0, n=0;
-    data.items.forEach(function(it){
-      if(!TRACKED[it.t]) return;
-      var s = status[it.e] || "new";
-      if(s === "use") u++; else if(s === "understand") d++; else n++;
-    });
-    $("cUse").textContent = u; $("cUnd").textContent = d; $("cNew").textContent = n;
+    var u=0, d=0, r=0;
+    Q.forEach(function(q){ var s = status(q.e); if(s === "use") u++; else if(s === "understand") d++; if(misses(q.e) > 0) r++; });
+    $("cUse").textContent = u; $("cUnd").textContent = d; $("cRev").textContent = r; $("cSen").textContent = sentences.length;
   }
-  function render(){
-    var rows = data.items.filter(function(it){ return it.t === type && (chap === "all" || String(it.c) === chap); });
-    if(!rows.length){ $("list").innerHTML = '<p class="small">Nothing in this chapter for this list.</p>'; return; }
-    var h = "";
-    rows.forEach(function(it, i){
-      h += '<div class="item"><div class="e">' + esc(it.e) + '</div>';
-      h += '<div class="meta">Chapter ' + it.c + ' · ' + esc(chapName(it.c)) + (it.p ? ' · PDF page ' + it.p : '') + '</div>';
-      h += '<div>' + esc(it.m) + '</div>';
-      if(it.j) h += '<div class="ja">' + esc(it.j) + '</div>';
-      if(it.x) h += '<div class="ex">' + esc(it.x) + '</div>';
-      if(it.s) h += '<div class="ex">In the book: ' + esc(it.s) + '</div>';
-      if(TRACKED[it.t]){
-        var s = status[it.e] || "new";
-        h += '<div class="status" role="group" aria-label="How well do you know this word?">';
-        [["new","New"],["understand","I understand it"],["use","I can use it"]].forEach(function(o){
-          h += '<button type="button" class="sbtn s-' + o[0] + (s === o[0] ? ' on' : '') + '" data-word="' + esc(it.e) + '" data-status="' + o[0] + '" aria-pressed="' + (s === o[0]) + '">' + o[1] + '</button>';
-        });
-        h += '</div>';
+
+  /* ---------- question building ---------- */
+  var lastPos = [];
+  function placeCorrect(correct, wrongs){
+    var opts, pos, tries = 0;
+    do {
+      opts = shuffle([correct].concat(wrongs));
+      pos = opts.indexOf(correct);
+      tries++;
+    } while(tries < 8 && lastPos.length >= 2 && lastPos[lastPos.length-1] === pos && lastPos[lastPos.length-2] === pos);
+    lastPos.push(pos);
+    return {opts: opts, pos: pos};
+  }
+  function near(q){
+    var same = Q.filter(function(x){ return x.e !== q.e && Math.abs(x.c - q.c) <= 2; });
+    return same.length >= 3 ? same : Q.filter(function(x){ return x.e !== q.e; });
+  }
+  function qMeaning(q){
+    var wrongs = pick(near(q).map(function(x){ return x.m; }), 3, [q.m]);
+    var p = placeCorrect(q.m, wrongs);
+    return {kind:"mc", word:q.e, prompt:'What does <span class="qword">' + esc(q.e) + '</span> mean? ' + listenBtn(q.e), opts:p.opts, pos:p.pos,
+      explain:'<b>' + esc(q.e) + '</b> means: ' + esc(q.m) + (q.j ? ' <span class="ja">(' + esc(q.j) + ')</span>' : '')};
+  }
+  function qGap(q){
+    var wrongs = pick(near(q).map(function(x){ return x.ans; }), 3, [q.ans]);
+    var p = placeCorrect(q.ans, wrongs);
+    return {kind:"mc", word:q.e, prompt:'Which word fits the gap?<br><span style="font-family:var(--font-display);font-size:22px">' + esc(q.gap).replace("___", '<span class="blank"></span>') + '</span>', opts:p.opts, pos:p.pos,
+      explain: esc(q.gap.replace("___", q.ans))};
+  }
+  function qUsage(q){
+    var p = placeCorrect(q.ok, q.bad.slice(0,2));
+    return {kind:"mc", word:q.e, prompt:'Which sentence uses <span class="qword">' + esc(q.e) + '</span> correctly?', opts:p.opts, pos:p.pos,
+      explain:'Correct: ' + esc(q.ok) + '<br><span class="small">Meaning: ' + esc(q.m) + '</span>'};
+  }
+  function qType(q){
+    return {kind:"type", word:q.e, prompt:'Type the word that means:<br><b>' + esc(q.m) + '</b>' + (q.j ? ' <span class="ja">(' + esc(q.j) + ')</span>' : '') + '<br><span class="small">It starts with "' + esc(q.e.charAt(0)) + '".</span>',
+      answers:[q.e.toLowerCase(), String(q.ans).toLowerCase()], explain:'The word is <b>' + esc(q.e) + '</b>. ' + listenBtn(q.e)};
+  }
+
+  /* ---------- practice round ---------- */
+  var round = null;
+  function startRound(){
+    var ch = $("pChap").value, pool;
+    if(ch === "review"){
+      pool = Q.filter(function(q){ return misses(q.e) > 0; });
+      if(!pool.length) pool = Q.filter(function(q){ return status(q.e) !== "use"; });
+    } else {
+      pool = Q.filter(function(q){ return String(q.c) === ch; });
+    }
+    if(!pool.length){ $("pNote").textContent = "There are no words to practise here. Choose another chapter."; return; }
+    var rank = function(q){ return (misses(q.e) > 0 ? 0 : 10) + ({"new":1,"understand":2,"use":5})[status(q.e)]; };
+    pool = shuffle(pool).sort(function(a,b){ return rank(a) - rank(b); }).slice(0,5);
+    var steps = [];
+    lastPos = [];
+    pool.forEach(function(q){
+      if(status(q.e) === "new") steps.push({q:q, level:"understand", list:[qMeaning(q), qGap(q)]});
+      else steps.push({q:q, level:"use", list:[qUsage(q), qType(q)]});
+    });
+    round = {steps:steps, si:0, qi:0, total:steps.length*2, done:0, results:[], wrongInStep:false};
+    $("pStart").classList.add("hidden"); $("pDone").classList.add("hidden"); $("pRun").classList.remove("hidden");
+    showQ();
+  }
+  function showQ(){
+    var st = round.steps[round.si], qq = st.list[round.qi];
+    $("pProg").textContent = "Question " + (round.done + 1) + " of " + round.total;
+    $("pBar").style.width = Math.round(round.done / round.total * 100) + "%";
+    var h = '<div class="qtext">' + qq.prompt + '</div>';
+    if(qq.kind === "mc"){
+      h += '<div class="opts">';
+      qq.opts.forEach(function(o, i){ h += '<button class="opt" type="button" data-i="' + i + '"><span class="letter">' + LETTERS[i] + '</span>' + esc(o) + '</button>'; });
+      h += '</div>';
+    } else {
+      h += '<div class="row"><label for="tIn" class="small">Your answer</label><input type="text" id="tIn" autocomplete="off" autocapitalize="off" spellcheck="false" style="flex:1 1 220px"><button class="btn" type="button" id="tGo">Check</button></div>';
+    }
+    h += '<div id="fb"></div>';
+    $("pCard").innerHTML = h;
+    if(qq.kind === "type"){
+      var inp = $("tIn"); setTimeout(function(){ inp.focus(); }, 30);
+      $("tGo").addEventListener("click", function(){ checkType(qq); });
+      inp.addEventListener("keydown", function(e){ if(e.key === "Enter") checkType(qq); });
+    }
+  }
+  function lev(a, b){
+    var m = [], i, j;
+    for(i=0;i<=b.length;i++){ m[i] = [i]; }
+    for(j=0;j<=a.length;j++){ m[0][j] = j; }
+    for(i=1;i<=b.length;i++){ for(j=1;j<=a.length;j++){ m[i][j] = b.charAt(i-1) === a.charAt(j-1) ? m[i-1][j-1] : Math.min(m[i-1][j-1]+1, m[i][j-1]+1, m[i-1][j]+1); } }
+    return m[b.length][a.length];
+  }
+  function checkType(qq){
+    var v = ($("tIn").value || "").trim().toLowerCase();
+    if(!v) return;
+    var ok = qq.answers.indexOf(v) >= 0, close = false;
+    if(!ok){ qq.answers.forEach(function(a){ if(a.length > 5 && lev(v, a) === 1) close = true; }); }
+    $("tIn").disabled = true; $("tGo").disabled = true;
+    answer(ok || close, close ? 'Almost! Check the spelling. ' + qq.explain : qq.explain);
+  }
+  $("pCard").addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest(".opt") : null;
+    if(!b || b.disabled) return;
+    var st = round.steps[round.si], qq = st.list[round.qi], i = +b.getAttribute("data-i");
+    var all = $("pCard").querySelectorAll(".opt");
+    for(var k=0;k<all.length;k++){ all[k].disabled = true; if(k === qq.pos) all[k].classList.add("right"); }
+    if(i !== qq.pos) b.classList.add("wrong");
+    answer(i === qq.pos, qq.explain);
+  });
+  function answer(ok, explain){
+    var st = round.steps[round.si];
+    if(!ok) st.wrong = true;
+    round.done++;
+    var last = round.qi === st.list.length - 1;
+    var fb = '<div class="fb ' + (ok ? "ok" : "no") + '"><b>' + (ok ? "Right!" : "Not quite.") + '</b> ' + explain + '</div>';
+    fb += '<div class="row" style="margin-top:12px"><button class="btn" type="button" id="nextBtn">' + (round.done >= round.total ? "See my results" : "Next") + '</button></div>';
+    $("fb").innerHTML = fb;
+    $("nextBtn").addEventListener("click", next);
+    $("nextBtn").focus();
+    if(last){
+      var passed = !st.wrong;
+      round.results.push({q:st.q, level:st.level, passed:passed});
+      if(passed){ state[st.q.e] = [st.level, 0]; } else { state[st.q.e] = [status(st.q.e), misses(st.q.e) + 1]; }
+      counts();
+      if(hasKey){
+        saving("Saving…");
+        rpc("hb_vocab_result", {p_key:KEY, p_word:st.q.e, p_status: passed ? st.level : null, p_missed: !passed})
+          .then(function(){ saving("Saved"); })
+          .catch(function(){ saving("Not saved. Check your internet.", true); });
+      }
+    }
+  }
+  function next(){
+    var st = round.steps[round.si];
+    if(round.qi < st.list.length - 1){ round.qi++; }
+    else { round.si++; round.qi = 0; }
+    if(round.si >= round.steps.length){ finish(); return; }
+    showQ();
+  }
+  function finish(){
+    $("pRun").classList.add("hidden");
+    var h = '<div class="qcard"><h2 style="font-family:var(--font-display);font-size:26px;margin:0 0 10px">Round finished</h2><div class="list">';
+    round.results.forEach(function(r, ri){
+      var label = r.passed ? (r.level === "use" ? "Now: I can use it" : "Now: I understand it") : "Practise again later";
+      h += '<div class="item"><div class="row" style="justify-content:space-between"><span class="e">' + esc(r.q.e) + '</span><span class="badge ' + (r.passed ? (r.level === "use" ? "s" : "u") : "") + '">' + label + '</span></div>';
+      if(r.passed && r.level === "use"){
+        h += '<label class="small" for="s-' + ri + '">Write your own sentence with this word (your tutor will read it):</label>' +
+             '<div class="row"><input type="text" id="s-' + ri + '" style="flex:1 1 260px"><button class="btn ghost" type="button" data-save="' + ri + '" data-w="' + esc(r.q.e) + '">Save</button></div>';
       }
       h += '</div>';
     });
-    $("list").innerHTML = h;
+    h += '</div><div class="row" style="margin-top:16px"><button class="btn" type="button" id="againBtn">Practise again</button></div></div>';
+    $("pDone").innerHTML = h; $("pDone").classList.remove("hidden");
+    $("againBtn").addEventListener("click", function(){ $("pDone").classList.add("hidden"); $("pStart").classList.remove("hidden"); renderWords(); });
   }
-  function setStatus(word, s){
-    status[word] = s; counts(); render();
-    if(!hasKey){ $("saving").textContent = "Open this page from your board link to save your progress."; return; }
-    $("saving").className = "saving"; $("saving").textContent = "Saving…";
-    rpc("hb_vocab_set", {p_key:KEY, p_word:word, p_status:s})
-      .then(function(){ $("saving").textContent = "Saved"; })
-      .catch(function(){ $("saving").className = "saving err"; $("saving").textContent = "Not saved. Check your internet and try again."; });
-  }
-  $("list").addEventListener("click", function(e){
-    var b = e.target;
-    if(b && b.getAttribute && b.getAttribute("data-status")) setStatus(b.getAttribute("data-word"), b.getAttribute("data-status"));
+  $("pDone").addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest("[data-save]") : null;
+    if(!b) return;
+    var w = b.getAttribute("data-w"), inp = $("s-" + b.getAttribute("data-save")), s = (inp.value || "").trim();
+    if(!s) return;
+    if(s.toLowerCase().indexOf(w.toLowerCase().slice(0, Math.max(3, w.length - 2))) < 0){ saving('Use the word "' + w + '" in your sentence.', true); return; }
+    addSentence(w, s, function(){ b.textContent = "Saved"; b.disabled = true; inp.disabled = true; });
   });
+  function addSentence(w, s, done){
+    if(!hasKey){ saving("Open this page from your board link to save sentences.", true); return; }
+    saving("Saving…");
+    rpc("hb_sentence_add", {p_key:KEY, p_word:w, p_sentence:s}).then(function(id){
+      sentences.unshift({id:id, w:w, s:s}); counts(); renderSentences(); saving("Saved"); if(done) done();
+    }).catch(function(){ saving("Not saved. Check your internet.", true); });
+  }
+  $("pGo").addEventListener("click", startRound);
+  $("pQuit").addEventListener("click", function(){ $("pRun").classList.add("hidden"); $("pStart").classList.remove("hidden"); renderWords(); });
+
+  /* ---------- lists ---------- */
+  function renderWords(){
+    var ch = $("wChap").value;
+    var rows = Q.filter(function(q){ return ch === "all" || String(q.c) === ch; });
+    var h = "";
+    rows.forEach(function(q){
+      var s = status(q.e);
+      var b = s === "use" ? '<span class="badge s">I can use it</span>' : s === "understand" ? '<span class="badge u">I understand it</span>' : '<span class="badge">New</span>';
+      h += '<div class="item"><div class="row" style="justify-content:space-between"><span class="e">' + esc(q.e) + '</span>' + b + '</div>' +
+        '<div class="meta">' + esc(chapLabel(q.c)) + (misses(q.e) > 0 ? ' · to review' : '') + '</div>' +
+        '<div>' + esc(q.m) + (q.j ? ' <span class="ja">(' + esc(q.j) + ')</span>' : '') + '</div>' +
+        '<div class="ex">' + esc(q.ok) + '</div><div>' + listenBtn(q.e) + '</div></div>';
+    });
+    $("wList").innerHTML = h || '<p class="small">No words in this chapter.</p>';
+  }
+  function renderSentences(){
+    if(!sentences.length){ $("sList").innerHTML = '<p class="small">No sentences yet. When a word reaches "I can use it", you can write your own sentence.</p>'; return; }
+    $("sList").innerHTML = sentences.map(function(s){
+      return '<div class="item"><div class="row" style="justify-content:space-between"><span class="e">' + esc(s.w) + '</span><button class="listen" type="button" data-del="' + esc(s.id) + '">Delete</button></div><div>' + esc(s.s) + '</div></div>';
+    }).join("");
+  }
+  $("sList").addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest("[data-del]") : null;
+    if(!b || !hasKey) return;
+    var id = b.getAttribute("data-del");
+    rpc("hb_sentence_delete", {p_key:KEY, p_id:id}).then(function(){
+      sentences = sentences.filter(function(s){ return s.id !== id; }); counts(); renderSentences();
+    });
+  });
+  function renderOther(type, chapSel, listEl){
+    var ch = $(chapSel).value;
+    var rows = V.items.filter(function(it){ return it.t === type && (ch === "all" || String(it.c) === ch); });
+    $(listEl).innerHTML = rows.map(function(it){
+      return '<div class="item"><div class="row" style="justify-content:space-between"><span class="e">' + esc(it.e) + '</span>' + listenBtn(it.e) + '</div>' +
+        '<div class="meta">' + esc(chapLabel(it.c)) + (it.p ? ' · PDF page ' + it.p : '') + '</div>' +
+        (it.s ? '<div class="ex">In the book: ' + esc(it.s) + '</div>' : '') +
+        (type === "idiom" ? '<details class="reveal" style="margin-top:4px"><summary>Meaning</summary><p>' + esc(it.m) + '</p></details>' : '<div>' + esc(it.m) + (it.j ? ' <span class="ja">(' + esc(it.j) + ')</span>' : '') + '</div>') +
+        '</div>';
+    }).join("") || '<p class="small">Nothing in this chapter.</p>';
+  }
+
+  /* ---------- tabs ---------- */
   var tabs = document.querySelectorAll(".tabbtn");
-  for(var i=0;i<tabs.length;i++){
-    tabs[i].addEventListener("click", function(){
-      type = this.getAttribute("data-type");
+  for(var t=0;t<tabs.length;t++){
+    tabs[t].addEventListener("click", function(){
+      var name = this.getAttribute("data-tab");
       for(var j=0;j<tabs.length;j++) tabs[j].setAttribute("aria-pressed", tabs[j] === this ? "true" : "false");
-      render();
+      ["practise","words","sentences","idioms","filipino"].forEach(function(n){ $("tab-" + n).classList.toggle("hidden", n !== name); });
+      if(name === "words") renderWords();
+      if(name === "sentences") renderSentences();
+      if(name === "idioms") renderOther("idiom", "iChap", "iList");
+      if(name === "filipino") renderOther("filipino", "fChap", "fList");
     });
   }
-  $("chap").addEventListener("change", function(){ chap = this.value; render(); });
+  $("wChap").addEventListener("change", renderWords);
+  $("iChap").addEventListener("change", function(){ renderOther("idiom", "iChap", "iList"); });
+  $("fChap").addEventListener("change", function(){ renderOther("filipino", "fChap", "fList"); });
 
-  fetch("vocab.json").then(function(r){ return r.json(); }).then(function(d){
-    data = d;
-    var sel = $("chap");
-    d.chapters.forEach(function(c){
-      var o = document.createElement("option");
-      o.value = String(c.n); o.textContent = (c.n === 0 ? "Prologue" : c.n + ". " + c.t);
-      sel.appendChild(o);
-    });
-    var p = hasKey ? rpc("hb_vocab_get", {p_key:KEY}).catch(function(){ $("saving").className="saving err"; $("saving").textContent="Couldn't load your progress."; return {}; }) : Promise.resolve({});
-    return p.then(function(s){ status = s || {}; counts(); render(); });
-  }).catch(function(){ $("list").innerHTML = '<p class="small">The word list did not load. Refresh the page.</p>'; });
+  /* ---------- load ---------- */
+  Promise.all([fetch("vocab.json?v=3").then(function(r){ return r.json(); }), fetch("quiz.json?v=1").then(function(r){ return r.json(); })])
+    .then(function(res){
+      V = res[0]; Q = res[1];
+      Q.forEach(function(q){ QBY[q.e] = q; });
+      var used = {};
+      Q.forEach(function(q){ used[q.c] = true; });
+      V.chapters.forEach(function(c){
+        ["pChap","wChap","iChap","fChap"].forEach(function(id){
+          if(id === "pChap" && !used[c.n]) return;
+          var o = document.createElement("option"); o.value = String(c.n); o.textContent = chapLabel(c.n); $(id).appendChild(o);
+        });
+      });
+      if(!hasKey){ $("pNote").textContent = "Open this page from your board link so your progress is saved."; }
+      var p = hasKey ? rpc("hb_vocab_state", {p_key:KEY}).catch(function(){ saving("Couldn't load your progress.", true); return null; }) : Promise.resolve(null);
+      return p.then(function(s){
+        if(s){ state = s.words || {}; sentences = s.sentences || []; }
+        counts(); renderSentences();
+      });
+    }).catch(function(){ $("pNote").textContent = "The word list did not load. Refresh the page."; });
 })();
 </script>
 </body>
