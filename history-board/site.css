@@ -109,3 +109,6 @@ a.stage:hover{border-color:var(--ink)}
 /* On-screen answer boxes */
 textarea.ans{display:block;width:100%;box-sizing:border-box;margin:6px 0 4px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:16px var(--font-body);min-height:56px;background:#fff;color:var(--ink);resize:vertical}
 .anslabel{display:block;margin-top:10px;font-size:16px}
+/* Embedded video, 16:9 */
+.vembed{position:relative;width:100%;padding-top:56.25%;border-radius:12px;overflow:hidden;background:#000;margin:10px 0 6px}
+.vembed iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
