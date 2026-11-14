@@ -53,7 +53,9 @@ textarea,input,select{font:inherit;color:inherit}
 .card p{margin:0;color:#2c3136;white-space:pre-wrap}
 .links{display:flex;flex-wrap:wrap;gap:12px;font-size:15px;margin-top:auto;padding-top:6px}
 .actions{display:flex;gap:8px;margin-top:8px}
-.readings{margin-top:10px;font-size:15px;font-weight:600;color:var(--muted)}
+.pnav{display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid var(--line);margin:0 0 6px}
+.pnav a{padding:10px 14px;font-weight:700;font-size:17px;color:var(--muted);text-decoration:none;border-bottom:3px solid transparent}
+.pnav a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent)}
 .readings a{margin-left:4px}
 .section-h{font-family:"Fraunces",Georgia,serif;font-size:22px;margin:4px 0 10px}
 .id-cards{margin-bottom:24px}
@@ -100,8 +102,8 @@ textarea,input,select{font:inherit;color:inherit}
     <h1 id="title">History Board</h1>
     <label class="bq-label" for="bigq">Compelling question</label>
     <textarea id="bigq" rows="2"></textarea>
-    <nav class="readings" id="readings">Lessons: <a href="stage2.html" data-keyed="1">We and they</a> · <a href="lesson-icc.html" data-keyed="1">The ICC</a></nav>
   </header>
+  <nav class="pnav" id="readings" aria-label="Project sections"><a href="home.html" data-keyed="1">Lessons</a><a href="index.html" data-keyed="1" aria-current="page">Board</a><a href="vocab.html" data-keyed="1">Vocabulary</a></nav>
 
   <div id="nokey" class="nokey hidden">
     <h2>This board link is incomplete</h2>

@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Vocabulary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<link rel="stylesheet" href="site.css">
+<style>
+.counts{display:flex;flex-wrap:wrap;gap:12px;margin:6px 0 16px}
+.count{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px 18px;min-width:150px}
+.count b{display:block;font-family:var(--font-display);font-size:30px;line-height:1.1}
+.count span{color:var(--muted);font-size:16px}
+.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:8px 0 14px}
+.tabbtn{-webkit-appearance:none;appearance:none;border:1px solid var(--line);background:var(--soft);color:var(--ink);border-radius:10px;padding:8px 14px;font:600 16px var(--font-body);cursor:pointer;min-height:40px}
+.tabbtn[aria-pressed="true"]{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
+select{font:inherit;font-size:16px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);min-height:40px;max-width:100%}
+.list{display:grid;gap:10px}
+.item{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 16px;display:grid;gap:4px}
+.item .e{font-weight:700;font-size:20px}
+.item .meta{font-size:14px;color:var(--muted)}
+.item .ex{color:var(--muted);font-style:italic;font-size:17px}
+.status{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.sbtn{-webkit-appearance:none;appearance:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:6px 12px;font:600 15px var(--font-body);cursor:pointer;min-height:36px}
+.sbtn.on.s-new{background:var(--soft);border-color:var(--ink)}
+.sbtn.on.s-understand{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+.sbtn.on.s-use{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.saving{font-size:15px;color:var(--muted)}
+.saving.err{color:var(--accent);font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap wide">
+  <header class="top">
+    <div class="eyebrow">History project · Patron Saints of Nothing</div>
+    <h1 class="title">The Drug War in the Philippines</h1>
+    <div class="cq"><b>Compelling question:</b> How can we know what really happened in the past?</div>
+  </header>
+  <nav class="nav" aria-label="Project sections">
+    <a href="home.html" data-keyed>Lessons</a>
+    <a href="index.html" data-keyed>Board</a>
+    <a href="vocab.html" data-keyed aria-current="page">Vocabulary</a>
+  </nav>
+
+  <div class="counts" id="counts">
+    <div class="count"><b id="cUse">0</b><span>words I can use</span></div>
+    <div class="count"><b id="cUnd">0</b><span>words I understand</span></div>
+    <div class="count"><b id="cNew">0</b><span>still new</span></div>
+  </div>
+
+  <div class="filters">
+    <button class="tabbtn" type="button" data-type="use" aria-pressed="true">Words to use</button>
+    <button class="tabbtn" type="button" data-type="drugwar" aria-pressed="false">Drug-war words</button>
+    <button class="tabbtn" type="button" data-type="idiom" aria-pressed="false">Idioms</button>
+    <button class="tabbtn" type="button" data-type="filipino" aria-pressed="false">Filipino words</button>
+    <label for="chap" class="small">Chapter</label>
+    <select id="chap"><option value="all">All chapters</option></select>
+    <span class="saving" id="saving"></span>
+  </div>
+
+  <div class="list" id="list"><p class="small">Loading the word list…</p></div>
+</div>
+<script src="site.js"></script>
+<script>
+(function(){
+  "use strict";
+  var API = "https://tbrgkozypzlpbmetnorl.supabase.co/rest/v1/rpc/";
+  var APIKEY = "sb_publishable_oINhZITFStePh8JcIrj0kQ_gT-77nvG";
+  var KEY = (window.location.hash || "").replace(/^#/, "");
+  var hasKey = /^[a-f0-9]{20,}$/i.test(KEY);
+  var data = null, status = {}, type = "use", chap = "all";
+  var TRACKED = {use:true, drugwar:true};
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+  function rpc(name, body){
+    return fetch(API + name, {method:"POST", headers:{"apikey":APIKEY,"Authorization":"Bearer " + APIKEY,"Content-Type":"application/json"}, body:JSON.stringify(body)})
+      .then(function(r){ return r.text().then(function(t){ if(!r.ok) throw new Error(t); return t ? JSON.parse(t) : null; }); });
+  }
+  function chapName(n){
+    for(var i=0;i<data.chapters.length;i++){ if(data.chapters[i].n === n) return data.chapters[i].t; }
+    return "";
+  }
+  function counts(){
+    var u=0, d=0, n=0;
+    data.items.forEach(function(it){
+      if(!TRACKED[it.t]) return;
+      var s = status[it.e] || "new";
+      if(s === "use") u++; else if(s === "understand") d++; else n++;
+    });
+    $("cUse").textContent = u; $("cUnd").textContent = d; $("cNew").textContent = n;
+  }
+  function render(){
+    var rows = data.items.filter(function(it){ return it.t === type && (chap === "all" || String(it.c) === chap); });
+    if(!rows.length){ $("list").innerHTML = '<p class="small">Nothing in this chapter for this list.</p>'; return; }
+    var h = "";
+    rows.forEach(function(it, i){
+      h += '<div class="item"><div class="e">' + esc(it.e) + '</div>';
+      h += '<div class="meta">Chapter ' + it.c + ' · ' + esc(chapName(it.c)) + (it.p ? ' · PDF page ' + it.p : '') + '</div>';
+      h += '<div>' + esc(it.m) + '</div>';
+      if(it.j) h += '<div class="ja">' + esc(it.j) + '</div>';
+      if(it.x) h += '<div class="ex">' + esc(it.x) + '</div>';
+      if(it.s) h += '<div class="ex">In the book: ' + esc(it.s) + '</div>';
+      if(TRACKED[it.t]){
+        var s = status[it.e] || "new";
+        h += '<div class="status" role="group" aria-label="How well do you know this word?">';
+        [["new","New"],["understand","I understand it"],["use","I can use it"]].forEach(function(o){
+          h += '<button type="button" class="sbtn s-' + o[0] + (s === o[0] ? ' on' : '') + '" data-word="' + esc(it.e) + '" data-status="' + o[0] + '" aria-pressed="' + (s === o[0]) + '">' + o[1] + '</button>';
+        });
+        h += '</div>';
+      }
+      h += '</div>';
+    });
+    $("list").innerHTML = h;
+  }
+  function setStatus(word, s){
+    status[word] = s; counts(); render();
+    if(!hasKey){ $("saving").textContent = "Open this page from your board link to save your progress."; return; }
+    $("saving").className = "saving"; $("saving").textContent = "Saving…";
+    rpc("hb_vocab_set", {p_key:KEY, p_word:word, p_status:s})
+      .then(function(){ $("saving").textContent = "Saved"; })
+      .catch(function(){ $("saving").className = "saving err"; $("saving").textContent = "Not saved. Check your internet and try again."; });
+  }
+  $("list").addEventListener("click", function(e){
+    var b = e.target;
+    if(b && b.getAttribute && b.getAttribute("data-status")) setStatus(b.getAttribute("data-word"), b.getAttribute("data-status"));
+  });
+  var tabs = document.querySelectorAll(".tabbtn");
+  for(var i=0;i<tabs.length;i++){
+    tabs[i].addEventListener("click", function(){
+      type = this.getAttribute("data-type");
+      for(var j=0;j<tabs.length;j++) tabs[j].setAttribute("aria-pressed", tabs[j] === this ? "true" : "false");
+      render();
+    });
+  }
+  $("chap").addEventListener("change", function(){ chap = this.value; render(); });
+
+  fetch("vocab.json").then(function(r){ return r.json(); }).then(function(d){
+    data = d;
+    var sel = $("chap");
+    d.chapters.forEach(function(c){
+      var o = document.createElement("option");
+      o.value = String(c.n); o.textContent = (c.n === 0 ? "Prologue" : c.n + ". " + c.t);
+      sel.appendChild(o);
+    });
+    var p = hasKey ? rpc("hb_vocab_get", {p_key:KEY}).catch(function(){ $("saving").className="saving err"; $("saving").textContent="Couldn't load your progress."; return {}; }) : Promise.resolve({});
+    return p.then(function(s){ status = s || {}; counts(); render(); });
+  }).catch(function(){ $("list").innerHTML = '<p class="small">The word list did not load. Refresh the page.</p>'; });
+})();
+</script>
+</body>
+</html>

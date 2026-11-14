@@ -61,12 +61,13 @@ ol.q li{margin:6px 0}
 @media (max-width:560px){.words{grid-template-columns:1fr}}
 @media print{body{background:#fff}.back{display:none}.box,.word,.st{break-inside:avoid}details{display:block}}
 </style>
+<link rel="stylesheet" href="site.css">
 </head>
 <body>
 <div class="wrap">
-  <a class="back" href="./#" id="backlink">← Back to the History Board</a>
+  <nav class="nav" aria-label="Project sections"><a href="home.html" data-keyed>Lessons</a><a href="index.html" data-keyed>Board</a><a href="vocab.html" data-keyed>Vocabulary</a></nav>
 
-  <div class="eyebrow">Lesson · Patron Saints of Nothing</div>
+  <div class="eyebrow">Stage 5 · Judgment, memory and legacy</div>
   <h1>A court for the whole world</h1>
   <div class="aim"><b>Aim:</b> Explain what the International Criminal Court (ICC) is and why Duterte is on trial there, using the key court words.</div>
   <div class="cq"><b>Compelling question:</b> How can we know what really happened in the past?</div>
@@ -227,15 +228,21 @@ ol.q li{margin:6px 0}
     </div>
   </section>
 
+  <section class="part">
+    <span class="label">Reflect</span>
+    <div class="reflect" style="margin-top:10px">In your journal: has anyone ever judged you before they knew the whole story? How did it feel?</div>
+  </section>
+
   <p class="sources">Sources: <a href="https://www.icc-cpi.int/news/duterte-case-trial-open-30-november-2026" target="_blank" rel="noopener">ICC: trial opens 30 November 2026</a> · <a href="https://globalnation.inquirer.net/319640/icc-confirms-all-charges-vs-rodrigo-duterte" target="_blank" rel="noopener">Inquirer: ICC confirms all charges</a> · <a href="https://www.philstar.com/headlines/2026/04/22/2522819/icc-rejects-duterte-plea-dismiss-case-over-jurisdiction" target="_blank" rel="noopener">Philstar: ICC rejects Duterte's jurisdiction challenge</a> · <a href="https://mindanews.com/top-stories/2026/05/dutertes-trial-at-the-icc-starts-on-november-30-2026/" target="_blank" rel="noopener">MindaNews: arrest and trial date</a></p>
 </div>
 <script>
 (function(){
   try{
     var key = (window.location.hash || "").replace(/^#/, "");
-    if(key){ document.getElementById("backlink").setAttribute("href", "./#" + key); }
+
   }catch(e){}
 })();
 </script>
+<script src="site.js"></script>
 </body>
 </html>
