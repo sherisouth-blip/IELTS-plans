@@ -167,7 +167,7 @@ textarea,input,select{font:inherit;color:inherit}
       <div class="field"><label for="f_year">Year (for the timeline)</label><input id="f_year" inputmode="numeric" placeholder="2016"></div>
     </div>
     <div class="field"><fieldset class="kinds"><legend>Card type</legend>
-      <input type="hidden" id="f_kind" value="event">
+      <input type="hidden" id="f_kind" value="identity">
       <div class="kgroup"><span class="kglabel">Identity</span><div class="kopts"><label class="kopt"><input type="radio" name="kind" value="identity"><span>Identity chart</span></label></div></div>
       <div class="kgroup"><span class="kglabel">History</span><div class="kopts"><label class="kopt"><input type="radio" name="kind" value="event"><span>Event</span></label><label class="kopt"><input type="radio" name="kind" value="voice"><span>Voice (a person's story)</span></label><label class="kopt"><input type="radio" name="kind" value="official"><span>Official story</span></label><label class="kopt"><input type="radio" name="kind" value="claim"><span>False claim</span></label><label class="kopt"><input type="radio" name="kind" value="factcheck"><span>Fact-check</span></label></div></div>
       <details class="kgroup klock" id="choicesGrp"><summary><span class="kglabel" style="display:inline">Choices</span> <span class="small">· Stage 4 words. Open these after the lesson "Choosing to see."</span></summary><div class="kopts" style="margin-top:6px"><label class="kopt"><input type="radio" name="kind" value="upstander"><span>Upstander</span></label><label class="kopt"><input type="radio" name="kind" value="bystander"><span>Bystander</span></label><label class="kopt"><input type="radio" name="kind" value="perpetrator"><span>Perpetrator</span></label></div></details>
@@ -365,7 +365,7 @@ textarea,input,select{font:inherit;color:inherit}
     $("mwarn").classList.add("hidden");
     $("f_date").value = card ? card.event_date : "";
     $("f_year").value = card && card.sort_year != null ? card.sort_year : "";
-    $("f_kind").value = card ? (card.kind || "event") : "event";
+    $("f_kind").value = card ? (card.kind || "event") : "identity";
     var radios = document.querySelectorAll('input[name="kind"]');
     for(var ri=0; ri<radios.length; ri++){ radios[ri].checked = radios[ri].value === $("f_kind").value; }
     $("f_title").value = card ? card.title : "";
@@ -378,7 +378,7 @@ textarea,input,select{font:inherit;color:inherit}
     applyKind();
     $("overlay").classList.remove("hidden");
     document.body.style.overflow = "hidden";
-    setTimeout(function(){ $("f_date").focus(); }, 30);
+    setTimeout(function(){ ($("f_kind").value === "identity" ? $("f_title") : $("f_date")).focus(); }, 30);
   }
   function applyKind(){
     var k = $("f_kind").value, isId = k === "identity";
