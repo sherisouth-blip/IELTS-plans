@@ -135,3 +135,38 @@
     })(keys[k], k);
   }catch(e){}
 })();
+
+/* On-screen answers: every textarea.ans saves on this device as he types.
+   A .copy-ans button copies the answers in its section, with the questions, for the journal. */
+(function(){
+  try{
+    var page = location.pathname.split("/").pop() || "page";
+    var boxes = document.querySelectorAll("textarea.ans");
+    for(var i=0;i<boxes.length;i++) (function(ta, i){
+      var id = "psn-ans-" + page + "-" + i;
+      try{ var v = localStorage.getItem(id); if(v) ta.value = v; }catch(e){}
+      ta.addEventListener("input", function(){ try{ localStorage.setItem(id, ta.value); }catch(e){} });
+    })(boxes[i], i);
+    var btns = document.querySelectorAll(".copy-ans");
+    for(var b=0;b<btns.length;b++) (function(btn){
+      btn.addEventListener("click", function(){
+        var sec = btn.closest ? btn.closest("section") : null;
+        var msg = btn.parentNode.querySelector(".done");
+        var h = sec && sec.querySelector("h2") ? sec.querySelector("h2").textContent.trim() : "";
+        var tas = sec ? sec.querySelectorAll("textarea.ans") : [];
+        var lines = [];
+        for(var k=0;k<tas.length;k++){ if(tas[k].value.trim()) lines.push(tas[k].getAttribute("data-q") + ":\n" + tas[k].value.trim()); }
+        if(!lines.length){ if(msg) msg.textContent = "Write an answer first."; return; }
+        var out = (h ? h.toUpperCase() + "\n\n" : "") + lines.join("\n\n");
+        function ok(){ if(msg) msg.textContent = "Copied. Paste it into your journal."; }
+        function fallback(){
+          var t = document.createElement("textarea"); t.value = out; t.setAttribute("readonly","");
+          t.style.position = "fixed"; t.style.top = "-1000px"; document.body.appendChild(t);
+          t.select(); try{ document.execCommand("copy"); ok(); }catch(e){ if(msg) msg.textContent = "Select your answers and copy them."; }
+          document.body.removeChild(t);
+        }
+        if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(out).then(ok, fallback); } else fallback();
+      });
+    })(btns[b]);
+  }catch(e){}
+})();

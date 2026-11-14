@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
-<link rel="stylesheet" href="site.css?v=3">
+<link rel="stylesheet" href="site.css?v=4">
 </head>
 <body>
 <div class="wrap">
@@ -106,10 +106,14 @@
     <p>Think about your school (now or before).</p>
     <div class="box">
       <ol class="q">
-        <li>What groups are there? Make a list. <span class="small">For example: the sports team, the students who always study, the gamers…</span></li>
-        <li>Are you in one of these groups? Which one, if any?</li>
-        <li>What do people <b>call</b> each group? Write the name people use.</li>
-        <li>Choose a group you are <b>not</b> in. What are they like? Write three words.</li>
+        <li>What groups are there? Make a list. <span class="small">For example: the sports team, the students who always study, the gamers…</span>
+          <textarea class="ans" data-q="What groups are there at my school?" placeholder="the sports team, …"></textarea></li>
+        <li>Are you in one of these groups? Which one, if any?
+          <textarea class="ans" data-q="Am I in one of these groups?" placeholder="I am in … / I am not in any group because …"></textarea></li>
+        <li>What do people <b>call</b> each group? Write the name people use.
+          <textarea class="ans" data-q="What do people call each group?" placeholder="People call the … “…”"></textarea></li>
+        <li>Choose a group you are <b>not</b> in. What are they like? Write three words.
+          <textarea class="ans" data-q="A group I am not in, in three words" placeholder="The group: … · Three words: …, …, …"></textarea></li>
       </ol>
     </div>
     <details class="reveal">
@@ -120,6 +124,10 @@
     <div class="box">
       <b>Sort your labels</b>
       <p style="margin:6px 0 0">Which labels only <b>describe</b> a group (like "the basketball team")? Which ones <b>judge</b> a group (like "losers")? Which would hurt if someone used it about you?</p>
+      <label class="anslabel">Labels that only <b>describe</b><textarea class="ans" data-q="Labels that only describe"></textarea></label>
+      <label class="anslabel">Labels that <b>judge</b><textarea class="ans" data-q="Labels that judge"></textarea></label>
+      <label class="anslabel">A label that would <b>hurt</b> if someone used it about me, and why<textarea class="ans" data-q="A label that would hurt me, and why" placeholder="“…” would hurt because …"></textarea></label>
+      <div class="agree-bar"><button type="button" class="btn copy-ans">Copy my answers</button><span class="done"></span></div>
     </div>
   </section>
 
@@ -155,6 +163,6 @@
     <div class="reflect" style="margin-top:10px">In your journal: has anyone ever put a label on you before they knew you? What did they get wrong?</div>
   </section>
 </div>
-<script src="site.js?v=3"></script>
+<script src="site.js?v=4"></script>
 </body>
 </html>
