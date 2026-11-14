@@ -114,7 +114,22 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
 
   <!-- SENTENCES -->
   <section id="tab-sentences" class="hidden">
-    <p>These are the sentences you wrote. Your tutor will go over them with you in class.</p>
+    <h2 style="font-family:var(--font-display);font-size:26px;margin:0 0 6px">Write your own sentences</h2>
+    <p>Show that you can <b>use</b> a word. Choose a word, then write one sentence about <b>your</b> life, the book, or the news. Your tutor will read your sentences with you in class.</p>
+    <div class="qcard" style="margin-top:6px">
+      <div class="row">
+        <label for="sWord" class="small">Word</label>
+        <select id="sWord" style="flex:1 1 220px"></select>
+        <button class="listen" type="button" id="sListen">🔊 Listen</button>
+      </div>
+      <p class="small" id="sMeaning" style="margin:8px 0 0"></p>
+      <p class="ex" id="sModel" style="margin:4px 0 0;color:var(--muted);font-style:italic"></p>
+      <label for="sText" class="small" style="display:block;margin-top:10px">Your sentence</label>
+      <textarea id="sText" rows="2" style="width:100%" placeholder="Write one complete sentence."></textarea>
+      <div class="row" style="margin-top:10px"><button class="btn" type="button" id="sSave">Save my sentence</button><span class="small" id="sMsg"></span></div>
+      <p class="small" style="margin:8px 0 0">Tip: words you can already use are at the top of the list.</p>
+    </div>
+    <h3 style="font-family:var(--font-display);font-size:21px;margin:22px 0 8px">My saved sentences</h3>
     <div class="list" id="sList"></div>
   </section>
 
@@ -394,8 +409,40 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
     });
     $("wList").innerHTML = h || '<p class="small">No words to show here yet.</p>';
   }
+  function fillWordPicker(){
+    var sel = $("sWord"), cur = sel.value;
+    var rank = {"use":0, "understand":1, "new":2};
+    var words = Q.slice().sort(function(a,b){ return rank[status(a.e)] - rank[status(b.e)] || a.c - b.c; });
+    var h = "", lastGroup = null;
+    words.forEach(function(q){
+      var g = status(q.e);
+      if(g !== lastGroup){ if(lastGroup !== null) h += '</optgroup>'; h += '<optgroup label="' + ({"use":"I can use it","understand":"I understand it","new":"New"})[g] + '">'; lastGroup = g; }
+      h += '<option value="' + esc(q.e) + '">' + esc(q.e) + '</option>';
+    });
+    sel.innerHTML = h + '</optgroup>';
+    if(cur && QBY[cur]) sel.value = cur;
+    showWordHelp();
+  }
+  function showWordHelp(){
+    var q = QBY[$("sWord").value]; if(!q) return;
+    $("sMeaning").innerHTML = '<b>' + esc(q.e) + '</b>: ' + esc(q.m) + (q.j ? ' <span class="ja">(' + esc(q.j) + ')</span>' : '');
+    $("sModel").textContent = 'Example: ' + q.ok;
+    $("sMsg").textContent = "";
+  }
+  $("sWord").addEventListener("change", showWordHelp);
+  $("sListen").addEventListener("click", function(){ speak($("sWord").value); });
+  $("sSave").addEventListener("click", function(){
+    var w = $("sWord").value, t = ($("sText").value || "").trim();
+    if(!t){ $("sMsg").textContent = "Write your sentence first."; return; }
+    if(t.split(/\s+/).length < 4){ $("sMsg").textContent = "Write a complete sentence (at least 4 words)."; return; }
+    var stem = w.toLowerCase().split(" ")[0]; stem = stem.slice(0, Math.max(3, stem.length - 2));
+    if(t.toLowerCase().indexOf(stem) < 0){ $("sMsg").textContent = 'Use the word "' + w + '" in your sentence.'; return; }
+    if(t.toLowerCase() === (QBY[w] && QBY[w].ok || "").toLowerCase()){ $("sMsg").textContent = "Write your own sentence, not the example."; return; }
+    addSentence(w, t, function(){ $("sText").value = ""; $("sMsg").textContent = "Saved. Your tutor will read it."; });
+  });
+
   function renderSentences(){
-    if(!sentences.length){ $("sList").innerHTML = '<p class="small">No sentences yet. When a word reaches "I can use it", you can write your own sentence.</p>'; return; }
+    if(!sentences.length){ $("sList").innerHTML = '<p class="small">No sentences yet. Write your first one above.</p>'; return; }
     $("sList").innerHTML = sentences.map(function(s){
       return '<div class="item"><div class="row" style="justify-content:space-between"><span class="e">' + esc(s.w) + '</span><button class="listen" type="button" data-del="' + esc(s.id) + '">Delete</button></div><div>' + esc(s.s) + '</div></div>';
     }).join("");
@@ -428,7 +475,7 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
       for(var j=0;j<tabs.length;j++) tabs[j].setAttribute("aria-pressed", tabs[j] === this ? "true" : "false");
       ["practice","words","sentences","idioms","filipino"].forEach(function(n){ $("tab-" + n).classList.toggle("hidden", n !== name); });
       if(name === "words") renderWords();
-      if(name === "sentences") renderSentences();
+      if(name === "sentences"){ fillWordPicker(); renderSentences(); }
       if(name === "idioms") renderOther("idiom", "iChap", "iList");
       if(name === "filipino") renderOther("filipino", "fChap", "fList");
     });
