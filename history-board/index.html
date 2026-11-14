@@ -77,7 +77,7 @@ textarea,input,select{font:inherit;color:inherit}
 #script{width:100%;min-height:340px;border:1px solid var(--line);border-radius:10px;padding:12px;font-size:18px;line-height:1.6;resize:vertical;background:#fff}
 .counter{display:flex;flex-wrap:wrap;gap:16px;font-size:15px;color:var(--muted);margin-top:8px}
 .counter b{color:var(--ink)}
-.tips{font-size:15px;color:var(--muted);margin:0 0 10px}
+.tips{font-size:16px;color:var(--ink);margin:0 0 10px}
 .hidden{display:none !important}
 /* modal */
 .overlay{position:fixed;inset:0;top:0;left:0;right:0;bottom:0;background:rgba(20,20,20,.5);display:flex;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto;-webkit-overflow-scrolling:touch;z-index:10}
@@ -90,6 +90,9 @@ textarea,input,select{font:inherit;color:inherit}
 .kgroup{margin:6px 0}
 .kglabel{display:block;font-size:13px;color:var(--muted);font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-bottom:4px}
 .kopts{display:flex;flex-wrap:wrap;gap:6px}
+.idword.idlabel{background:transparent;border:2px dashed var(--accent);color:var(--accent)}
+.klock summary{cursor:pointer;list-style-position:inside;margin-bottom:4px}
+.klock .small{font-size:13px;color:var(--muted)}
 .kopt{position:relative;display:inline-block;cursor:pointer}
 .kopt input{position:absolute;opacity:0;width:1px;height:1px}
 .kopt span{display:inline-block;border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 12px;font-size:15px;font-weight:600;color:var(--ink)}
@@ -136,8 +139,19 @@ textarea,input,select{font:inherit;color:inherit}
 
     <section id="panel-script" class="hidden">
       <div class="script-box">
-        <p class="tips">Write your 3-minute narration here (about 350–400 words). Start with the airport, end with your answer to the big question, and link it to Jay. It saves as you type.</p>
-        <textarea id="script" placeholder="One airport, two stories…"></textarea>
+        <div class="tips">
+          <p style="margin:0 0 6px"><b>This is your final project (Stage 6).</b> You will make a short documentary, about 3 minutes, that answers the compelling question: <b>How can we know what really happened in the past?</b> Your cards on the timeline are your evidence. You don't need to write here until Stage 6.</p>
+          <p style="margin:0 0 4px">Follow these five parts (about 350–400 words in total):</p>
+          <ol style="margin:0 0 6px;padding-left:22px">
+            <li><b>One case.</b> Choose one event card from your timeline. What happened?</li>
+            <li><b>The official story.</b> What did the police or the government say?</li>
+            <li><b>Other voices.</b> What did families, journalists or a court say?</li>
+            <li><b>The evidence.</b> Which source do you trust most, and why?</li>
+            <li><b>Your answer.</b> How can we know what really happened? Connect it to Jay, who wanted to know what really happened to Jun.</li>
+          </ol>
+          <p style="margin:0">It saves as you type.</p>
+        </div>
+        <textarea id="script" placeholder="1. One case: On … , …"></textarea>
         <div class="counter"><span><b id="wc">0</b> words</span><span>about <b id="mins">0:00</b> spoken</span><span id="status2"></span></div>
       </div>
     </section>
@@ -156,7 +170,7 @@ textarea,input,select{font:inherit;color:inherit}
       <input type="hidden" id="f_kind" value="event">
       <div class="kgroup"><span class="kglabel">Identity</span><div class="kopts"><label class="kopt"><input type="radio" name="kind" value="identity"><span>Identity chart</span></label></div></div>
       <div class="kgroup"><span class="kglabel">History</span><div class="kopts"><label class="kopt"><input type="radio" name="kind" value="event"><span>Event</span></label><label class="kopt"><input type="radio" name="kind" value="voice"><span>Voice (a person's story)</span></label><label class="kopt"><input type="radio" name="kind" value="official"><span>Official story</span></label><label class="kopt"><input type="radio" name="kind" value="claim"><span>False claim</span></label><label class="kopt"><input type="radio" name="kind" value="factcheck"><span>Fact-check</span></label></div></div>
-      <div class="kgroup"><span class="kglabel">Choices</span><div class="kopts"><label class="kopt"><input type="radio" name="kind" value="upstander"><span>Upstander</span></label><label class="kopt"><input type="radio" name="kind" value="bystander"><span>Bystander</span></label><label class="kopt"><input type="radio" name="kind" value="perpetrator"><span>Perpetrator</span></label></div></div>
+      <details class="kgroup klock" id="choicesGrp"><summary><span class="kglabel" style="display:inline">Choices</span> <span class="small">· Stage 4 words. Open these after the lesson "Choosing to see."</span></summary><div class="kopts" style="margin-top:6px"><label class="kopt"><input type="radio" name="kind" value="upstander"><span>Upstander</span></label><label class="kopt"><input type="radio" name="kind" value="bystander"><span>Bystander</span></label><label class="kopt"><input type="radio" name="kind" value="perpetrator"><span>Perpetrator</span></label></div></details>
       <div class="kgroup"><span class="kglabel">Memory and the novel</span><div class="kopts"><label class="kopt"><input type="radio" name="kind" value="memory"><span>Memory and legacy</span></label><label class="kopt"><input type="radio" name="kind" value="novel"><span>Link to the novel</span></label></div></div>
       </fieldset>
       <div class="hint" id="kindHint"></div>
@@ -195,7 +209,12 @@ textarea,input,select{font:inherit;color:inherit}
 
   var KIND_LABEL = {identity:"Identity chart", event:"Event", voice:"Voice", official:"Official story", claim:"False claim", factcheck:"Fact-check", upstander:"Upstander", bystander:"Bystander", perpetrator:"Perpetrator", memory:"Memory and legacy", novel:"Link to the novel"};
   var KIND_HINT = {
-    identity:"Who is this person? Put their name as the title, then list words that describe them: how they see themselves and how others see them.",
+    identity:"Ask three questions. What does this person call himself? What labels do other people put on him? Is each label fair? Put the labels other people use in quotation marks, like \"a drug user\".",
+    event:"Something that happened. Give the date, say what happened in 2–4 sentences in your own words, and add your source: news, government, court, university or museum. Not Wikipedia.",
+    voice:"One real person's story, told by them or their family. Who are they, and what do they say happened?",
+    official:"What the police or the government said happened. Who said it, and when?",
+    claim:"Something people said or shared that turned out to be false. What was the claim, and how do we know it is false?",
+    factcheck:"A source that checks a claim. What claim did it check, and what did it find?",
     upstander:"Someone who chose to speak up or act against the injustice. What did they do, and what did it cost them?",
     bystander:"Someone who saw what was happening and stayed silent or looked away. Why might they have done that?",
     perpetrator:"Someone who carried out or ordered the injustice. Describe what they did, not what they were like.",
@@ -303,7 +322,11 @@ textarea,input,select{font:inherit;color:inherit}
     var h = '<article class="card idcard"><div class="body">';
     h += '<div class="meta"><span class="pill kind">Identity chart</span></div>';
     h += '<div class="idchart"><div class="idname">' + esc(c.title || "Name") + '</div><div class="idwords">';
-    words.forEach(function(w){ h += '<span class="idword">' + esc(w) + '</span>'; });
+    words.forEach(function(w){
+      var isLabel = /^["“'‘].*["”'’]$/.test(w);
+      h += '<span class="idword' + (isLabel ? ' idlabel' : '') + '">' + esc(isLabel ? w.replace(/^["“'‘]|["”'’]$/g, "") : w) + '</span>';
+    });
+    if(words.some(function(w){ return /^["“'‘].*["”'’]$/.test(w); })) h += '<div class="small" style="margin-top:6px">Dashed = a label other people use.</div>';
     if(!words.length) h += '<span class="idword muted">Add words that describe this person</span>';
     h += '</div></div>';
     var src = safeUrl(c.source_url);
@@ -363,7 +386,8 @@ textarea,input,select{font:inherit;color:inherit}
     $("l_title").textContent = isId ? "Whose identity chart? (name)" : "Title";
     $("f_title").placeholder = isId ? "Jay" : "The drug war begins";
     $("l_caption").textContent = isId ? "Identity words, separated by commas" : "What happened, in your own words";
-    $("f_caption").placeholder = isId ? "Filipino American, son, student, outsider, cousin…" : "2–4 sentences. Don't copy from the source.";
+    $("f_caption").placeholder = isId ? "Filipino American, son, cousin, \"outsider\", \"a drug user\"…" : "2–4 sentences. Don't copy from the source.";
+    if(k === "upstander" || k === "bystander" || k === "perpetrator") $("choicesGrp").open = true;
     var dateFields = [$("f_date"), $("f_year"), $("f_img"), $("f_video")];
     for(var i=0;i<dateFields.length;i++){
       var fld = dateFields[i].parentNode;
