@@ -91,6 +91,8 @@ textarea,input,select{font:inherit;color:inherit}
 .kglabel{display:block;font-size:13px;color:var(--muted);font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-bottom:4px}
 .kopts{display:flex;flex-wrap:wrap;gap:6px}
 .idword.idlabel{background:transparent;border:2px dashed var(--accent);color:var(--accent)}
+.field input.missing{border:2px solid var(--accent);background:#fbe9e6}
+.warntext{color:var(--accent);font-weight:700;font-size:15px}
 .klock summary{cursor:pointer;list-style-position:inside;margin-bottom:4px}
 .klock .small{font-size:13px;color:var(--muted)}
 .kopt{position:relative;display:inline-block;cursor:pointer}
@@ -175,7 +177,7 @@ textarea,input,select{font:inherit;color:inherit}
       </fieldset>
       <div class="hint" id="kindHint"></div>
     </div>
-    <div class="field"><label for="f_title" id="l_title">Title</label><input id="f_title" maxlength="200" placeholder="The drug war begins"></div>
+    <div class="field"><label for="f_title" id="l_title">Title</label><input id="f_title" maxlength="200" placeholder="e.g. The drug war begins"><div class="hint warntext hidden" id="titleMissing"></div></div>
     <div class="field"><label for="f_caption" id="l_caption">What happened, in your own words</label><textarea id="f_caption" maxlength="2000" placeholder="2–4 sentences. Don't copy from the source."></textarea></div>
     <div class="field"><label for="f_img">Image link (optional)</label><input id="f_img" type="url" placeholder="https://…jpg"><div class="hint">Right-click an image on the source page and choose "Copy image address".</div></div>
     <div class="field"><label for="f_video">Video link (optional)</label><input id="f_video" type="url" placeholder="https://www.youtube.com/watch?v=…"></div>
@@ -363,6 +365,7 @@ textarea,input,select{font:inherit;color:inherit}
     state.editingId = card ? card.id : null;
     $("mtitle").textContent = card ? "Edit card" : "Add a card";
     $("mwarn").classList.add("hidden");
+    $("f_title").classList.remove("missing"); $("titleMissing").classList.add("hidden");
     $("f_date").value = card ? card.event_date : "";
     $("f_year").value = card && card.sort_year != null ? card.sort_year : "";
     $("f_kind").value = card ? (card.kind || "event") : "identity";
@@ -384,9 +387,9 @@ textarea,input,select{font:inherit;color:inherit}
     var k = $("f_kind").value, isId = k === "identity";
     $("kindHint").textContent = KIND_HINT[k] || "";
     $("l_title").textContent = isId ? "Whose identity chart? (name)" : "Title";
-    $("f_title").placeholder = isId ? "Jay" : "The drug war begins";
+    $("f_title").placeholder = isId ? "e.g. Jay" : "e.g. The drug war begins";
     $("l_caption").textContent = isId ? "Identity words, separated by commas" : "What happened, in your own words";
-    $("f_caption").placeholder = isId ? "Filipino American, son, cousin, gamer, \"outsider\"…" : "2–4 sentences. Don't copy from the source.";
+    $("f_caption").placeholder = isId ? "e.g. Filipino American, son, cousin, gamer, \"outsider\"…" : "2–4 sentences. Don't copy from the source.";
     if(k === "upstander" || k === "bystander" || k === "perpetrator") $("choicesGrp").open = true;
     var dateFields = [$("f_date"), $("f_year"), $("f_img"), $("f_video")];
     for(var i=0;i<dateFields.length;i++){
@@ -401,6 +404,7 @@ textarea,input,select{font:inherit;color:inherit}
   }
   function warn(msg){ var w = $("mwarn"); w.textContent = msg; w.classList.remove("hidden"); w.scrollIntoView({block:"nearest"}); }
 
+  document.addEventListener("input", function(e){ if(e.target && e.target.id === "f_title" && e.target.value.trim()){ e.target.classList.remove("missing"); $("titleMissing").classList.add("hidden"); } });
   function saveCard(){
     var yearRaw = $("f_year").value.trim();
     var card = {
@@ -415,7 +419,15 @@ textarea,input,select{font:inherit;color:inherit}
       source_type: $("f_srctype").value,
       source_url: $("f_srcurl").value.trim()
     };
-    if(!card.title){ return warn("Give your card a title."); }
+    if(!card.title){
+      var isIdW = $("f_kind").value === "identity";
+      var t = $("f_title");
+      t.classList.add("missing");
+      t.focus();
+      try{ t.scrollIntoView({block:"center"}); }catch(e){ t.scrollIntoView(); }
+      var hint = $("titleMissing"); hint.textContent = isIdW ? "Write the person's name here." : "Write a title here."; hint.classList.remove("hidden");
+      return;
+    }
     if(yearRaw && !/^\d{4}$/.test(yearRaw)){ return warn("Year should be four digits, like 1972."); }
     var all = (card.source_url + " " + card.image_url + " " + card.source_name).toLowerCase();
     if(all.indexOf("wikipedia") >= 0 || all.indexOf("wikimedia") >= 0){
