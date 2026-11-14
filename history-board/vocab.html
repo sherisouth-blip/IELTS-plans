@@ -48,6 +48,11 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
 .badge.u{background:var(--gold);color:var(--ink)}
 .badge.s{background:var(--accent);color:var(--on-accent)}
 .saving{font-size:15px;color:var(--muted)}
+.wordchips{display:flex;flex-wrap:wrap;gap:6px}
+.wchip{-webkit-appearance:none;appearance:none;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:7px 12px;font:600 16px var(--font-body);cursor:pointer;min-height:38px}
+.wchip[aria-pressed="true"]{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
+.wchip .wtag{color:#2f6b3c;font-weight:700}
+.wchip[aria-pressed="true"] .wtag{color:#bfe5c7}
 .chapbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:var(--ink);color:var(--on-ink);border-radius:14px;padding:12px 16px;margin:4px 0 12px}
 .chapbar select{font-size:17px;min-width:0;max-width:100%;flex:1 1 240px}
 .chapbar .small{color:#d8d2c6}
@@ -124,17 +129,18 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
     <h2 style="font-family:var(--font-display);font-size:26px;margin:0 0 6px">Write your own sentences</h2>
     <p>Show that you can <b>use</b> a word. Choose a word, then write one sentence about <b>your</b> life, the book, or the news. Your tutor will read your sentences with you in class.</p>
     <div class="qcard" style="margin-top:6px">
-      <div class="row">
-        <label for="sWord" class="small">Word</label>
-        <select id="sWord" style="flex:1 1 220px"></select>
+      <p class="small" style="margin:0 0 6px"><b>1. Tap a word</b> from this chapter.</p>
+      <input type="hidden" id="sWord" value="">
+      <div class="wordchips" id="sWordList" role="group" aria-label="Choose a word"></div>
+      <div class="row" style="margin-top:8px">
         <button class="listen" type="button" id="sListen">🔊 Listen</button>
       </div>
       <p class="small" id="sMeaning" style="margin:8px 0 0"></p>
       <p class="ex" id="sModel" style="margin:4px 0 0;color:var(--muted);font-style:italic"></p>
-      <label for="sText" class="small" style="display:block;margin-top:10px">Your sentence</label>
+      <label for="sText" class="small" style="display:block;margin-top:10px"><b>2. Write your sentence</b></label>
       <textarea id="sText" rows="2" style="width:100%" placeholder="Write one complete sentence."></textarea>
       <div class="row" style="margin-top:10px"><button class="btn" type="button" id="sSave">Save my sentence</button><span class="small" id="sMsg"></span></div>
-      <p class="small" style="margin:8px 0 0">The menu shows words from the chapter you chose. Words you can already use are at the top.</p>
+      <p class="small" style="margin:8px 0 0">✓ = you understand it · ✓✓ = you can use it. Those words come first.</p>
     </div>
     <h3 style="font-family:var(--font-display);font-size:21px;margin:22px 0 8px">My saved sentences</h3>
     <div class="list" id="sList"></div>
@@ -416,17 +422,24 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
     $("wList").innerHTML = h || '<p class="small">No words to show here yet.</p>';
   }
   function fillWordPicker(){
-    var sel = $("sWord"), cur = sel.value;
+    var sel = $("sWord"), cur = sel.value, list = $("sWordList");
     var rank = {"use":0, "understand":1, "new":2};
     var ch = chap();
     var words = Q.filter(function(q){ return ch === "all" || String(q.c) === ch; }).sort(function(a,b){ return rank[status(a.e)] - rank[status(b.e)] || a.c - b.c; });
     var h = "";
-    var tag = {"use":" ✓✓ can use", "understand":" ✓ understand", "new":""};
+    var tag = {"use":" ✓✓", "understand":" ✓", "new":""};
     words.forEach(function(q){
-      h += '<option value="' + esc(q.e) + '">' + esc(q.e) + tag[status(q.e)] + '</option>';
+      h += '<button type="button" class="wchip" data-w="' + esc(q.e) + '">' + esc(q.e) + '<span class="wtag">' + tag[status(q.e)] + '</span></button>';
     });
-    sel.innerHTML = h;
-    if(cur && QBY[cur]) sel.value = cur;
+    list.innerHTML = h || '<p class="small">There are no practice words in this chapter. Choose another chapter at the top.</p>';
+    var keep = (cur && words.some(function(q){ return q.e === cur; })) ? cur : (words[0] ? words[0].e : "");
+    pickWord(keep);
+  }
+  function pickWord(w){
+    $("sWord").value = w;
+    var bs = $("sWordList").querySelectorAll(".wchip");
+    for(var i=0;i<bs.length;i++) bs[i].setAttribute("aria-pressed", bs[i].getAttribute("data-w") === w ? "true" : "false");
+    if(!w){ $("sMeaning").textContent = ""; $("sModel").textContent = ""; return; }
     showWordHelp();
   }
   function showWordHelp(){
@@ -435,7 +448,10 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
     $("sModel").textContent = 'Example: ' + q.ok;
     $("sMsg").textContent = "";
   }
-  $("sWord").addEventListener("change", showWordHelp);
+  $("sWordList").addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest(".wchip") : null;
+    if(b) pickWord(b.getAttribute("data-w"));
+  });
   $("sListen").addEventListener("click", function(){ speak($("sWord").value); });
   $("sSave").addEventListener("click", function(){
     var w = $("sWord").value, t = ($("sText").value || "").trim();
