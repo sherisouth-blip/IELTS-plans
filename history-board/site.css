@@ -122,3 +122,5 @@ textarea.ans{display:block;width:100%;box-sizing:border-box;margin:6px 0 4px;bor
 .orderout{margin:8px 0 4px;font-size:16px}
 .orderout ol{margin:0 0 6px;padding-left:24px}
 .oreset{-webkit-appearance:none;appearance:none;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:5px 12px;font:600 14px var(--font-body);cursor:pointer}
+.addb{margin:10px 0 0}
+.addb a{display:inline-block;border:2px solid var(--accent);color:var(--accent);background:#fff;text-decoration:none;font-weight:700;border-radius:999px;padding:6px 14px;font-size:15px}

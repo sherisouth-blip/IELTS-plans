@@ -92,6 +92,7 @@ textarea,input,select{font:inherit;color:inherit}
 .kopts{display:flex;flex-wrap:wrap;gap:6px}
 .idword.idlabel{background:transparent;border:2px dashed var(--accent);color:var(--accent)}
 .field input.missing{border:2px solid var(--accent);background:#fbe9e6}
+.warn.info{background:#e8f0f7;color:var(--ink);font-weight:600}
 .warntext{color:var(--accent);font-weight:700;font-size:15px}
 .klock summary{cursor:pointer;list-style-position:inside;margin-bottom:4px}
 .klock .small{font-size:13px;color:var(--muted)}
@@ -364,7 +365,7 @@ textarea,input,select{font:inherit;color:inherit}
   function openModal(card){
     state.editingId = card ? card.id : null;
     $("mtitle").textContent = card ? "Edit card" : "Add a card";
-    $("mwarn").classList.add("hidden");
+    $("mwarn").classList.add("hidden"); $("mwarn").classList.remove("info");
     $("f_title").classList.remove("missing"); $("titleMissing").classList.add("hidden");
     $("f_date").value = card ? card.event_date : "";
     $("f_year").value = card && card.sort_year != null ? card.sort_year : "";
@@ -385,7 +386,8 @@ textarea,input,select{font:inherit;color:inherit}
   }
   function applyKind(){
     var k = $("f_kind").value, isId = k === "identity";
-    $("kindHint").textContent = KIND_HINT[k] || "";
+    $("kindHint").textContent = KIND_HINT[k] || (k ? "" : "Choose the card type that fits this source.");
+    $("kindHint").classList.remove("warntext");
     $("l_title").textContent = isId ? "Whose identity chart? (name)" : "Title";
     $("f_title").placeholder = isId ? "e.g. Jay" : "e.g. The drug war begins";
     $("l_caption").textContent = isId ? "Identity words, separated by commas" : "What happened, in your own words";
@@ -419,6 +421,11 @@ textarea,input,select{font:inherit;color:inherit}
       source_type: $("f_srctype").value,
       source_url: $("f_srcurl").value.trim()
     };
+    if(!card.kind){
+      var kh = $("kindHint"); kh.textContent = "Choose a card type first: is this an event, an official story, or a voice?"; kh.classList.add("warntext");
+      try{ kh.scrollIntoView({block:"center"}); }catch(e){}
+      return;
+    }
     if(!card.title){
       var isIdW = $("f_kind").value === "identity";
       var t = $("f_title");
@@ -483,6 +490,32 @@ textarea,input,select{font:inherit;color:inherit}
     $("panel-script").classList.toggle("hidden", b);
   }
 
+  /* "Add to my board" buttons in the lessons open the form with the source already filled in.
+     The student still chooses the card type and writes the title and summary. */
+  function fromLesson(){
+    var q = window.location.search;
+    if(!/[?&]add=1/.test(q)) return;
+    var P = {};
+    q.replace(/^\?/, "").split("&").forEach(function(kv){
+      var i = kv.indexOf("="); if(i < 0) return;
+      try{ P[kv.slice(0, i)] = decodeURIComponent(kv.slice(i + 1).replace(/\+/g, " ")); }catch(e){}
+    });
+    openModal(null);
+    $("f_kind").value = "";
+    var radios = document.querySelectorAll('input[name="kind"]');
+    for(var ri=0; ri<radios.length; ri++){ radios[ri].checked = false; }
+    $("f_date").value = P.date || "";
+    $("f_year").value = P.year || "";
+    $("f_srcname").value = P.src || "";
+    if(P.stype) $("f_srctype").value = P.stype;
+    $("f_srcurl").value = P.url || "";
+    applyKind();
+    var w = $("mwarn"); w.textContent = "From your lesson" + (P.from ? ": " + P.from : "") + ". The source is filled in. You choose the card type and write the title and what it says in your own words.";
+    w.classList.remove("hidden"); w.classList.add("info");
+    setTimeout(function(){ var first = document.querySelector('input[name="kind"]'); if(first) first.focus(); }, 40);
+    try{ history.replaceState(null, "", window.location.pathname + window.location.hash); }catch(e){}
+  }
+
   function init(){
     if(!/^[a-f0-9]{20,}$/i.test(KEY)){
       $("nokey").classList.remove("hidden");
@@ -514,7 +547,7 @@ textarea,input,select{font:inherit;color:inherit}
     $("script").addEventListener("input", function(){ state.typing = true; countWords(); queueBoardSave(); });
     $("tab-board").addEventListener("click", function(){ showTab("board"); });
     $("tab-script").addEventListener("click", function(){ showTab("script"); });
-    load(false);
+    load(false).then(fromLesson);
     setInterval(function(){
       var modalOpen = !$("overlay").classList.contains("hidden");
       var editing = document.activeElement === $("script") || document.activeElement === $("bigq");
