@@ -48,6 +48,9 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
 .badge.u{background:var(--gold);color:var(--ink)}
 .badge.s{background:var(--accent);color:var(--on-accent)}
 .saving{font-size:15px;color:var(--muted)}
+.chapbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:var(--ink);color:var(--on-ink);border-radius:14px;padding:12px 16px;margin:4px 0 12px}
+.chapbar select{font-size:17px;min-width:0;max-width:100%;flex:1 1 240px}
+.chapbar .small{color:#d8d2c6}
 .saving.err{color:var(--accent);font-weight:700}
 .hidden{display:none!important}
 </style>
@@ -72,6 +75,12 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
     <div class="count"><b id="cSen">0</b><span>my sentences</span></div>
   </div>
 
+  <div class="chapbar">
+    <label for="gChap"><b>Chapter</b></label>
+    <select id="gChap"><option value="all">All chapters</option></select>
+    <span class="small" id="gSum"></span>
+  </div>
+
   <div class="tabs" role="group" aria-label="Vocabulary sections">
     <button class="tabbtn" type="button" data-tab="words" aria-pressed="false">Pre-practice</button>
     <button class="tabbtn" type="button" data-tab="practice" aria-pressed="true">Practice</button>
@@ -85,11 +94,10 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
   <section id="tab-practice">
     <div id="pStart">
       <h2 style="font-family:var(--font-display);font-size:26px;margin:0 0 6px">Practice your words</h2>
-      <p>Choose a chapter. You will practice 5 words, with 2 questions each. Get both right to move a word up: <b>new → I understand it → I can use it</b>.</p>
+      <p>You will practice 5 words from the chapter you chose, with 2 questions each. Get both right to move a word up: <b>new → I understand it → I can use it</b>.</p>
       <div class="row">
-        <label for="pChap" class="small">Chapter</label>
-        <select id="pChap"><option value="review">Words to review</option></select>
         <button class="btn" type="button" id="pGo">Start</button>
+        <button class="btn ghost" type="button" id="pRev">Practice my words to review</button>
       </div>
       <p class="small" id="pNote"></p>
     </div>
@@ -105,7 +113,6 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
   <section id="tab-words" class="hidden">
     <p>All the words to learn from the book. Use this list to <b>study before you practice</b>: read the meaning, listen, and read the example. The label shows how far you have got with each word.</p>
     <div class="row" style="margin-bottom:12px">
-      <label for="wChap" class="small">Chapter</label><select id="wChap"><option value="all">All chapters</option></select>
       <label for="wStat" class="small">Show</label>
       <select id="wStat"><option value="all">All words</option><option value="new">New</option><option value="understand">I understand it</option><option value="use">I can use it</option><option value="review">To review</option></select>
     </div>
@@ -127,7 +134,7 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
       <label for="sText" class="small" style="display:block;margin-top:10px">Your sentence</label>
       <textarea id="sText" rows="2" style="width:100%" placeholder="Write one complete sentence."></textarea>
       <div class="row" style="margin-top:10px"><button class="btn" type="button" id="sSave">Save my sentence</button><span class="small" id="sMsg"></span></div>
-      <p class="small" style="margin:8px 0 0">Tip: words you can already use are at the top of the list.</p>
+      <p class="small" style="margin:8px 0 0">The menu shows words from the chapter you chose. Words you can already use are at the top.</p>
     </div>
     <h3 style="font-family:var(--font-display);font-size:21px;margin:22px 0 8px">My saved sentences</h3>
     <div class="list" id="sList"></div>
@@ -136,11 +143,9 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
   <!-- IDIOMS / FILIPINO -->
   <section id="tab-idioms" class="hidden">
     <p>Idioms are groups of words with a special meaning. Read the scene note to work out the meaning before you read it.</p>
-    <div class="row" style="margin-bottom:12px"><label for="iChap" class="small">Chapter</label><select id="iChap"><option value="all">All chapters</option></select></div>
     <div class="list" id="iList"></div>
   </section>
   <section id="tab-filipino" class="hidden">
-    <div class="row" style="margin-bottom:12px"><label for="fChap" class="small">Chapter</label><select id="fChap"><option value="all">All chapters</option></select></div>
     <div class="list" id="fList"></div>
   </section>
 </div>
@@ -260,15 +265,15 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
 
   /* ---------- practice round ---------- */
   var round = null;
-  function startRound(){
-    var ch = $("pChap").value, pool;
+  function startRound(review){
+    var ch = review === true ? "review" : chap(), pool;
     if(ch === "review"){
       pool = Q.filter(function(q){ return misses(q.e) > 0; });
       if(!pool.length) pool = Q.filter(function(q){ return status(q.e) !== "use"; });
     } else {
       pool = Q.filter(function(q){ return String(q.c) === ch; });
     }
-    if(!pool.length){ $("pNote").textContent = "There are no words to practice here. Choose another chapter."; return; }
+    if(!pool.length){ $("pNote").textContent = review === true ? "You have no words to review right now." : "There are no words to practice in this chapter. Choose another chapter."; return; }
     var rank = function(q){ return (misses(q.e) > 0 ? 0 : 10) + ({"new":1,"understand":2,"use":5})[status(q.e)]; };
     pool = shuffle(pool).sort(function(a,b){ return rank(a) - rank(b); }).slice(0,5);
     var steps = [];
@@ -386,12 +391,13 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
       sentences.unshift({id:id, w:w, s:s}); counts(); renderSentences(); saving("Saved"); if(done) done();
     }).catch(function(){ saving("Not saved. Check your internet.", true); });
   }
-  $("pGo").addEventListener("click", startRound);
+  $("pGo").addEventListener("click", function(){ startRound(false); });
+  $("pRev").addEventListener("click", function(){ startRound(true); });
   $("pQuit").addEventListener("click", function(){ $("pRun").classList.add("hidden"); $("pStart").classList.remove("hidden"); renderWords(); });
 
   /* ---------- lists ---------- */
   function renderWords(){
-    var ch = $("wChap").value, st = $("wStat").value;
+    var ch = chap(), st = $("wStat").value;
     var rows = Q.filter(function(q){
       if(ch !== "all" && String(q.c) !== ch) return false;
       if(st === "all") return true;
@@ -412,7 +418,8 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
   function fillWordPicker(){
     var sel = $("sWord"), cur = sel.value;
     var rank = {"use":0, "understand":1, "new":2};
-    var words = Q.slice().sort(function(a,b){ return rank[status(a.e)] - rank[status(b.e)] || a.c - b.c; });
+    var ch = chap();
+    var words = Q.filter(function(q){ return ch === "all" || String(q.c) === ch; }).sort(function(a,b){ return rank[status(a.e)] - rank[status(b.e)] || a.c - b.c; });
     var h = "";
     var tag = {"use":" ✓✓ can use", "understand":" ✓ understand", "new":""};
     words.forEach(function(q){
@@ -454,8 +461,8 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
       sentences = sentences.filter(function(s){ return s.id !== id; }); counts(); renderSentences();
     });
   });
-  function renderOther(type, chapSel, listEl){
-    var ch = $(chapSel).value;
+  function renderOther(type, listEl){
+    var ch = chap();
     var rows = V.items.filter(function(it){ return it.t === type && (ch === "all" || String(it.c) === ch); });
     $(listEl).innerHTML = rows.map(function(it){
       return '<div class="item"><div class="row" style="justify-content:space-between"><span class="e">' + esc(it.e) + '</span>' + listenBtn(it.sy || it.e, (type === "filipino" && !PH_ENGLISH[it.e]) ? "fil" : null) + '</div>' +
@@ -475,28 +482,46 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
       ["practice","words","sentences","idioms","filipino"].forEach(function(n){ $("tab-" + n).classList.toggle("hidden", n !== name); });
       if(name === "words") renderWords();
       if(name === "sentences"){ fillWordPicker(); renderSentences(); }
-      if(name === "idioms") renderOther("idiom", "iChap", "iList");
-      if(name === "filipino") renderOther("filipino", "fChap", "fList");
+      if(name === "idioms") renderOther("idiom", "iList");
+      if(name === "filipino") renderOther("filipino", "fList");
     });
   }
-  $("wChap").addEventListener("change", renderWords);
   $("wStat").addEventListener("change", renderWords);
-  $("iChap").addEventListener("change", function(){ renderOther("idiom", "iChap", "iList"); });
-  $("fChap").addEventListener("change", function(){ renderOther("filipino", "fChap", "fList"); });
+  function chap(){ return $("gChap").value; }
+  function currentTab(){ var b = document.querySelector('.tabbtn[aria-pressed="true"]'); return b ? b.getAttribute("data-tab") : "practice"; }
+  function summary(){
+    var ch = chap();
+    var inCh = function(c){ return ch === "all" || String(c) === ch; };
+    var w = Q.filter(function(q){ return inCh(q.c); }).length;
+    var i = V.items.filter(function(x){ return x.t === "idiom" && inCh(x.c); }).length;
+    var f = V.items.filter(function(x){ return x.t === "filipino" && inCh(x.c); }).length;
+    $("gSum").textContent = w + " words · " + i + " idioms · " + f + " Filipino words";
+  }
+  $("gChap").addEventListener("change", function(){
+    try{ localStorage.setItem("psn-vocab-chapter", chap()); }catch(e){}
+    summary();
+    $("pNote").textContent = "";
+    if(!$("pRun").classList.contains("hidden")){ $("pRun").classList.add("hidden"); $("pStart").classList.remove("hidden"); }
+    $("pDone").classList.add("hidden"); $("pStart").classList.remove("hidden");
+    var t = currentTab();
+    if(t === "words") renderWords();
+    if(t === "sentences") fillWordPicker();
+    if(t === "idioms") renderOther("idiom", "iList");
+    if(t === "filipino") renderOther("filipino", "fList");
+  });
 
   /* ---------- load ---------- */
-  Promise.all([fetch("vocab.json?v=4").then(function(r){ return r.json(); }), fetch("quiz.json?v=1").then(function(r){ return r.json(); })])
+  Promise.all([fetch("vocab.json?v=4").then(function(r){ return r.json(); }), fetch("quiz.json?v=2").then(function(r){ return r.json(); })])
     .then(function(res){
       V = res[0]; Q = res[1];
       Q.forEach(function(q){ QBY[q.e] = q; });
-      var used = {};
-      Q.forEach(function(q){ used[q.c] = true; });
       V.chapters.forEach(function(c){
-        ["pChap","wChap","iChap","fChap"].forEach(function(id){
-          if(id === "pChap" && !used[c.n]) return;
-          var o = document.createElement("option"); o.value = String(c.n); o.textContent = chapLabel(c.n); $(id).appendChild(o);
-        });
+        var o = document.createElement("option"); o.value = String(c.n); o.textContent = chapLabel(c.n); $("gChap").appendChild(o);
       });
+      var saved = null;
+      try{ saved = localStorage.getItem("psn-vocab-chapter"); }catch(e){}
+      $("gChap").value = (saved && $("gChap").querySelector('option[value="' + saved + '"]')) ? saved : "0";
+      summary();
       if(!hasKey){ $("pNote").textContent = "Open this page from your board link so your progress is saved."; }
       var p = hasKey ? rpc("hb_vocab_state", {p_key:KEY}).catch(function(){ saving("Couldn't load your progress.", true); return null; }) : Promise.resolve(null);
       return p.then(function(s){
