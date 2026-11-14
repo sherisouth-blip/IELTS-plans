@@ -73,19 +73,19 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
   </div>
 
   <div class="tabs" role="group" aria-label="Vocabulary sections">
-    <button class="tabbtn" type="button" data-tab="practise" aria-pressed="true">Practise</button>
-    <button class="tabbtn" type="button" data-tab="words" aria-pressed="false">Word list</button>
+    <button class="tabbtn" type="button" data-tab="practice" aria-pressed="true">Practice</button>
+    <button class="tabbtn" type="button" data-tab="words" aria-pressed="false">Pre-practice</button>
     <button class="tabbtn" type="button" data-tab="sentences" aria-pressed="false">My sentences</button>
     <button class="tabbtn" type="button" data-tab="idioms" aria-pressed="false">Idioms</button>
     <button class="tabbtn" type="button" data-tab="filipino" aria-pressed="false">Filipino words</button>
     <span class="saving" id="saving"></span>
   </div>
 
-  <!-- PRACTISE -->
-  <section id="tab-practise">
+  <!-- PRACTICE -->
+  <section id="tab-practice">
     <div id="pStart">
-      <h2 style="font-family:var(--font-display);font-size:26px;margin:0 0 6px">Practise your words</h2>
-      <p>Choose a chapter. You will practise 5 words, with 2 questions each. Get both right to move a word up: <b>new → I understand it → I can use it</b>.</p>
+      <h2 style="font-family:var(--font-display);font-size:26px;margin:0 0 6px">Practice your words</h2>
+      <p>Choose a chapter. You will practice 5 words, with 2 questions each. Get both right to move a word up: <b>new → I understand it → I can use it</b>.</p>
       <div class="row">
         <label for="pChap" class="small">Chapter</label>
         <select id="pChap"><option value="review">Words to review</option></select>
@@ -103,7 +103,7 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
 
   <!-- MY WORDS -->
   <section id="tab-words" class="hidden">
-    <p>All the words to learn from the book. Use this list to <b>study before you practise</b>: read the meaning, listen, and read the example. The label shows how far you have got with each word.</p>
+    <p>All the words to learn from the book. Use this list to <b>study before you practice</b>: read the meaning, listen, and read the example. The label shows how far you have got with each word.</p>
     <div class="row" style="margin-bottom:12px">
       <label for="wChap" class="small">Chapter</label><select id="wChap"><option value="all">All chapters</option></select>
       <label for="wStat" class="small">Show</label>
@@ -253,7 +253,7 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
     } else {
       pool = Q.filter(function(q){ return String(q.c) === ch; });
     }
-    if(!pool.length){ $("pNote").textContent = "There are no words to practise here. Choose another chapter."; return; }
+    if(!pool.length){ $("pNote").textContent = "There are no words to practice here. Choose another chapter."; return; }
     var rank = function(q){ return (misses(q.e) > 0 ? 0 : 10) + ({"new":1,"understand":2,"use":5})[status(q.e)]; };
     pool = shuffle(pool).sort(function(a,b){ return rank(a) - rank(b); }).slice(0,5);
     var steps = [];
@@ -344,7 +344,7 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
     $("pRun").classList.add("hidden");
     var h = '<div class="qcard"><h2 style="font-family:var(--font-display);font-size:26px;margin:0 0 10px">Round finished</h2><div class="list">';
     round.results.forEach(function(r, ri){
-      var label = r.passed ? (r.level === "use" ? "Now: I can use it" : "Now: I understand it") : "Practise again later";
+      var label = r.passed ? (r.level === "use" ? "Now: I can use it" : "Now: I understand it") : "Practice again later";
       h += '<div class="item"><div class="row" style="justify-content:space-between"><span class="e">' + esc(r.q.e) + '</span><span class="badge ' + (r.passed ? (r.level === "use" ? "s" : "u") : "") + '">' + label + '</span></div>';
       if(r.passed && r.level === "use"){
         h += '<label class="small" for="s-' + ri + '">Write your own sentence with this word (your tutor will read it):</label>' +
@@ -352,7 +352,7 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
       }
       h += '</div>';
     });
-    h += '</div><div class="row" style="margin-top:16px"><button class="btn" type="button" id="againBtn">Practise again</button></div></div>';
+    h += '</div><div class="row" style="margin-top:16px"><button class="btn" type="button" id="againBtn">Practice again</button></div></div>';
     $("pDone").innerHTML = h; $("pDone").classList.remove("hidden");
     $("againBtn").addEventListener("click", function(){ $("pDone").classList.add("hidden"); $("pStart").classList.remove("hidden"); renderWords(); });
   }
@@ -426,7 +426,7 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
     tabs[t].addEventListener("click", function(){
       var name = this.getAttribute("data-tab");
       for(var j=0;j<tabs.length;j++) tabs[j].setAttribute("aria-pressed", tabs[j] === this ? "true" : "false");
-      ["practise","words","sentences","idioms","filipino"].forEach(function(n){ $("tab-" + n).classList.toggle("hidden", n !== name); });
+      ["practice","words","sentences","idioms","filipino"].forEach(function(n){ $("tab-" + n).classList.toggle("hidden", n !== name); });
       if(name === "words") renderWords();
       if(name === "sentences") renderSentences();
       if(name === "idioms") renderOther("idiom", "iChap", "iList");
