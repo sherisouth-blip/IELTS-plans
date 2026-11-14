@@ -163,10 +163,12 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
   if("speechSynthesis" in window){ loadVoice(); window.speechSynthesis.onvoiceschanged = loadVoice; }
   var TTS = "https://tbrgkozypzlpbmetnorl.supabase.co/functions/v1/psn-tts?v=en-US-Chirp3-HD-Enceladus&w=";
   var player = null;
-  function speak(text){
+  var TTS_FIL = "https://tbrgkozypzlpbmetnorl.supabase.co/functions/v1/psn-tts?lang=fil&w=";
+  var PH_ENGLISH = {"brownout":1, "close the light":1, "tricycle":1, "Islander (sandals)":1};
+  function speak(text, lang){
     try{
       if(player){ player.pause(); }
-      player = new Audio(TTS + encodeURIComponent(text));
+      player = new Audio((lang === "fil" ? TTS_FIL : TTS) + encodeURIComponent(text));
       var fellBack = false;
       var fallback = function(){ if(fellBack) return; fellBack = true; deviceSpeak(text); };
       player.addEventListener("error", fallback);
@@ -185,10 +187,10 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
       window.speechSynthesis.speak(u);
     }catch(e){ saving("Listening is not available on this device.", true); }
   }
-  function listenBtn(text){ return '<button class="listen" type="button" data-say="' + esc(text) + '">🔊 Listen</button>'; }
+  function listenBtn(text, lang){ return '<button class="listen" type="button" data-say="' + esc(text) + '"' + (lang ? ' data-lang="' + lang + '"' : '') + '>🔊 Listen</button>'; }
   document.addEventListener("click", function(e){
     var b = e.target.closest ? e.target.closest("[data-say]") : null;
-    if(b) speak(b.getAttribute("data-say"));
+    if(b) speak(b.getAttribute("data-say"), b.getAttribute("data-lang"));
   });
 
   /* ---------- counts ---------- */
@@ -400,7 +402,7 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
     var ch = $(chapSel).value;
     var rows = V.items.filter(function(it){ return it.t === type && (ch === "all" || String(it.c) === ch); });
     $(listEl).innerHTML = rows.map(function(it){
-      return '<div class="item"><div class="row" style="justify-content:space-between"><span class="e">' + esc(it.e) + '</span>' + listenBtn(it.e) + '</div>' +
+      return '<div class="item"><div class="row" style="justify-content:space-between"><span class="e">' + esc(it.e) + '</span>' + listenBtn(it.e, (type === "filipino" && !PH_ENGLISH[it.e]) ? "fil" : null) + '</div>' +
         '<div class="meta">' + esc(chapLabel(it.c)) + (it.p ? ' · PDF page ' + it.p : '') + '</div>' +
         (it.s ? '<div class="ex">In the book: ' + esc(it.s) + '</div>' : '') +
         (type === "idiom" ? '<details class="reveal" style="margin-top:4px"><summary>Meaning</summary><p>' + esc(it.m) + '</p></details>' : '<div>' + esc(it.m) + (it.j ? ' <span class="ja">(' + esc(it.j) + ')</span>' : '') + '</div>') +
