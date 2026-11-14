@@ -116,3 +116,9 @@ textarea.ans{display:block;width:100%;box-sizing:border-box;margin:6px 0 4px;bor
 .vlink a{display:inline-block;background:var(--ink);color:var(--on-ink);text-decoration:none;font-weight:700;border-radius:999px;padding:9px 16px}
 .stage .adds{margin-top:8px;font-size:16px}
 .stage .sq{margin-top:6px;font-size:14px;color:var(--muted)}
+/* Ordering chips */
+.chips.order .chip .onum{display:inline-block;min-width:0;font-weight:800}
+.chips.order .chip .onum:not(:empty){background:#fff;color:var(--ink);border-radius:999px;padding:0 7px;margin-right:6px}
+.orderout{margin:8px 0 4px;font-size:16px}
+.orderout ol{margin:0 0 6px;padding-left:24px}
+.oreset{-webkit-appearance:none;appearance:none;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:5px 12px;font:600 14px var(--font-body);cursor:pointer}

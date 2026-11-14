@@ -17,7 +17,7 @@
     var chips = document.querySelectorAll(".chips .chip, .choices .chip");
     for(var i=0;i<chips.length;i++){
       var c = chips[i];
-      if(c.closest && c.closest(".static")) continue;
+      if(c.closest && (c.closest(".static") || c.closest(".order"))) continue;
       c.setAttribute("role","button");
       c.setAttribute("tabindex","0");
       c.setAttribute("aria-pressed","false");
@@ -168,5 +168,53 @@
         if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(out).then(ok, fallback); } else fallback();
       });
     })(btns[b]);
+  }catch(e){}
+})();
+
+
+/* Ordering: tap chips in order to number them 1, 2, 3…; tap a numbered chip to take it out.
+   The order is shown underneath and saved on this device. */
+(function(){
+  try{
+    var lists = document.querySelectorAll(".chips.order");
+    for(var L=0; L<lists.length; L++) (function(box, L){
+      var key = "psn-order-" + (box.getAttribute("data-id") || (location.pathname.split("/").pop() + "-" + L));
+      var chips = box.querySelectorAll(".chip");
+      var order = [];
+      try{ order = JSON.parse(localStorage.getItem(key) || "[]") || []; }catch(e){ order = []; }
+      order = order.filter(function(i){ return i >= 0 && i < chips.length; });
+      var out = document.createElement("div"); out.className = "orderout";
+      box.parentNode.insertBefore(out, box.nextSibling);
+      for(var i=0;i<chips.length;i++) (function(c, i){
+        c.setAttribute("role","button"); c.setAttribute("tabindex","0"); c.classList.add("pickable");
+        var badge = document.createElement("span"); badge.className = "onum"; badge.setAttribute("aria-hidden","true");
+        c.insertBefore(badge, c.firstChild);
+        var tap = function(){
+          var at = order.indexOf(i);
+          if(at >= 0) order.splice(at, 1); else order.push(i);
+          save(); render();
+        };
+        c.addEventListener("click", tap);
+        c.addEventListener("keydown", function(e){ if(e.key === "Enter" || e.key === " "){ e.preventDefault(); tap(); } });
+      })(chips[i], i);
+      function text(c){ var t = c.cloneNode(true); var b = t.querySelector(".onum"); if(b) b.parentNode.removeChild(b); return t.textContent.trim(); }
+      function save(){ try{ localStorage.setItem(key, JSON.stringify(order)); }catch(e){} }
+      function render(){
+        for(var i=0;i<chips.length;i++){
+          var at = order.indexOf(i), b = chips[i].querySelector(".onum");
+          chips[i].setAttribute("aria-pressed", at >= 0 ? "true" : "false");
+          b.textContent = at >= 0 ? String(at + 1) : "";
+        }
+        if(!order.length){ out.innerHTML = '<span class="small">Tap the chips in order.</span>'; return; }
+        var h = '<ol>';
+        order.forEach(function(i){ h += '<li>' + text(chips[i]).replace(/[&<>]/g, function(m){ return {"&":"&amp;","<":"&lt;",">":"&gt;"}[m]; }) + '</li>'; });
+        h += '</ol>';
+        h += (order.length === chips.length ? '<span class="small">Done! Tap a chip to take it out and change your order.</span> ' : '') + '<button type="button" class="oreset">Start again</button>';
+        out.innerHTML = h;
+        var r = out.querySelector(".oreset");
+        if(r) r.addEventListener("click", function(){ order = []; save(); render(); });
+      }
+      render();
+    })(lists[L], L);
   }catch(e){}
 })();

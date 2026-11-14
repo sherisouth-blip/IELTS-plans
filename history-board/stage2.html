@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
-<link rel="stylesheet" href="site.css?v=7">
+<link rel="stylesheet" href="site.css?v=8">
 </head>
 <body>
 <div class="wrap">
@@ -25,8 +25,8 @@
   <section class="part">
     <span class="label">Let's get started</span>
     <h2>Who would you help?</h2>
-    <p>Someone needs help. You can only help one person today. Put them in order, from the person you would help first to the person you would help last. Explain your order.</p>
-    <div class="chips"><span class="chip">your best friend</span><span class="chip">a classmate you don't know well</span><span class="chip">your cousin</span><span class="chip">a stranger in your city</span><span class="chip">a stranger in another country</span></div>
+    <p>Someone needs help. You can only help one person today. Put them in order, from the person you would help first to the person you would help last. <b>Tap them in order: first tap = number 1.</b> Then explain your order.</p>
+    <div class="chips order" data-id="s2-help"><span class="chip">your best friend</span><span class="chip">a classmate you don't know well</span><span class="chip">your cousin</span><span class="chip">a stranger in your city</span><span class="chip">a stranger in another country</span></div>
     <div class="model">Example: I would help my cousin first, because family comes first for me.</div>
   </section>
 
@@ -138,13 +138,8 @@
     </details>
 
     <div class="box" style="margin-top:14px">
-      <b>Build the idea.</b> Put these four steps in order, 1 to 4.
-      <ul style="margin:8px 0 0;padding-left:22px">
-        <li>People stop asking questions when that person is hurt.</li>
-        <li>A person gets a label, like "drug runner."</li>
-        <li>Harm to that person becomes easier to accept.</li>
-        <li>People see a type, not a person with a name.</li>
-      </ul>
+      <b>Build the idea.</b> Put these four steps in order. Tap the first step, then the second, and so on.
+      <div class="chips order" data-id="s2-steps" style="margin-top:8px"><span class="chip">People stop asking questions when that person is hurt.</span><span class="chip">A person gets a label, like "drug runner."</span><span class="chip">Harm to that person becomes easier to accept.</span><span class="chip">People see a type, not a person with a name.</span></div>
       <details class="reveal" style="margin-top:10px">
         <summary>Check your order</summary>
         <p>1. A person gets a label. → 2. People see a type, not a person. → 3. People stop asking questions. → 4. Harm becomes easier to accept.</p>
@@ -300,6 +295,6 @@
     <div class="reflect" style="margin-top:10px">In your journal: who is outside <b>your</b> circle? How did they get there?</div>
   </section>
 </div>
-<script src="site.js?v=5"></script>
+<script src="site.js?v=6"></script>
 </body>
 </html>
