@@ -495,7 +495,8 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
     var w = Q.filter(function(q){ return inCh(q.c); }).length;
     var i = V.items.filter(function(x){ return x.t === "idiom" && inCh(x.c); }).length;
     var f = V.items.filter(function(x){ return x.t === "filipino" && inCh(x.c); }).length;
-    $("gSum").textContent = w + " words · " + i + " idioms · " + f + " Filipino words";
+    var pl = function(n, one, many){ return n + " " + (n === 1 ? one : many); };
+    $("gSum").textContent = pl(w, "word", "words") + " · " + pl(i, "idiom", "idioms") + " · " + pl(f, "Filipino word", "Filipino words");
   }
   $("gChap").addEventListener("change", function(){
     try{ localStorage.setItem("psn-vocab-chapter", chap()); }catch(e){}
