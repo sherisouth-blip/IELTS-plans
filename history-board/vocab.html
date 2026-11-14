@@ -74,7 +74,7 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
 
   <div class="tabs" role="group" aria-label="Vocabulary sections">
     <button class="tabbtn" type="button" data-tab="practise" aria-pressed="true">Practise</button>
-    <button class="tabbtn" type="button" data-tab="words" aria-pressed="false">My words</button>
+    <button class="tabbtn" type="button" data-tab="words" aria-pressed="false">Word list</button>
     <button class="tabbtn" type="button" data-tab="sentences" aria-pressed="false">My sentences</button>
     <button class="tabbtn" type="button" data-tab="idioms" aria-pressed="false">Idioms</button>
     <button class="tabbtn" type="button" data-tab="filipino" aria-pressed="false">Filipino words</button>
@@ -103,7 +103,12 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
 
   <!-- MY WORDS -->
   <section id="tab-words" class="hidden">
-    <div class="row" style="margin-bottom:12px"><label for="wChap" class="small">Chapter</label><select id="wChap"><option value="all">All chapters</option></select></div>
+    <p>All the words to learn from the book. Use this list to <b>study before you practise</b>: read the meaning, listen, and read the example. The label shows how far you have got with each word.</p>
+    <div class="row" style="margin-bottom:12px">
+      <label for="wChap" class="small">Chapter</label><select id="wChap"><option value="all">All chapters</option></select>
+      <label for="wStat" class="small">Show</label>
+      <select id="wStat"><option value="all">All words</option><option value="new">New</option><option value="understand">I understand it</option><option value="use">I can use it</option><option value="review">To review</option></select>
+    </div>
     <div class="list" id="wList"></div>
   </section>
 
@@ -371,8 +376,13 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
 
   /* ---------- lists ---------- */
   function renderWords(){
-    var ch = $("wChap").value;
-    var rows = Q.filter(function(q){ return ch === "all" || String(q.c) === ch; });
+    var ch = $("wChap").value, st = $("wStat").value;
+    var rows = Q.filter(function(q){
+      if(ch !== "all" && String(q.c) !== ch) return false;
+      if(st === "all") return true;
+      if(st === "review") return misses(q.e) > 0;
+      return status(q.e) === st;
+    });
     var h = "";
     rows.forEach(function(q){
       var s = status(q.e);
@@ -382,7 +392,7 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
         '<div>' + esc(q.m) + (q.j ? ' <span class="ja">(' + esc(q.j) + ')</span>' : '') + '</div>' +
         '<div class="ex">' + esc(q.ok) + '</div><div>' + listenBtn(q.e) + '</div></div>';
     });
-    $("wList").innerHTML = h || '<p class="small">No words in this chapter.</p>';
+    $("wList").innerHTML = h || '<p class="small">No words to show here yet.</p>';
   }
   function renderSentences(){
     if(!sentences.length){ $("sList").innerHTML = '<p class="small">No sentences yet. When a word reaches "I can use it", you can write your own sentence.</p>'; return; }
@@ -424,6 +434,7 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
     });
   }
   $("wChap").addEventListener("change", renderWords);
+  $("wStat").addEventListener("change", renderWords);
   $("iChap").addEventListener("change", function(){ renderOther("idiom", "iChap", "iList"); });
   $("fChap").addEventListener("change", function(){ renderOther("filipino", "fChap", "fList"); });
 
