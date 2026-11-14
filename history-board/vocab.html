@@ -161,7 +161,20 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
     voice = best || males.filter(function(v){ return /^en-(US|CA)/i.test(v.lang); })[0] || males[0] || null;
   }
   if("speechSynthesis" in window){ loadVoice(); window.speechSynthesis.onvoiceschanged = loadVoice; }
+  var TTS = "https://tbrgkozypzlpbmetnorl.supabase.co/functions/v1/psn-tts?w=";
+  var player = null;
   function speak(text){
+    try{
+      if(player){ player.pause(); }
+      player = new Audio(TTS + encodeURIComponent(text));
+      var fellBack = false;
+      var fallback = function(){ if(fellBack) return; fellBack = true; deviceSpeak(text); };
+      player.addEventListener("error", fallback);
+      var pr = player.play();
+      if(pr && pr.catch) pr.catch(fallback);
+    }catch(e){ deviceSpeak(text); }
+  }
+  function deviceSpeak(text){
     if(!("speechSynthesis" in window)){ saving("Listening is not available in this browser.", true); return; }
     try{
       window.speechSynthesis.cancel();
