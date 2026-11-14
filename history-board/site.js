@@ -143,7 +143,7 @@
     var page = location.pathname.split("/").pop() || "page";
     var boxes = document.querySelectorAll("textarea.ans");
     for(var i=0;i<boxes.length;i++) (function(ta, i){
-      var id = "psn-ans-" + page + "-" + i;
+      var id = ta.getAttribute("data-id") ? "psn-ans-" + ta.getAttribute("data-id") : "psn-ans-" + page + "-" + i;
       try{ var v = localStorage.getItem(id); if(v) ta.value = v; }catch(e){}
       ta.addEventListener("input", function(){ try{ localStorage.setItem(id, ta.value); }catch(e){} });
     })(boxes[i], i);

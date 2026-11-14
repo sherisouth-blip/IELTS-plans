@@ -114,3 +114,5 @@ textarea.ans{display:block;width:100%;box-sizing:border-box;margin:6px 0 4px;bor
 .vembed iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
 .vlink{margin:12px 0 0}
 .vlink a{display:inline-block;background:var(--ink);color:var(--on-ink);text-decoration:none;font-weight:700;border-radius:999px;padding:9px 16px}
+.stage .adds{margin-top:8px;font-size:16px}
+.stage .sq{margin-top:6px;font-size:14px;color:var(--muted)}

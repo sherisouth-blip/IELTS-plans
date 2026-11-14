@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
-<link rel="stylesheet" href="site.css?v=6">
+<link rel="stylesheet" href="site.css?v=7">
 </head>
 <body>
 <div class="wrap">
@@ -279,11 +279,27 @@
     </div>
   </section>
 
-  <section class="part">
+    <section class="part tracker">
+    <span class="label">Evidence tracker</span>
+    <h2>How can we know? My answer so far</h2>
+    <p>Today you met these kinds of evidence:</p>
+    <div class="chips static"><span class="chip">a university study</span><span class="chip">the president's words</span><span class="chip">a senator and the police chief</span><span class="chip">surveys</span><span class="chip">a security camera, witnesses and a court (Kian)</span></div>
+    <div class="box">
+      <label class="anslabel"><b>1. Choose one kind of evidence from today.</b><textarea class="ans" data-id="tracker-s2-what" data-q="Stage 2: evidence"></textarea></label>
+      <label class="anslabel"><b>2. What can it show?</b><textarea class="ans" data-id="tracker-s2-can" data-q="It can show"></textarea></label>
+      <label class="anslabel"><b>3. What can't it show?</b><textarea class="ans" data-id="tracker-s2-cant" data-q="It can't show"></textarea></label>
+      <div class="model">Example: A security camera can show that police took Kian away, but it can't show what everyone was thinking.</div>
+      <label class="anslabel"><b>4. Finish the sentence:</b> We can know more about the past when…<textarea class="ans" data-id="tracker-s2-know" data-q="We can know more about the past when"></textarea></label>
+      <div class="agree-bar"><button type="button" class="btn copy-ans">Copy my answers</button><span class="done">Your answers also appear on the Lessons page.</span></div>
+    </div>
+    <details class="reveal"><summary>Today's big idea</summary><p>A label can change what people believe happened. Evidence can show the label was wrong.</p></details>
+  </section>
+
+<section class="part">
     <span class="label">Reflect</span>
     <div class="reflect" style="margin-top:10px">In your journal: who is outside <b>your</b> circle? How did they get there?</div>
   </section>
 </div>
-<script src="site.js?v=4"></script>
+<script src="site.js?v=5"></script>
 </body>
 </html>

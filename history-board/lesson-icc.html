@@ -61,7 +61,7 @@ ol.q li{margin:6px 0}
 @media (max-width:560px){.words{grid-template-columns:1fr}}
 @media print{body{background:#fff}.back{display:none}.box,.word,.st{break-inside:avoid}details{display:block}}
 </style>
-<link rel="stylesheet" href="site.css?v=6">
+<link rel="stylesheet" href="site.css?v=7">
 </head>
 <body>
 <div class="wrap">
@@ -264,7 +264,23 @@ ol.q li{margin:6px 0}
     </div>
   </section>
 
-  <section class="part">
+    <section class="part tracker">
+    <span class="label">Evidence tracker</span>
+    <h2>How can we know? My answer so far</h2>
+    <p>Today you met these kinds of evidence:</p>
+    <div class="chips static"><span class="chip">a UN video</span><span class="chip">the ICC's charges</span><span class="chip">a trial: evidence from both sides</span></div>
+    <div class="box">
+      <label class="anslabel"><b>1. Choose one kind of evidence from today.</b><textarea class="ans" data-id="tracker-s5-what" data-q="Stage 5: evidence"></textarea></label>
+      <label class="anslabel"><b>2. What can it show?</b><textarea class="ans" data-id="tracker-s5-can" data-q="It can show"></textarea></label>
+      <label class="anslabel"><b>3. What can't it show?</b><textarea class="ans" data-id="tracker-s5-cant" data-q="It can't show"></textarea></label>
+      <div class="model">Example: A trial can test the evidence from both sides, but it takes years, and the verdict is not decided yet.</div>
+      <label class="anslabel"><b>4. Finish the sentence:</b> We can know more about the past when…<textarea class="ans" data-id="tracker-s5-know" data-q="We can know more about the past when"></textarea></label>
+      <div class="agree-bar"><button type="button" class="btn copy-ans">Copy my answers</button><span class="done">Your answers also appear on the Lessons page.</span></div>
+    </div>
+    <details class="reveal"><summary>Today's big idea</summary><p>A court does not decide quickly. Until the verdict, the accused is presumed innocent.</p></details>
+  </section>
+
+<section class="part">
     <span class="label">Reflect</span>
     <div class="reflect" style="margin-top:10px">In your journal: has anyone ever judged you before they knew the whole story? How did it feel?</div>
   </section>
@@ -279,6 +295,6 @@ ol.q li{margin:6px 0}
   }catch(e){}
 })();
 </script>
-<script src="site.js?v=4"></script>
+<script src="site.js?v=5"></script>
 </body>
 </html>
