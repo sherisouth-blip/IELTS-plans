@@ -218,3 +218,61 @@
     })(lists[L], L);
   }catch(e){}
 })();
+
+/* Gap-fill sentences: each blank becomes a box he can type in (saved on this device).
+   "Check" marks blanks that have an answer key; "See an example" shows a model sentence. */
+(function(){
+  try{
+    var page = location.pathname.split("/").pop() || "page";
+    var frames = document.querySelectorAll(".frame[data-model]");
+    function norm(t){ return String(t || "").toLowerCase().replace(/[’']/g, "'").replace(/\s+/g, " ").trim(); }
+    for(var f=0; f<frames.length; f++) (function(fr, f){
+      var blanks = fr.querySelectorAll(".blank");
+      var inputs = [];
+      for(var b=0; b<blanks.length; b++) (function(sp, b){
+        var inp = document.createElement("input");
+        inp.type = "text"; inp.className = "gap"; inp.setAttribute("autocomplete","off"); inp.setAttribute("autocapitalize","off");
+        inp.setAttribute("aria-label", "Blank " + (b + 1));
+        if(sp.getAttribute("data-ans")) inp.setAttribute("data-ans", sp.getAttribute("data-ans"));
+        var key = "psn-gap-" + page + "-" + f + "-" + b;
+        try{ var v = localStorage.getItem(key); if(v) inp.value = v; }catch(e){}
+        var fit = function(){ inp.size = Math.max(10, Math.min(60, inp.value.length + 2)); };
+        fit();
+        inp.addEventListener("input", function(){ fit(); inp.classList.remove("ok","no"); try{ localStorage.setItem(key, inp.value); }catch(e){} });
+        sp.parentNode.replaceChild(inp, sp);
+        inputs.push(inp);
+      })(blanks[b], b);
+      var hasKey = inputs.some(function(i){ return i.getAttribute("data-ans"); });
+      var bar = document.createElement("div"); bar.className = "gapbar";
+      var msg = document.createElement("span"); msg.className = "gapmsg";
+      if(hasKey){
+        var chk = document.createElement("button"); chk.type = "button"; chk.className = "gapbtn"; chk.textContent = "Check";
+        chk.addEventListener("click", function(){
+          var empty = 0, wrong = 0;
+          inputs.forEach(function(i){
+            var v = norm(i.value);
+            i.classList.remove("ok","no");
+            if(!v){ empty++; return; }
+            var ans = i.getAttribute("data-ans");
+            if(!ans){ i.classList.add("ok"); return; }
+            var good = ans.split("|").some(function(a){ return v.indexOf(norm(a)) >= 0; });
+            i.classList.add(good ? "ok" : "no"); if(!good) wrong++;
+          });
+          if(empty){ msg.textContent = "Fill in every blank first."; return; }
+          msg.textContent = wrong ? "Not quite. Look back at the source and try again, or see an example." : "Good! That matches the source.";
+        });
+        bar.appendChild(chk);
+      }
+      var ex = document.createElement("button"); ex.type = "button"; ex.className = "gapbtn ghost"; ex.textContent = "See an example";
+      var model = document.createElement("div"); model.className = "gapmodel"; model.textContent = "Example: " + fr.getAttribute("data-model"); model.style.display = "none";
+      ex.addEventListener("click", function(){
+        var show = model.style.display === "none";
+        model.style.display = show ? "block" : "none";
+        ex.textContent = show ? "Hide the example" : "See an example";
+      });
+      bar.appendChild(ex); bar.appendChild(msg);
+      fr.parentNode.insertBefore(bar, fr.nextSibling);
+      bar.parentNode.insertBefore(model, bar.nextSibling);
+    })(frames[f], f);
+  }catch(e){}
+})();
