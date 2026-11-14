@@ -154,7 +154,11 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
     if(!("speechSynthesis" in window)) return;
     var vs = window.speechSynthesis.getVoices();
     var en = vs.filter(function(v){ return /^en(-|_)/i.test(v.lang); });
-    voice = en.filter(function(v){ return /natural|online|google|samantha|daniel|karen|aria|jenny/i.test(v.name); })[0] || en[0] || null;
+    var male = /\b(male|man|daniel|alex|fred|aaron|arthur|evan|nathan|tom|rishi|oliver|gordon|lee|reed|ralph|david|mark|guy|andrew|christopher|eric|ryan|brian|roger|steffan|james|thomas|george|liam|william)\b/i;
+    var female = /\b(female|woman|samantha|karen|victoria|allison|ava|susan|zira|hazel|jenny|aria|emma|michelle|libby|sonia|natasha|serena|moira|tessa|fiona|kate|nicky|joanna|salli|kimberly|ivy|kendra|amy|olivia|zoe)\b/i;
+    var males = en.filter(function(v){ return male.test(v.name) && !female.test(v.name); });
+    var best = males.filter(function(v){ return /natural|online|enhanced|premium|neural/i.test(v.name); })[0];
+    voice = best || males.filter(function(v){ return /^en-(US|CA)/i.test(v.lang); })[0] || males[0] || null;
   }
   if("speechSynthesis" in window){ loadVoice(); window.speechSynthesis.onvoiceschanged = loadVoice; }
   function speak(text){
@@ -162,7 +166,8 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
     try{
       window.speechSynthesis.cancel();
       var u = new SpeechSynthesisUtterance(text);
-      if(voice){ u.voice = voice; u.lang = voice.lang; } else { u.lang = "en-US"; }
+      if(!voice) loadVoice();
+      if(voice){ u.voice = voice; u.lang = voice.lang; } else { u.lang = "en-US"; u.pitch = 0.8; }
       u.rate = 0.9;
       window.speechSynthesis.speak(u);
     }catch(e){ saving("Listening is not available on this device.", true); }
