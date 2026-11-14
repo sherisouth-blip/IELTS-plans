@@ -94,3 +94,15 @@ a.stage:hover{border-color:var(--ink)}
 .chip.pickable{cursor:pointer;-webkit-user-select:none;user-select:none}
 .chip.pickable:hover{border-color:var(--ink)}
 .chip.pickable[aria-pressed="true"]{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
+/* "Choose your three": tap a level on a statement, then explain it. */
+.agree .st{display:block}
+.agree .st .lv{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.agree .st .lv button{-webkit-appearance:none;appearance:none;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:6px 12px;font:600 15px var(--font-body);cursor:pointer;min-height:36px}
+.agree .st .lv button[aria-pressed="true"].b1{background:#2f6b3c;border-color:#2f6b3c;color:#fff}
+.agree .st .lv button[aria-pressed="true"].b2{background:#8a6414;border-color:#8a6414;color:#fff}
+.agree .st .lv button[aria-pressed="true"].b3{background:#a33a2c;border-color:#a33a2c;color:#fff}
+.agree .st.s1{background:#dfeee2}.agree .st.s2{background:#f6ecd3}.agree .st.s3{background:#f3dcd8}
+.agree .st textarea{display:block;width:100%;box-sizing:border-box;margin-top:8px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:16px var(--font-body);min-height:64px;background:#fff;color:var(--ink)}
+.agree-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}
+.agree-bar .btn{-webkit-appearance:none;appearance:none;border:0;background:var(--ink);color:var(--on-ink);border-radius:999px;padding:8px 16px;font:700 15px var(--font-body);cursor:pointer}
+.agree-bar .done{font-size:15px;color:var(--muted)}
