@@ -413,13 +413,12 @@ select,input[type=text],textarea{font:inherit;font-size:17px;padding:9px 12px;bo
     var sel = $("sWord"), cur = sel.value;
     var rank = {"use":0, "understand":1, "new":2};
     var words = Q.slice().sort(function(a,b){ return rank[status(a.e)] - rank[status(b.e)] || a.c - b.c; });
-    var h = "", lastGroup = null;
+    var h = "";
+    var tag = {"use":" ✓✓ can use", "understand":" ✓ understand", "new":""};
     words.forEach(function(q){
-      var g = status(q.e);
-      if(g !== lastGroup){ if(lastGroup !== null) h += '</optgroup>'; h += '<optgroup label="' + ({"use":"I can use it","understand":"I understand it","new":"New"})[g] + '">'; lastGroup = g; }
-      h += '<option value="' + esc(q.e) + '">' + esc(q.e) + '</option>';
+      h += '<option value="' + esc(q.e) + '">' + esc(q.e) + tag[status(q.e)] + '</option>';
     });
-    sel.innerHTML = h + '</optgroup>';
+    sel.innerHTML = h;
     if(cur && QBY[cur]) sel.value = cur;
     showWordHelp();
   }
