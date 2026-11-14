@@ -85,6 +85,16 @@ textarea,input,select{font:inherit;color:inherit}
 .modal h2{font-family:"Fraunces",Georgia,serif;margin:0 0 12px}
 .field{margin-bottom:12px}
 .field label{display:block;font-weight:700;font-size:15px;margin-bottom:4px}
+.kinds{border:0;margin:0;padding:0;min-width:0}
+.kinds legend{font-weight:700;font-size:15px;margin-bottom:4px;padding:0}
+.kgroup{margin:6px 0}
+.kglabel{display:block;font-size:13px;color:var(--muted);font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-bottom:4px}
+.kopts{display:flex;flex-wrap:wrap;gap:6px}
+.kopt{position:relative;display:inline-block;cursor:pointer}
+.kopt input{position:absolute;opacity:0;width:1px;height:1px}
+.kopt span{display:inline-block;border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 12px;font-size:15px;font-weight:600;color:var(--ink)}
+.kopt input:checked + span{background:var(--ink);color:#fff;border-color:var(--ink)}
+.kopt input:focus-visible + span{outline:3px solid var(--accent);outline-offset:2px}
 .field .hint{font-size:13px;color:var(--muted);margin-top:2px}
 .field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;background:#fff;font-size:16px}
 .field textarea{min-height:90px;resize:vertical}
@@ -142,28 +152,13 @@ textarea,input,select{font:inherit;color:inherit}
       <div class="field"><label for="f_date">Date</label><input id="f_date" placeholder="e.g. 21 Sep 1972"><div class="hint">As exact as your source gives it.</div></div>
       <div class="field"><label for="f_year">Year (for the timeline)</label><input id="f_year" inputmode="numeric" placeholder="1972"></div>
     </div>
-    <div class="field"><label for="f_kind">Card type</label>
-      <select id="f_kind">
-        <optgroup label="Identity">
-          <option value="identity">Identity chart</option>
-        </optgroup>
-        <optgroup label="History">
-          <option value="event">Event</option>
-          <option value="voice">Voice (a person's story)</option>
-          <option value="official">Official story</option>
-          <option value="claim">False claim</option>
-          <option value="factcheck">Fact-check</option>
-        </optgroup>
-        <optgroup label="Choices">
-          <option value="upstander">Choice: upstander</option>
-          <option value="bystander">Choice: bystander</option>
-          <option value="perpetrator">Choice: perpetrator</option>
-        </optgroup>
-        <optgroup label="Memory and the novel">
-          <option value="memory">Memory and legacy</option>
-          <option value="novel">Link to the novel</option>
-        </optgroup>
-      </select>
+    <div class="field"><fieldset class="kinds"><legend>Card type</legend>
+      <input type="hidden" id="f_kind" value="event">
+      <div class="kgroup"><span class="kglabel">Identity</span><div class="kopts"><label class="kopt"><input type="radio" name="kind" value="identity"><span>Identity chart</span></label></div></div>
+      <div class="kgroup"><span class="kglabel">History</span><div class="kopts"><label class="kopt"><input type="radio" name="kind" value="event"><span>Event</span></label><label class="kopt"><input type="radio" name="kind" value="voice"><span>Voice (a person's story)</span></label><label class="kopt"><input type="radio" name="kind" value="official"><span>Official story</span></label><label class="kopt"><input type="radio" name="kind" value="claim"><span>False claim</span></label><label class="kopt"><input type="radio" name="kind" value="factcheck"><span>Fact-check</span></label></div></div>
+      <div class="kgroup"><span class="kglabel">Choices</span><div class="kopts"><label class="kopt"><input type="radio" name="kind" value="upstander"><span>Upstander</span></label><label class="kopt"><input type="radio" name="kind" value="bystander"><span>Bystander</span></label><label class="kopt"><input type="radio" name="kind" value="perpetrator"><span>Perpetrator</span></label></div></div>
+      <div class="kgroup"><span class="kglabel">Memory and the novel</span><div class="kopts"><label class="kopt"><input type="radio" name="kind" value="memory"><span>Memory and legacy</span></label><label class="kopt"><input type="radio" name="kind" value="novel"><span>Link to the novel</span></label></div></div>
+      </fieldset>
       <div class="hint" id="kindHint"></div>
     </div>
     <div class="field"><label for="f_title" id="l_title">Title</label><input id="f_title" maxlength="200" placeholder="Martial law is declared"></div>
@@ -348,6 +343,8 @@ textarea,input,select{font:inherit;color:inherit}
     $("f_date").value = card ? card.event_date : "";
     $("f_year").value = card && card.sort_year != null ? card.sort_year : "";
     $("f_kind").value = card ? (card.kind || "event") : "event";
+    var radios = document.querySelectorAll('input[name="kind"]');
+    for(var ri=0; ri<radios.length; ri++){ radios[ri].checked = radios[ri].value === $("f_kind").value; }
     $("f_title").value = card ? card.title : "";
     $("f_caption").value = card ? card.caption : "";
     $("f_img").value = card ? card.image_url : "";
@@ -461,7 +458,10 @@ textarea,input,select{font:inherit;color:inherit}
     for(var r=0;r<rl.length;r++){ rl[r].setAttribute("href", rl[r].getAttribute("href").split("#")[0] + "#" + KEY); }
     $("addBtn").addEventListener("click", function(){ openModal(null); });
     $("cancelBtn").addEventListener("click", closeModal);
-    $("f_kind").addEventListener("change", applyKind);
+    var kradios = document.querySelectorAll('input[name="kind"]');
+    for(var kr=0; kr<kradios.length; kr++){
+      kradios[kr].addEventListener("change", function(){ $("f_kind").value = this.value; applyKind(); });
+    }
     $("saveBtn").addEventListener("click", saveCard);
     $("overlay").addEventListener("click", function(e){ if(e.target === this) closeModal(); });
     document.addEventListener("keydown", function(e){ if(e.key === "Escape") closeModal(); });
