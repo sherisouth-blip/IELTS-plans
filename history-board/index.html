@@ -149,8 +149,8 @@ textarea,input,select{font:inherit;color:inherit}
     <h2 id="mtitle">Add a card</h2>
     <div id="mwarn" class="warn hidden"></div>
     <div class="row2">
-      <div class="field"><label for="f_date">Date</label><input id="f_date" placeholder="e.g. 21 Sep 1972"><div class="hint">As exact as your source gives it.</div></div>
-      <div class="field"><label for="f_year">Year (for the timeline)</label><input id="f_year" inputmode="numeric" placeholder="1972"></div>
+      <div class="field"><label for="f_date">Date</label><input id="f_date" placeholder="e.g. 30 June 2016"><div class="hint">As exact as your source gives it.</div></div>
+      <div class="field"><label for="f_year">Year (for the timeline)</label><input id="f_year" inputmode="numeric" placeholder="2016"></div>
     </div>
     <div class="field"><fieldset class="kinds"><legend>Card type</legend>
       <input type="hidden" id="f_kind" value="event">
@@ -161,12 +161,12 @@ textarea,input,select{font:inherit;color:inherit}
       </fieldset>
       <div class="hint" id="kindHint"></div>
     </div>
-    <div class="field"><label for="f_title" id="l_title">Title</label><input id="f_title" maxlength="200" placeholder="Martial law is declared"></div>
+    <div class="field"><label for="f_title" id="l_title">Title</label><input id="f_title" maxlength="200" placeholder="The drug war begins"></div>
     <div class="field"><label for="f_caption" id="l_caption">What happened, in your own words</label><textarea id="f_caption" maxlength="2000" placeholder="2–4 sentences. Don't copy from the source."></textarea></div>
     <div class="field"><label for="f_img">Image link (optional)</label><input id="f_img" type="url" placeholder="https://…jpg"><div class="hint">Right-click an image on the source page and choose "Copy image address".</div></div>
     <div class="field"><label for="f_video">Video link (optional)</label><input id="f_video" type="url" placeholder="https://www.youtube.com/watch?v=…"></div>
     <div class="row2">
-      <div class="field"><label for="f_srcname">Source name</label><input id="f_srcname" maxlength="200" placeholder="Martial Law Museum"></div>
+      <div class="field"><label for="f_srcname">Source name</label><input id="f_srcname" maxlength="200" placeholder="Philippine Daily Inquirer"></div>
       <div class="field"><label for="f_srctype">Source type</label>
         <select id="f_srctype">
           <option value="">Choose…</option>
@@ -361,7 +361,7 @@ textarea,input,select{font:inherit;color:inherit}
     var k = $("f_kind").value, isId = k === "identity";
     $("kindHint").textContent = KIND_HINT[k] || "";
     $("l_title").textContent = isId ? "Whose identity chart? (name)" : "Title";
-    $("f_title").placeholder = isId ? "Jay" : "Martial law is declared";
+    $("f_title").placeholder = isId ? "Jay" : "The drug war begins";
     $("l_caption").textContent = isId ? "Identity words, separated by commas" : "What happened, in your own words";
     $("f_caption").placeholder = isId ? "Filipino American, son, student, outsider, cousin…" : "2–4 sentences. Don't copy from the source.";
     var dateFields = [$("f_date"), $("f_year"), $("f_img"), $("f_video")];
