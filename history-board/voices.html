@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Choose a Voice</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Source+Sans+3:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="site.css?v=2">
+<style>
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-top:12px}
+.v{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.v b{font-size:19px}
+.v .row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.v button{-webkit-appearance:none;appearance:none;border:1px solid var(--line);background:var(--soft);color:var(--ink);border-radius:999px;padding:6px 12px;font:600 15px var(--font-body);cursor:pointer;min-height:36px}
+.v button.playing{background:var(--ink);color:var(--on-ink)}
+</style>
+</head>
+<body>
+<div class="wrap wide">
+  <div class="eyebrow">Tutor page · not linked for the student</div>
+  <h1 class="title">Choose the voice</h1>
+  <p>Every voice here is a male Chirp voice. Click the words to compare. The first click on each one takes a second or two.</p>
+  <h2 style="font-family:var(--font-display)">American English</h2>
+  <div class="grid" id="us"></div>
+  <h2 style="font-family:var(--font-display);margin-top:28px">British English</h2>
+  <div class="grid" id="gb"></div>
+</div>
+<script>
+(function(){
+  var TTS = "https://tbrgkozypzlpbmetnorl.supabase.co/functions/v1/psn-tts";
+  var words = ["philosophical", "grief", "extrajudicial killing"];
+  var male = ["Charon","Puck","Fenrir","Orus","Iapetus","Enceladus","Algieba","Alnilam","Achird","Schedar","Umbriel","Sadaltager","Rasalgethi","Zubenelgenubi","Algenib","Sadachbia"];
+  var player = null, lastBtn = null;
+  function card(lang, name){
+    var voice = lang + "-Chirp3-HD-" + name;
+    var h = '<div class="v"><b>' + name + '</b><div class="small">' + voice + '</div><div class="row">';
+    words.forEach(function(w){ h += '<button type="button" data-v="' + voice + '" data-w="' + w + '">' + w + '</button>'; });
+    return h + '</div></div>';
+  }
+  document.getElementById("us").innerHTML = male.map(function(n){ return card("en-US", n); }).join("");
+  document.getElementById("gb").innerHTML = male.map(function(n){ return card("en-GB", n); }).join("");
+  document.addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest("button[data-v]") : null;
+    if(!b) return;
+    if(player) player.pause();
+    if(lastBtn) lastBtn.classList.remove("playing");
+    player = new Audio(TTS + "?v=" + encodeURIComponent(b.getAttribute("data-v")) + "&w=" + encodeURIComponent(b.getAttribute("data-w")));
+    b.classList.add("playing"); lastBtn = b;
+    player.addEventListener("ended", function(){ b.classList.remove("playing"); });
+    player.addEventListener("error", function(){ b.classList.remove("playing"); b.textContent = b.getAttribute("data-w") + " (not available)"; });
+    var p = player.play(); if(p && p.catch) p.catch(function(){});
+  });
+})();
+</script>
+</body>
+</html>
