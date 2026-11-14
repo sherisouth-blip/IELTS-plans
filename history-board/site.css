@@ -144,7 +144,7 @@ input.gap.no{background:#f3dcd8;border-bottom-color:#a33a2c}
 .flow .fstep{border-radius:12px;padding:10px 14px;font-size:17px;border:2px solid var(--line);background:#fff}
 .flow .fstep b{display:block;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
 .flow .fstep.name{border-color:#2f6b3c;background:#eef6ef}
-.flow .fstep.label{border-color:#b4432f;background:#fbeeeb}
+.flow .fstep.lab{border-color:#b4432f;background:#fbeeeb}
 .flow .fstep.harm{border-color:#1c1a17;background:#1c1a17;color:#fff}
 .flow .fstep.harm b{color:#d8d2c6}
 .flow .farrow{text-align:center;font-size:22px;line-height:1;color:var(--muted);padding:3px 0}
