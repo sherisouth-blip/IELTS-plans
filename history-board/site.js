@@ -121,7 +121,7 @@
         });
         var out = lines.join("\n\n");
         if(!out){ done.textContent = "Choose a statement first."; return; }
-        function ok(){ done.textContent = "Copied. Paste it into your journal."; }
+        function ok(){ done.textContent = "Copied! Now open your journal and paste (Ctrl+V, or ⌘V on a Mac)."; }
         function fallback(){
           var t = document.createElement("textarea"); t.value = out; t.setAttribute("readonly","");
           t.style.position = "fixed"; t.style.top = "-1000px"; document.body.appendChild(t);
@@ -158,7 +158,7 @@
         for(var k=0;k<tas.length;k++){ if(tas[k].value.trim()) lines.push(tas[k].getAttribute("data-q") + ":\n" + tas[k].value.trim()); }
         if(!lines.length){ if(msg) msg.textContent = "Write an answer first."; return; }
         var out = (h ? h.toUpperCase() + "\n\n" : "") + lines.join("\n\n");
-        function ok(){ if(msg) msg.textContent = "Copied. Paste it into your journal."; }
+        function ok(){ if(msg) msg.textContent = "Copied! Now open your journal and paste (Ctrl+V, or ⌘V on a Mac)."; }
         function fallback(){
           var t = document.createElement("textarea"); t.value = out; t.setAttribute("readonly","");
           t.style.position = "fixed"; t.style.top = "-1000px"; document.body.appendChild(t);
@@ -274,5 +274,22 @@
       fr.parentNode.insertBefore(bar, fr.nextSibling);
       bar.parentNode.insertBefore(model, bar.nextSibling);
     })(frames[f], f);
+  }catch(e){}
+})();
+
+
+/* His Google Doc journal: a link in the menu, and next to every Copy button. */
+(function(){
+  try{
+    var J = "https://docs.google.com/document/d/1Thc-ZWkePVy3NhJpWOpobZj-ksLnN4kBiz2em-hv898/edit";
+    function link(text, cls){ var a = document.createElement("a"); a.href = J; a.target = "_blank"; a.rel = "noopener"; a.textContent = text; if(cls) a.className = cls; return a; }
+    var navs = document.querySelectorAll("nav.nav, nav.pnav");
+    for(var i=0;i<navs.length;i++) navs[i].appendChild(link("My journal ↗"));
+    var bars = document.querySelectorAll(".agree-bar");
+    for(var b=0;b<bars.length;b++){
+      var btn = bars[b].querySelector(".btn");
+      var a = link("Open my journal ↗", "journal-link");
+      if(btn && btn.nextSibling) bars[b].insertBefore(a, btn.nextSibling); else bars[b].appendChild(a);
+    }
   }catch(e){}
 })();
