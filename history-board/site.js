@@ -278,18 +278,83 @@
 })();
 
 
-/* His Google Doc journal: a link in the menu, and next to every Copy button. */
+/* One place to save: at the end of each lesson, "Copy all my answers" collects everything he typed
+   or chose on this page (in page order), then he opens his journal and pastes once.
+   The smaller per-section Copy buttons are removed so the clipboard is never overwritten by mistake. */
 (function(){
   try{
     var J = "https://docs.google.com/document/d/1Thc-ZWkePVy3NhJpWOpobZj-ksLnN4kBiz2em-hv898/edit";
     function link(text, cls){ var a = document.createElement("a"); a.href = J; a.target = "_blank"; a.rel = "noopener"; a.textContent = text; if(cls) a.className = cls; return a; }
     var navs = document.querySelectorAll("nav.nav, nav.pnav");
     for(var i=0;i<navs.length;i++) navs[i].appendChild(link("My journal ↗"));
-    var bars = document.querySelectorAll(".agree-bar");
-    for(var b=0;b<bars.length;b++){
-      var btn = bars[b].querySelector(".btn");
-      var a = link("Open my journal ↗", "journal-link");
-      if(btn && btn.nextSibling) bars[b].insertBefore(a, btn.nextSibling); else bars[b].appendChild(a);
+
+    var olds = document.querySelectorAll(".copy-ans, .agree-bar > .btn");
+    for(var o=0;o<olds.length;o++){
+      var bar = olds[o].parentNode; bar.removeChild(olds[o]);
+      var d = bar.querySelector(".done");
+      if(d && /appear on the Lessons page/.test(d.textContent)) d.textContent = "Your answers also appear on the Lessons page.";
+      if(d && /Copy|Write an answer/.test(d.textContent)) d.textContent = "";
     }
+
+    var wrap = document.querySelector(".wrap"); if(!wrap) return;
+    var items = document.querySelectorAll("textarea.ans, .frame[data-model], .statements.agree, .chips.order");
+    if(!items.length) return;
+
+    function clean(t){ return String(t || "").replace(/\s+/g, " ").trim(); }
+    function collect(){
+      var out = [], lastH = null;
+      var h1 = document.querySelector("h1");
+      var d = new Date();
+      out.push((h1 ? clean(h1.textContent) : document.title) + " (" + d.toLocaleDateString() + ")");
+      var all = document.querySelectorAll("textarea.ans, .frame[data-model], .statements.agree, .chips.order");
+      for(var k=0;k<all.length;k++){
+        var el = all[k], text = "";
+        if(el.matches("textarea.ans")){
+          if(clean(el.value)) text = (el.getAttribute("data-q") || "Answer") + ":\n" + el.value.trim();
+        } else if(el.matches(".frame[data-model]")){
+          var any = false, c = el.cloneNode(true), ins = c.querySelectorAll("input.gap"), real = el.querySelectorAll("input.gap");
+          for(var n=0;n<ins.length;n++){ var v = clean(real[n].value); if(v) any = true; ins[n].parentNode.replaceChild(document.createTextNode(v || "___"), ins[n]); }
+          if(any) text = clean(c.textContent);
+        } else if(el.matches(".statements.agree")){
+          var lv = {s1:"STRONGLY AGREE", s2:"PARTLY AGREE", s3:"TOTALLY DISAGREE"}, lines = [];
+          ["s1","s2","s3"].forEach(function(cl){
+            var st = el.querySelector(".st." + cl); if(!st) return;
+            var t = st.cloneNode(true); var x = t.querySelectorAll(".lv, textarea"); for(var q=0;q<x.length;q++) x[q].parentNode.removeChild(x[q]);
+            var ta = st.querySelector("textarea");
+            lines.push(lv[cl] + ": " + clean(t.textContent) + (ta && clean(ta.value) ? "\n" + ta.value.trim() : ""));
+          });
+          text = lines.join("\n");
+        } else if(el.matches(".chips.order")){
+          var out2 = el.nextElementSibling && el.nextElementSibling.querySelectorAll("li");
+          if(out2 && out2.length){ var arr = []; for(var r=0;r<out2.length;r++) arr.push((r+1) + ". " + clean(out2[r].textContent)); text = "My order:\n" + arr.join("\n"); }
+        }
+        if(!text) continue;
+        var sec = el.closest ? el.closest("section") : null, h = sec && sec.querySelector("h2");
+        var ht = h ? clean(h.textContent) : "";
+        if(ht && ht !== lastH){ out.push("\n== " + ht.toUpperCase() + " =="); lastH = ht; }
+        out.push(text);
+      }
+      return out.length > 1 ? out.join("\n\n") : "";
+    }
+
+    var box = document.createElement("section"); box.className = "part savebox";
+    box.innerHTML = '<span class="label">Save your work</span><h2>Put this lesson in your journal</h2>' +
+      '<ol class="q"><li>Tap <b>Copy all my answers</b>.</li><li>Tap <b>Open my journal</b>.</li><li>Click at the end of your journal and paste (Ctrl+V, or ⌘V on a Mac).</li></ol>' +
+      '<div class="agree-bar"><button type="button" class="btn" id="copyAll">Copy all my answers</button></div><p class="done small" id="copyMsg" style="margin:8px 0 0"></p>';
+    wrap.appendChild(box);
+    box.querySelector(".agree-bar").appendChild(link("Open my journal ↗", "journal-link"));
+    var msg = box.querySelector("#copyMsg");
+    box.querySelector("#copyAll").addEventListener("click", function(){
+      var out = collect();
+      if(!out){ msg.textContent = "You haven't written any answers on this page yet."; return; }
+      function ok(){ msg.textContent = "Copied! Now open your journal and paste it at the end."; }
+      function fallback(){
+        var t = document.createElement("textarea"); t.value = out; t.setAttribute("readonly","");
+        t.style.position = "fixed"; t.style.top = "-1000px"; document.body.appendChild(t);
+        t.select(); try{ document.execCommand("copy"); ok(); }catch(e){ msg.textContent = "Couldn't copy. Ask your tutor for help."; }
+        document.body.removeChild(t);
+      }
+      if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(out).then(ok, fallback); } else fallback();
+    });
   }catch(e){}
 })();
